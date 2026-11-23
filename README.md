@@ -1,6 +1,6 @@
 # dev-workflow-skills
 
-Five independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/` and `scripts/`) covering the path from a rough idea to planned, implemented, tested, debugged and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
+Ten independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/` and `scripts/`) covering the path from a rough idea to planned, implemented, tested, debugged and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
 
 ## Skills
 
@@ -11,6 +11,11 @@ Five independent, cross-agent **Agent Skills** (open Agent Skills format: a fold
 | [`test-case-writer`](test-case-writer)       | Designs, writes and runs tests (happy / boundary / negative)                               |
 | [`codebase-auditor`](codebase-auditor)       | Read-only audit of an existing codebase with `file:line` evidence                          |
 | [`bug-investigator`](bug-investigator)       | Reproduce → evidence → root cause → minimal fix with regression test                       |
+| [`refactor-planner`](refactor-planner)       | Behavior-preserving refactor: characterization tests first, then small verified steps      |
+| [`security-reviewer`](security-reviewer)     | Read-only security review (auth, authorization, injection, secrets) with exploit scenarios |
+| [`migration-writer`](migration-writer)       | Safe schema and framework/dependency migrations with rollback (expand → migrate → contract) |
+| [`code-explainer`](code-explainer)           | Read-only onboarding map of an unfamiliar repo, with one traced flow                       |
+| [`ci-cd-setup`](ci-cd-setup)                 | CI pipeline, Dockerfile and deploy/rollback guide from the repo's real commands            |
 
 ## Flow
 
@@ -30,7 +35,8 @@ Idea / feature request
 (optional) PR step → pre-pr-self-review + pr-description-writer
 ```
 
-- `codebase-auditor` can be used standalone to audit a legacy repo (read-only).
+- `codebase-auditor` can be used standalone to audit a legacy repo (read-only). Its findings feed `refactor-planner` (tech debt) and `security-reviewer` (deeper security pass).
+- `refactor-planner` and `migration-writer` can be used standalone or called from Phase 3; `code-explainer` is for reading, `ci-cd-setup` for automation files.
 - `bug-investigator` handles bugs; `dev-lifecycle` hands over to it when a failure is unexplained.
 - Each `dev-lifecycle` reply starts with a `[Phase X/5: ...]` label so the agent does not forget the rules.
 - **Light mode:** trivial edits skip the workflow; small ones get a mini-plan and a quick test. Say "chạy đủ quy trình" to force all 5 phases or "làm nhanh thôi" to force light mode.
@@ -50,8 +56,9 @@ They are not required. Install them the same way as below if you want `dev-lifec
 |---|---|
 | [`dev-workflow-skills`](https://github.com/Lolisuki18/dev-workflow-skills) (this one) | idea → plan → code → tests → audit, bug investigation |
 | [`pull-request-skills`](https://github.com/Lolisuki18/pull-request-skills) | PR description, PR review, review replies, pre-PR self-review, code comments |
-| [`qa-workflow-skills`](https://github.com/Lolisuki18/qa-workflow-skills) | QA/STLC: test plan, test matrix, E2E, defects, summary report |
-| [`docs-workflow-skills`](https://github.com/Lolisuki18/docs-workflow-skills) | README, diagrams, API docs, ADRs, SDLC reports, Review 2 pack |
+| [`qa-workflow-skills`](https://github.com/Lolisuki18/qa-workflow-skills) | QA/STLC: test plan, test matrix, E2E, API, non-functional, regression, defects, summary report |
+| [`docs-workflow-skills`](https://github.com/Lolisuki18/docs-workflow-skills) | README, diagrams, API docs, ADRs, changelog, runbook, SDLC reports, Review 2 pack |
+| `ai-workflow-suite` | `delivery-lifecycle` orchestrator across all four (build → PR → QA → docs → release), shared `CONVENTIONS.md`, `install-all.py` |
 
 Each repo is self-contained; install only what you need.
 
@@ -63,6 +70,11 @@ feature-plan-writer/  SKILL.md, scripts/init-plan.py, references/{plan-template,
 test-case-writer/     SKILL.md, references/lessons-learned.md
 codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,lessons-learned}.md
 bug-investigator/     SKILL.md, references/debug-playbook.md
+refactor-planner/     SKILL.md, references/refactor-catalog.md
+security-reviewer/    SKILL.md, references/security-checklist.md
+migration-writer/     SKILL.md, references/migration-patterns.md
+code-explainer/       SKILL.md
+ci-cd-setup/          SKILL.md, references/pipeline-templates.md
 scripts/validate-skills.py   # repo checker (not a skill)
 scripts/install.py           # links/copies the skills into an agent's skills folder
 scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
@@ -73,7 +85,7 @@ docs/                        # hard-stop-enforcement.md, maintenance.md, release
 README.md
 ```
 
-Skills reference each other by name only, so install them together.
+Skills reference each other by name only, so install them together. Suite-wide rules are in the sibling `ai-workflow-suite` repo (`CONVENTIONS.md`).
 
 ### Architecture choice (Feature-based vs Clean)
 
@@ -157,6 +169,11 @@ Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requ
 - "Viết test cho module này" → `test-case-writer`.
 - "Audit giúp tôi codebase này" → `codebase-auditor`.
 - "Debug giúp tôi lỗi này" → `bug-investigator`.
+- "Dọn code module này nhưng đừng đổi hành vi" → `refactor-planner`.
+- "Kiểm tra bảo mật phần đăng nhập" → `security-reviewer`.
+- "Thêm cột vào bảng users an toàn" → `migration-writer`.
+- "Giải thích repo này cho tôi" → `code-explainer`.
+- "Viết pipeline CI và Dockerfile" → `ci-cd-setup`.
 
 ## About `plan/`
 
@@ -168,7 +185,7 @@ Written rules can be ignored in long contexts, so approval is also stored in the
 
 ## Evals
 
-[`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and seven scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill; results are logged in [`evals/README.md`](evals/README.md). So far they were run on Claude agents only, not yet on Cursor, Gemini CLI or Codex.
+[`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and twelve scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill; results are logged in [`evals/README.md`](evals/README.md). So far they were run on Claude agents only, not yet on Cursor, Gemini CLI or Codex.
 
 ## Keeping it current
 

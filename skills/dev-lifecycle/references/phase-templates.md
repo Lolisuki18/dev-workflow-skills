@@ -12,6 +12,8 @@ Copy the structure, translate headings to the user's language. Replace `<...>`. 
 1. Nền tảng?  A) Web (khuyên dùng) B) Mobile C) Desktop D) CLI
 2. MVP gồm? A) <tính năng cốt lõi 1> B) <bộ 2–3 tính năng> C) Tôi tự liệt kê
 3. Tech stack? A) <stack gợi ý phù hợp ý tưởng> B) <lựa chọn nhẹ hơn> C) Khác
+   (+ sau khi chốt stack: giải thích Feature-based vs Clean Architecture và đề xuất theo
+   references/architecture-guide.md, để người dùng chọn)
 4. Dữ liệu? A) SQLite/file local B) PostgreSQL/MySQL C) Cloud (Firebase/Supabase)
 5. Auth & triển khai? A) Chưa cần auth, chạy local B) Email/password C) OAuth, deploy cloud
 

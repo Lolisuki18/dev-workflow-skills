@@ -32,6 +32,8 @@ First decide the mode by inspecting the repo:
 ### Greenfield
 Ask ONE batched message of 4–5 questions covering: platform (web/mobile/desktop/CLI), MVP scope (3–5 must-have features), tech stack, data & storage, and auth/deployment. Give every question lettered options with a recommended default (A/B/C) so the user can answer with e.g. "1A 2B 3A". Use the template in `references/phase-templates.md`.
 
+**Architecture choice:** when the stack is known, read `references/architecture-guide.md`. Briefly explain Feature-based vs Clean Architecture (what each is), recommend one for the user's stack with the reason, and let them choose (A/B/C). Skip the lecture if they already named a style. Record it as `Architecture: <style> — <reason>` in the Spec Summary.
+
 **Code-format suggestion:** once the stack is known (or proposed), read `references/formatter-setup.md` and recommend the extensions/config for that stack. Ask whether the user wants you to generate `.editorconfig`, `.vscode/extensions.json` and the formatter config (Prettier/Ruff/etc.) during scaffolding. Do not create them without a yes.
 
 ### Brownfield

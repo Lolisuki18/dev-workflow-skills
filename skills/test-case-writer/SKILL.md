@@ -37,6 +37,8 @@ Coverage rules for every requirement:
 - **Boundary / edge:** min/max length and values, empty/zero/one/many, off-by-one, first/last item, unicode and whitespace, duplicates, date/timezone limits, pagination edges, concurrency where relevant.
 - **Negative / error:** invalid type/format, missing required field, unauthorized/forbidden, not found, conflict, dependency failure (DB/network down), malformed payload. Assert the specific error, not just "throws".
 
+Also read `references/lessons-learned.md` and add a case for each rule that applies to this feature.
+
 Prioritize: core business logic and requirements first; skip trivial getters, framework internals and third-party code. State what you deliberately do not test.
 
 ## Step 3 — Detect framework and style
@@ -88,6 +90,9 @@ Framework: <name> | Command: `<cmd>`
 Summary: <passed>/<total> passed, <failed> failed, <skipped> skipped (real run output).
 Requirement coverage: R1 ✔ R2 ✔ R3 ✘ (no test: reason)
 Defects found: <list with file:line> | Not tested on purpose: <list>
+Suggested new rules (repeat habits only): <bullet for references/lessons-learned.md, or "none">
 ```
+
+Append to `references/lessons-learned.md` only after the user agrees.
 
 For dev-lifecycle Phase 4, return this report so it can fill the Req → code → test → result traceability table.

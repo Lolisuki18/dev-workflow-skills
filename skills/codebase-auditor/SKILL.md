@@ -31,7 +31,9 @@ Load ONLY the files that match the detected stack:
 | Frontend / UI / mobile client | `references/frontend.md` |
 | Any stack (secrets, auth, config, deploy, logging, deps) | `references/security-and-ops.md` |
 
-Full-stack → load all three. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
+ALWAYS also load `references/architecture-rules.md` (judge against the project's declared or evident style, only the sections for the detected stack) and `references/lessons-learned.md` (the user's own recurring-mistake rules; check each rule against the scoped modules and report hits as normal findings).
+
+Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 
 Method:
 - Work module by module from the approved list. Read the real code; follow calls across layers.
@@ -69,7 +71,12 @@ Commands run: <list with real results, or "none">
 
 ## Could not verify / out of scope
 - <area not scanned, reason>
+
+## Suggested new rules (only for repeat habits)
+- [area] <rule as a ready-to-paste bullet for references/lessons-learned.md>
 ```
+
+Do not edit `references/lessons-learned.md` yourself; ask the user, and append only after a yes.
 
 Rules for the report:
 - Always include 2–3 genuine highlights; do not invent praise.

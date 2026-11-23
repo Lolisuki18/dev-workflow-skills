@@ -1,6 +1,6 @@
 ---
 name: dev-lifecycle
-description: "Orchestrates a 5-phase software development workflow (Discovery, Planning, Implementation, Testing, Final Audit) from a raw idea or a feature request in an existing repo to finished, tested code, with hard stops for user approval. Use when the user says 'build me an app', 'I want to make...', 'add a feature', 'implement end to end', 'start a new project', 'tôi muốn làm một ứng dụng', 'làm tính năng này từ đầu đến cuối', 'khởi tạo dự án', 'code giúp tôi cả quy trình', or gives a vague idea needing clarification. Do NOT use for trivial edits (one file or a few lines, typo, rename, config tweak) which need no workflow; debugging or fixing a bug (use bug-investigator); only writing a plan file (use feature-plan-writer), only writing tests (use test-case-writer), or only auditing existing code without changing it (use codebase-auditor)."
+description: "Orchestrates a 5-phase software development workflow (Discovery, Planning, Implementation, Testing, Final Audit) from a raw idea or a feature request in an existing repo to finished, tested code. Use when the user says 'build me an app', 'I want to make...', 'add a feature', 'implement end to end'. Do NOT use for trivial edits (one file or a few lines, typo, rename, config tweak) which need no workflow; debugging or fixing a bug (use bug-investigator)."
 ---
 
 # Dev Lifecycle — 5-Phase Orchestrator

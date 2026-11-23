@@ -1,6 +1,6 @@
 ---
 name: code-explainer
-description: "Explains an unfamiliar repository or module to a newcomer in strictly read-only mode: finds entry points, traces one real request or command end to end, maps modules and data flow, lists key files with file:line pointers, and writes an onboarding map with a glossary and open questions. Use when the user says 'explain this repo', 'how does this code work', 'where do I start in this project', 'walk me through this flow', 'onboard me', 'what does this module do', 'giải thích dự án này', 'code này chạy như thế nào', 'bắt đầu đọc từ đâu', 'hướng dẫn tôi hiểu repo', 'luồng xử lý của chức năng này'. Do NOT use for judging code quality or finding problems (use codebase-auditor), finding a bug (use bug-investigator), writing the project's README or docs (use readme-writer from docs-workflow-skills), or building features (use dev-lifecycle)."
+description: "Explains an unfamiliar repository or module to a newcomer in strictly read-only mode: finds entry points, traces one real request or command end to end, maps modules and data flow. Use when the user says 'explain this repo', 'how does this code work', 'where do I start in this project', 'walk me through this flow'. Do NOT use for judging code quality or finding problems (use codebase-auditor), finding a bug (use bug-investigator), writing the project's README or docs (use readme-writer from docs-workflow-skills), or building features (use dev-lifecycle)."
 ---
 
 # Code Explainer

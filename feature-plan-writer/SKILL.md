@@ -1,6 +1,6 @@
 ---
 name: feature-plan-writer
-description: "Plans a feature or project by first auditing existing plan/ files for concept consistency, then writing a numbered plan (requirements R1..Rn, architecture impact, files to change, DB/API contract, edge cases, test plan) into plan/ and adding plan/ to .gitignore. Use when the user says 'write a plan', 'plan this feature', 'design before coding', 'update the plan', 'lên kế hoạch', 'viết plan cho tính năng', 'lập kế hoạch triển khai', 'soạn plan trước khi code', or when dev-lifecycle reaches Phase 2. Do NOT use for writing code (use dev-lifecycle Phase 3), writing test cases (use test-case-writer), auditing existing code quality (use codebase-auditor), or PR descriptions."
+description: "Plans a feature or project by first auditing existing plan/ files for concept consistency, then writing a numbered plan. Use when the user says 'write a plan', 'plan this feature', 'design before coding', 'update the plan'. Do NOT use for writing code (use dev-lifecycle Phase 3), writing test cases (use test-case-writer), auditing existing code quality (use codebase-auditor), or PR descriptions."
 ---
 
 # Feature Plan Writer

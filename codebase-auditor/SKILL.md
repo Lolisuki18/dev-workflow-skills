@@ -1,6 +1,6 @@
 ---
 name: codebase-auditor
-description: "Audits an existing codebase in strictly read-only mode: surveys structure and stack, agrees on 3-5 key modules with the user, deep-scans using stack-specific checklists, and reports evidence-backed findings (file:line) with severity and a cleanup roadmap. Use when the user says 'audit this codebase', 'review the whole project', 'find bugs and tech debt', 'security check my repo', 'is this production ready', 'audit codebase giúp tôi', 'rà soát dự án', 'kiểm tra chất lượng code', 'tìm lỗi bảo mật và nợ kỹ thuật', 'đánh giá đồ án'. Do NOT use for fixing a specific bug (use bug-investigator), changing code (use dev-lifecycle), writing plans (use feature-plan-writer), writing tests (use test-case-writer), or reviewing a single PR diff."
+description: "Audits an existing codebase in strictly read-only mode: surveys structure and stack, agrees on 3-5 key modules with the user, deep-scans using stack-specific checklists. Use when the user says 'audit this codebase', 'review the whole project', 'find bugs and tech debt', 'security check my repo'. Do NOT use for fixing a specific bug (use bug-investigator), changing code (use dev-lifecycle), writing plans (use feature-plan-writer), writing tests (use test-case-writer), or reviewing a single PR diff."
 ---
 
 # Codebase Auditor (read-only)

@@ -2,7 +2,9 @@
 
 **Verification status (checked 2026-11-23 via web search of official/primary pages):**
 - Verified: Next.js 16 (`proxy.ts` replaces `middleware.ts`; official Data Access Layer guidance), Spring Boot 4 / Framework 7 (Jackson 3 default, JSpecify null-safety), MediatR v13+ licensing, FastAPI + Pydantic v2 status.
-- NOT re-verified against current docs: NestJS, Flutter, Firebase/Supabase, EF Core details, JPA details. Treat those sections as general practice.
+- Second pass (same date): NestJS `ValidationPipe` options, Flutter `BuildContext`/`mounted` lint, Supabase RLS and key handling, Spring `open-in-view`, EF Core tracking/lifetime/pooling were checked against search results (official docs where they were returned, otherwise reputable secondary sources).
+- Weakly verified: the Firebase "test mode expires after ~30 days" behavior (only community sources found, no official wording), Spring Boot 4's `open-in-view` default, exact FastAPI `on_event` removal version. Marked in the text.
+- NOT re-verified: Hibernate-specific behavior beyond the above, EF Core migrations, NestJS guard/module details, Firestore rule syntax. Treat those as general practice.
 - Always detect the project's actual framework version first (lockfile/manifest, cite `file:line`) and judge against THAT version's docs; a rule below that does not apply to the installed version is not a finding.
 
 How to use:
@@ -47,6 +49,7 @@ How to use:
 - Constructor injection (flag field `@Autowired`); configuration via `@ConfigurationProperties`, not scattered `@Value` strings.
 - Input validation with `@Valid` + Bean Validation on request DTOs; central `@RestControllerAdvice` for errors with a consistent error body.
 - JPA: LAZY relations accessed inside a transaction, N+1 (use fetch joins/entity graphs), pagination on lists, `equals/hashCode` sane on entities.
+- Open Session in View: `spring.jpa.open-in-view` is enabled when unset (Spring logs a startup warning). It keeps the persistence context open for the whole request, hiding N+1 queries and holding DB connections longer. If the property is unset or `true` on a non-trivial API, report Medium and recommend setting it explicitly (usually `false`, then fixing lazy loading with fetch joins, entity graphs or DTO projections). Whether the default changes in Boot 4 was still being discussed in the project's issue tracker; check the version's reference docs.
 - Security: method/route authorization rules present, ownership checks on resource ids, no secrets in `application.yml` committed.
 - Version check: Spring Boot 4 / Framework 7 make Jackson 3 the default JSON library (Jackson 2 deprecated) and adopt JSpecify null-safety annotations; Boot 3.x apps are not wrong, but note end-of-support dates (3.5 free support ends June 2026 per reported Spring timelines; verify on spring.io). After a 3→4 upgrade, serialization (dates, nulls, BigDecimal) and Spring Security 7 defaults need re-testing.
 - Clean/Hexagonal layout: `domain` has no Spring/JPA annotations (or a documented exception), adapters in/out packages, use-case classes per action.
@@ -54,7 +57,7 @@ How to use:
 ## ASP.NET Core (.NET)
 - Projects/folders Domain, Application, Infrastructure, Api (or Vertical Slice features); Api references Application; Domain references nothing. Flag `.csproj` references that break the rule.
 - Controllers/Minimal API endpoints are thin: bind, validate, send to a handler/service, map result. No `DbContext` in controllers.
-- `DbContext` and EF Core live in Infrastructure; async all the way (`async/await`, no `.Result`/`.Wait()`), `CancellationToken` passed through; `AsNoTracking` for reads; no N+1 in loops.
+- `DbContext` and EF Core live in Infrastructure; async all the way (`async/await`, no `.Result`/`.Wait()`), `CancellationToken` passed through; `AsNoTracking` for read-only queries (no change tracking overhead; the result ignores local unsaved changes); no N+1 in loops. `DbContext` registered scoped (one per request), never singleton (not thread-safe). `AddDbContextPool` is only safe when the context class keeps no per-request state in its own fields (pooling resets EF's internal state, not your fields), so flag pooled contexts that inject tenant/current-user state.
 - DTOs/contracts separate from entities; validation (DataAnnotations or FluentValidation) on requests; global exception handling (`ProblemDetails`).
 - DI lifetimes correct (no scoped service captured by a singleton); options pattern for configuration; secrets via user-secrets/env, not `appsettings.json` committed.
 - If MediatR/CQRS is used: commands and queries separated, handlers small, cross-cutting concerns in pipeline behaviors. Do not flag its absence on small apps.
@@ -63,7 +66,7 @@ How to use:
 ## NestJS (TypeScript)
 - One module per feature (controller, service, dto, entity/schema); modules export only what others need; no circular module imports (`forwardRef` smell).
 - Controllers thin; logic in providers/services; repositories or ORM calls not in controllers.
-- Global `ValidationPipe` with `whitelist`/`transform` (and `forbidNonWhitelisted` where fit); DTOs with class-validator on every body/query/param.
+- Global `ValidationPipe` configured deliberately: `whitelist: true` only strips undecorated properties silently; add `forbidNonWhitelisted: true` to reject requests with unknown fields; `transform: true` is needed for payloads to become DTO instances. Whitelisting only affects properties that carry at least one class-validator decorator, so a DTO field with no decorator is dropped (or flagged) — check every body/query/param DTO field is decorated.
 - Auth via guards on every protected route; ownership checks in the service; no business authorization only in the frontend.
 - Exceptions mapped through filters/`HttpException`; config via `ConfigModule` validated at boot; no `process.env` scattered.
 
@@ -79,6 +82,8 @@ How to use:
 - Feature-first folders; inside each: `data` (repositories, data sources, DTOs), `domain` (entities, use cases — optional on small apps), `presentation` (screens, widgets, state).
 - Widgets contain no direct Firestore/Supabase/HTTP calls; they talk to a controller/notifier/bloc that uses a repository.
 - One state-management approach used consistently (whichever the project already uses); no business logic in `build()`.
-- `dispose()` for controllers/streams/subscriptions; no `BuildContext` use after `await` without a `mounted` check; `const` constructors where possible.
-- Backend rules: Firestore Security Rules / Supabase RLS enabled and tested (default-open rules are Critical on production-scale apps); no service-role/admin keys in the app bundle; per-user data access scoped by `uid`.
+- `dispose()` for controllers/streams/subscriptions; no `BuildContext` use after an `await` without the right `mounted` check: inside a `State`, check `mounted`; for a context passed as a parameter or held in a local, check that context's own `context.mounted` (checking the State's `mounted` while using another context is the classic mistake). The `use_build_context_synchronously` lint covers most cases but is documented as missing uses inside `then()`/`catchError()`/`whenComplete()` callbacks, so read those by hand. `const` constructors where possible.
+- Supabase: Row Level Security enabled on every table exposed through the API, with explicit policies (with RLS on and no policies, the publishable/anon key sees nothing; with RLS off, anyone holding the anon key can read the table). The secret / legacy `service_role` key bypasses RLS and must exist only on a server, never in the app bundle, `.env` shipped to the client, or the repo (Critical).
+- Firebase: Firestore/Storage rules like `allow read, write: if true` (including "test mode" rules, which community sources say expire after a preset window — confirm the current behavior in the Firebase console) leave the database open to the internet: Critical on production-scale apps, High on a demo holding real user data. Rules should be tested (emulator/Rules Playground) and per-user access scoped by `request.auth.uid`.
+- No admin/service credentials in the app bundle; per-user data access scoped by `uid`.
 - Loading, empty and error states handled for every async screen.

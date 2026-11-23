@@ -10,6 +10,7 @@ Fails OPEN on any parse problem so it never bricks a session.
 Opt-in: see docs/hard-stop-enforcement.md.
 """
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -41,6 +42,11 @@ def main() -> int:
         plans = sorted(plan_dir.glob("*.md")) if plan_dir.is_dir() else []
         if not plans:
             return 0
+        # Escape hatches: env var or marker file (init-plan.py --gate off)
+        if os.environ.get("PLAN_GATE", "").lower() in ("off", "0", "false"):
+            return 0
+        if (plan_dir / ".no-gate").exists():
+            return 0
         try:
             rel = target.relative_to(root)
         except ValueError:
@@ -53,7 +59,8 @@ def main() -> int:
             print(
                 f"BLOCKED by plan-gate: {plans[-1].relative_to(root).as_posix()} is still 'Status: Draft'. "
                 "Present the plan and wait for the user's approval, then run init-plan.py --approve. "
-                "(Small edits: ask the user to approve or disable the hook.)",
+                "For a small edit that needs no plan, ask the user before bypassing: they can run "
+                "init-plan.py --gate off (or set PLAN_GATE=off). Never bypass it yourself.",
                 file=sys.stderr,
             )
             return 2

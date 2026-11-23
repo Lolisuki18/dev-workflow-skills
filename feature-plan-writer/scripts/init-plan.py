@@ -9,6 +9,9 @@ Usage:
   python init-plan.py --status                  # print latest plan's Status
   python init-plan.py --approve                 # set latest plan Status: Approved (after the user said ok)
   python init-plan.py --set-status "In progress"  # Draft | Approved | In progress | Done
+  python init-plan.py --share                   # team mode: stop ignoring plan/ (plans get committed)
+  python init-plan.py --gate off|on             # create/remove plan/.no-gate for the optional hook
+  (gitignore= result: created | added | already | skipped-tracked | removed | not-present)
   python init-plan.py --require-approved        # exit 3 unless latest plan is Approved / In progress
   (--plan NAME.md selects a plan other than the latest)
 
@@ -18,6 +21,7 @@ Exit codes: 0 ok, 1 error.
 """
 import argparse
 import re
+import subprocess
 import sys
 import unicodedata
 from datetime import date
@@ -59,14 +63,44 @@ def set_status(path: Path, value: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+IGNORE_LINES = ("plan/", "/plan/", "plan", "/plan")
+
+
+def plan_is_tracked(root: Path) -> bool:
+    """True if git already tracks files under plan/ (the team shares plans on purpose)."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "--", "plan"],
+            capture_output=True, text=True, timeout=10,
+        )
+        return out.returncode == 0 and bool(out.stdout.strip())
+    except Exception:
+        return False
+
+
+def remove_gitignore_entry(root: Path) -> str:
+    """--share: drop the plan/ line so plans can be committed."""
+    gi = root / ".gitignore"
+    if not gi.exists():
+        return "not-present"
+    lines = gi.read_text(encoding="utf-8").splitlines()
+    kept = [ln for ln in lines if ln.strip() not in IGNORE_LINES]
+    if len(kept) == len(lines):
+        return "not-present"
+    gi.write_text("\n".join(kept) + ("\n" if kept else ""), encoding="utf-8")
+    return "removed"
+
+
 def ensure_gitignore(root: Path) -> str:
+    if plan_is_tracked(root):
+        return "skipped-tracked"
     gi = root / ".gitignore"
     if not gi.exists():
         gi.write_text("plan/\n", encoding="utf-8")
         return "created"
     content = gi.read_text(encoding="utf-8")
     lines = [ln.strip() for ln in content.splitlines()]
-    if any(ln in ("plan/", "/plan/", "plan", "/plan") for ln in lines):
+    if any(ln in IGNORE_LINES for ln in lines):
         return "already"
     sep = "" if content == "" or content.endswith("\n") else "\n"
     gi.write_text(content + sep + "plan/\n", encoding="utf-8")
@@ -86,10 +120,24 @@ def main() -> int:
     ap.add_argument("--set-status", choices=["Draft", "Approved", "In progress", "Done"],
                     help="set latest plan Status to this value")
     ap.add_argument("--plan", help="plan file name to use instead of the latest")
+    ap.add_argument("--share", action="store_true",
+                    help="team mode: remove the plan/ line from .gitignore so plans can be committed")
+    ap.add_argument("--gate", choices=["on", "off"],
+                    help="off: create plan/.no-gate so the optional plan-gate hook stops blocking; on: remove it")
     args = ap.parse_args()
 
     root = Path(args.root).resolve() if args.root else find_root(Path.cwd())
     plan_dir = root / "plan"
+
+    if args.gate:
+        marker = plan_dir / ".no-gate"
+        if args.gate == "off":
+            plan_dir.mkdir(exist_ok=True)
+            marker.write_text("plan-gate disabled for this project\n", encoding="utf-8")
+        elif marker.exists():
+            marker.unlink()
+        print(f"gate={args.gate}")
+        return 0
 
     if args.status or args.approve or args.require_approved or args.set_status:
         plans = sorted(plan_dir.glob("*.md")) if plan_dir.is_dir() else []
@@ -124,7 +172,7 @@ def main() -> int:
     for n in names:
         print(f"existing={n}")
 
-    status = ensure_gitignore(root)
+    status = remove_gitignore_entry(root) if args.share else ensure_gitignore(root)
     print(f"gitignore={status}")
 
     if args.check:

@@ -49,6 +49,9 @@ Use the script's `gitignore=` result to choose the wording, in the user's langua
 - `added` / `created`:
 > Đã lưu plan tại `plan/<file>.md` và đưa `plan/` vào `.gitignore` để không đẩy lên GitHub. Nếu bạn muốn chia sẻ hoặc lưu lịch sử plan trên GitHub, chỉ cần xóa dòng `plan/` khỏi `.gitignore`.
 - `already`: same message, but say `plan/` was already in `.gitignore`.
+- `skipped-tracked`: git already tracks files in `plan/` (the team shares plans on purpose); say plans stay shared and `.gitignore` was left alone.
+
+**Sharing plans with a team:** plans are local by default, so the Resume point is lost on another machine. If the user says the project is a team/shared one, or asks to push plans, run `init-plan.py --share` (removes the `plan/` line; `gitignore=removed`) and tell them to commit `plan/`. Offer this once when the user mentions teammates or another computer.
 
 ## Step 4 — Hand-off
 

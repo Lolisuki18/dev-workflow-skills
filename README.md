@@ -55,6 +55,7 @@ bug-investigator/     SKILL.md, references/debug-playbook.md
 scripts/validate-skills.py   # repo checker (not a skill)
 scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
 evals/                       # trigger tests + scenarios with pass/fail checklists
+tests/test_scripts.py        # automated tests for init-plan.py and plan-gate.py
 docs/hard-stop-enforcement.md
 LICENSE  README.md
 ```
@@ -128,7 +129,7 @@ Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requ
 
 ## About `plan/`
 
-Plans are saved in `plan/` and `plan/` is added to `.gitignore` automatically. To share or version them, delete the `plan/` line from `.gitignore`.
+Plans are saved in `plan/` and `plan/` is added to `.gitignore` automatically, so they stay local (the Resume point will not follow you to another machine). To share them with a team run `python feature-plan-writer/scripts/init-plan.py --share` (or just say "dự án làm nhóm, push plan lên git"). If git already tracks files in `plan/`, the script leaves `.gitignore` alone.
 
 ## Hard stops: how they are enforced
 
@@ -146,7 +147,11 @@ After editing any skill:
 python scripts/validate-skills.py
 ```
 
-It checks name = folder, `Do NOT use` in the description, ≤ 250 lines, and that every referenced file exists.
+It checks name = folder, `Do NOT use` in the description, ≤ 250 lines, that every referenced file exists, and that scripts compile. Test the helper scripts with:
+
+```bash
+python -m unittest discover -s tests -v
+```
 
 ## License
 

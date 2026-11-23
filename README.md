@@ -65,6 +65,16 @@ Skills reference each other by name only, so install them together.
 
 For greenfield projects `dev-lifecycle` explains both styles, recommends one for the chosen stack (Next.js, Spring Boot, .NET, NestJS/FastAPI, Flutter) and lets you pick. The choice is stored in the plan and used by `codebase-auditor` later.
 
+### Project level (fresh / junior / mid / senior)
+
+One setting that scales the whole workflow: architecture default, test depth, audit strictness and task size (table in `dev-lifecycle/references/architecture-guide.md`). Asked in Phase 1 for new projects, inferred for existing ones, stored in the plan header, and used by `test-case-writer` and `codebase-auditor`.
+
+### Safety rails
+
+- 3-attempt limit: build/lint failures (Phase 3) and bug fixes (`bug-investigator`) stop after 3 distinct failed attempts and ask the user.
+- Skipped tests or quality scans are recorded in the plan (`skipped by user`) and repeated as a risk in the final report.
+- The plan has a **Resume point** (section 10) updated after each slice so a new session can continue from the file alone.
+
 ### Lessons learned (your own rules)
 
 `references/lessons-learned.md` in `codebase-auditor` and `test-case-writer` is a personal list of recurring mistakes. Skills check every rule and suggest new ones at the end of a report (`bug-investigator` suggests too); they only append after you approve.

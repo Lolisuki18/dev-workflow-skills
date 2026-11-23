@@ -186,5 +186,52 @@ class PlanGateTests(TempRepo):
         return run(INIT, list(args), self.root)
 
 
+INSTALL = REPO / "scripts" / "install.py"
+
+
+class InstallTests(unittest.TestCase):
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.target = Path(self._td.name) / "skills"
+
+    def tearDown(self):
+        self._td.cleanup()
+
+    def install(self, *args):
+        return run(INSTALL, ["--target", str(self.target), *args], REPO)
+
+    def test_dry_run_changes_nothing(self):
+        r = self.install("--dry-run")
+        self.assertEqual(r.returncode, 0)
+        self.assertIn("would link dev-lifecycle", r.stdout)
+        self.assertFalse(self.target.exists())
+
+    def test_copy_installs_all_skills_and_is_idempotent(self):
+        r = self.install("--copy")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        for name in ("dev-lifecycle", "feature-plan-writer", "test-case-writer",
+                     "codebase-auditor", "bug-investigator"):
+            self.assertTrue((self.target / name / "SKILL.md").exists(), name)
+        self.assertFalse((self.target / "scripts").exists())  # helper folders are not skills
+        again = self.install("--copy")
+        self.assertIn("exists", again.stdout)  # never overwrites
+
+    def test_link_then_uninstall(self):
+        r = self.install()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertTrue((self.target / "dev-lifecycle" / "SKILL.md").exists())
+        self.assertIn("already linked", self.install().stdout)
+        u = self.install("--uninstall")
+        self.assertIn("removed   dev-lifecycle", u.stdout)
+        self.assertFalse((self.target / "dev-lifecycle").exists())
+        self.assertTrue((REPO / "dev-lifecycle" / "SKILL.md").exists())  # source untouched
+
+    def test_uninstall_leaves_foreign_copy_alone(self):
+        self.install("--copy")
+        u = self.install("--uninstall")
+        self.assertIn("skipped", u.stdout)
+        self.assertTrue((self.target / "dev-lifecycle" / "SKILL.md").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -53,7 +53,9 @@ test-case-writer/     SKILL.md, references/lessons-learned.md
 codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,lessons-learned}.md
 bug-investigator/     SKILL.md, references/debug-playbook.md
 scripts/validate-skills.py   # repo checker (not a skill)
+scripts/install.py           # links/copies the skills into an agent's skills folder
 scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
+AGENTS.md  CHANGELOG.md  .gitattributes
 evals/                       # trigger tests + scenarios with pass/fail checklists
 tests/test_scripts.py        # automated tests for init-plan.py and plan-gate.py
 docs/hard-stop-enforcement.md
@@ -81,6 +83,16 @@ One setting that scales the whole workflow: architecture default, test depth, au
 `references/lessons-learned.md` in `codebase-auditor` and `test-case-writer` is a personal list of recurring mistakes. Skills check every rule and suggest new ones at the end of a report (`bug-investigator` suggests too); they only append after you approve.
 
 ## Installation
+
+Easiest (any OS, Python 3 only): from the cloned repo run
+
+```bash
+python scripts/install.py                  # links every skill into ~/.claude/skills
+python scripts/install.py --target ~/.cursor/skills   # another agent
+python scripts/install.py --dry-run        # preview; --copy to copy; --uninstall to remove
+```
+
+It uses junctions on Windows (no admin) and symlinks elsewhere, and never overwrites an existing skill. Manual options below.
 
 Pick the skills directory your agent reads, then copy or link each skill folder (every folder that contains a `SKILL.md`).
 

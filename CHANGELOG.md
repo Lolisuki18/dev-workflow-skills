@@ -8,7 +8,7 @@ Format: newest first. Skills are prompts, so "breaking" means a change in behavi
 - Skills: `refactor-planner`, `security-reviewer`, `migration-writer`, `code-explainer`, `ci-cd-setup`, `performance-profiler` (each with a validated `SKILL.md`; references for the first three and `ci-cd-setup`).
 - `LICENSE` (MIT).
 - `scripts/install.py --only` / `--exclude`; `scripts/readme-index.py` (generated skill index, checked in CI); CI workflow (`validate-skills.py` and the unit tests, plus a diff against the shared scripts of `ai-workflow-suite`); `.claude-plugin/plugin.json`. 30 tests.
-- Scenarios 08-12 and trigger tests for the five new skills; smoke-run results in `evals/README.md`.
+- Scenarios 08-12 and trigger tests for the new skills; smoke-run results in `evals/README.md` (also for `performance-profiler`, which has no scenario file yet).
 - `install.py --agent claude|gemini|cursor|codex|antigravity|windsurf|cline|roo|agents`, `--scope user|project`, `--list-agents`. Paths were checked against vendor docs; the ones that could not be confirmed (Cursor user scope, Codex project scope, Antigravity) are marked `weak` and print a warning. 3 new tests (27 total).
 - `feature-plan-writer`: explicit quoting rules for script paths with spaces (bash and PowerShell, verified with a path containing spaces) and manual fallback for the status commands when Python is missing.
 - README: install table now lists every agent preset with its confidence level.

@@ -86,7 +86,7 @@ Rules for the report:
 - Always include 2–3 genuine highlights; do not invent praise.
 - Group duplicate occurrences into one row listing several `file:line`.
 - Keep it proportionate to scale; no padding with generic advice.
-- End with: "Audit is read-only; no files were changed. To fix items, I can plan them with feature-plan-writer / dev-lifecycle." Offer, do not start.
+- End with: "Audit is read-only; no files were changed. To fix items, I can plan them with feature-plan-writer / dev-lifecycle." Offer, do not start. Where it fits, also name the specialist: `refactor-planner` for tech-debt findings, `security-reviewer` for a deeper security pass, `performance-profiler` for measured slowness.
 
 ## Use inside dev-lifecycle Phase 5
 

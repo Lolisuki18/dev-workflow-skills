@@ -103,7 +103,11 @@ Close the plan file: set the `Testing:` and `Quality scan:` lines in its checkli
 
 ### Optional PR step (separate skills, never required)
 
-If the user is about to open a pull request, offer the two skills from https://github.com/Lolisuki18/pull-request-skills when they are installed: `pre-pr-self-review` (check the diff against the plan's R1..Rn) and `pr-description-writer` (title and description). If they are not installed, mention the repo link once and move on. Do not block the wrap-up on them.
+If the user is about to open a pull request, offer the two skills from https://github.com/Lolisuki18/pull-request-skills when they are installed: `pre-pr-self-review` (check the diff against the plan's R1..Rn), `commit-message-writer` and `pr-description-writer` (title and description). If they are not installed, mention the repo link once and move on. Do not block the wrap-up on them.
+
+### Other skills to offer when they fit
+
+After the wrap-up, offer (never start without a yes): `security-reviewer` when the feature touches auth, payments, uploads or personal data; `performance-profiler` when a measured slowness remains; `ci-cd-setup` when the project has no pipeline; `migration-writer` when the plan changed the database schema. For QA and documentation of the finished feature, the sibling repos `qa-workflow-skills` (`qa-lifecycle`) and `docs-workflow-skills` (`docs-lifecycle`), or `delivery-lifecycle` in `ai-workflow-suite`, carry the work further.
 
 ## Bugs found along the way
 

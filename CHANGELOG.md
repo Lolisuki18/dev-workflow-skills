@@ -2,6 +2,16 @@
 
 Format: newest first. Skills are prompts, so "breaking" means a change in behavior an agent will notice (labels, hard stops, script flags).
 
+## Unreleased (next: 0.2.0)
+
+### Added
+- `install.py --agent claude|gemini|cursor|codex|antigravity|windsurf|cline|roo|agents`, `--scope user|project`, `--list-agents`. Paths were checked against vendor docs; the ones that could not be confirmed (Cursor user scope, Codex project scope, Antigravity) are marked `weak` and print a warning. 3 new tests (27 total).
+- `feature-plan-writer`: explicit quoting rules for script paths with spaces (bash and PowerShell, verified with a path containing spaces) and manual fallback for the status commands when Python is missing.
+- README: install table now lists every agent preset with its confidence level.
+
+### Changed
+- README no longer claims `~/.agents/skills` as the Codex user path (not confirmed); Codex defaults to `~/.codex/skills`.
+
 ## 0.1.0 — 2026-11-23
 
 First release (release notes: `docs/release-v0.1.0.md`; process: `docs/maintenance.md`).

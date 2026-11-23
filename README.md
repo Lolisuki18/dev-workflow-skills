@@ -87,23 +87,31 @@ One setting that scales the whole workflow: architecture default, test depth, au
 Easiest (any OS, Python 3 only): from the cloned repo run
 
 ```bash
-python scripts/install.py                  # links every skill into ~/.claude/skills
-python scripts/install.py --target ~/.cursor/skills   # another agent
-python scripts/install.py --dry-run        # preview; --copy to copy; --uninstall to remove
+python scripts/install.py                              # links every skill into ~/.claude/skills
+python scripts/install.py --agent gemini               # preset for another agent
+python scripts/install.py --agent cursor --scope project   # ./.cursor/skills of the current project
+python scripts/install.py --list-agents                # all presets and how well each path is verified
+python scripts/install.py --target ~/some/skills       # any directory
+python scripts/install.py --dry-run                    # preview; --copy to copy; --uninstall to remove
 ```
 
 It uses junctions on Windows (no admin) and symlinks elsewhere, and never overwrites an existing skill. Manual options below.
 
-Pick the skills directory your agent reads, then copy or link each skill folder (every folder that contains a `SKILL.md`).
+Skills directories (checked against each vendor's docs on 2026-11-23; agents move these paths between releases, so use `--list-agents` and your agent's docs if a skill is not found):
 
-| Agent       | Project scope                            | User scope          |
-| ----------- | ---------------------------------------- | ------------------- |
-| Claude Code | `.claude/skills/`                        | `~/.claude/skills/` |
-| Cursor      | `.cursor/skills/` (or `.agents/skills/`) | `~/.cursor/skills/` |
-| Gemini CLI  | `.gemini/skills/` (or `.agents/skills/`) | `~/.gemini/skills/` |
-| Codex       | `.agents/skills/`                        | `~/.agents/skills/` |
+| Agent | `--agent` | User scope | Project scope | Confidence |
+| ----- | --------- | ---------- | ------------- | ---------- |
+| Claude Code | `claude` | `~/.claude/skills/` | `.claude/skills/` | documented |
+| Gemini CLI | `gemini` | `~/.gemini/skills/` (alias `~/.agents/skills/`) | `.gemini/skills/` (alias `.agents/skills/`) | documented |
+| Cursor | `cursor` | `~/.cursor/skills/` | `.cursor/skills/` or `.agents/skills/` | project documented; user path third-party only. Cursor also reads `~/.claude/skills/` |
+| Codex | `codex` | `~/.codex/skills/` | `.agents/skills/` | user path long-standing; project path not confirmed |
+| Antigravity | `antigravity` | `~/.gemini/config/skills/` (legacy `~/.gemini/antigravity/skills/`) | `.agents/skills/` | docs conflict between pages; does not read `~/.gemini/skills/` |
+| Windsurf | `windsurf` | `~/.codeium/windsurf/skills/` | `.windsurf/skills/` | documented |
+| Cline | `cline` | `~/.cline/skills/` | `.cline/skills/` | documented |
+| Roo Code | `roo` | `~/.roo/skills/` | `.roo/skills/` | documented |
+| Cross-agent | `agents` | `~/.agents/skills/` | `.agents/skills/` | read by several tools |
 
-Directory names vary by agent version; check your agent's docs if a skill is not discovered. The folder name must equal the `name` in the frontmatter.
+The folder name must equal the `name` in the frontmatter. Gemini CLI skills are marked experimental in its docs: enable them in its settings if skills do not show up (`/skills list`).
 
 ### macOS / Linux (symlink)
 

@@ -262,6 +262,29 @@ class InstallTests(unittest.TestCase):
         self.assertFalse((self.target / "dev-lifecycle").exists())
         self.assertTrue((REPO / "dev-lifecycle" / "SKILL.md").exists())  # source untouched
 
+    def test_list_agents_shows_presets_and_confidence(self):
+        r = run(INSTALL, ["--list-agents"], REPO)
+        self.assertEqual(r.returncode, 0)
+        for name in ("claude", "gemini", "cursor", "codex", "antigravity", "windsurf", "cline", "roo", "agents"):
+            self.assertIn(name, r.stdout)
+        self.assertIn("[weak]", r.stdout)
+        self.assertIn("~/.gemini/skills", r.stdout)
+
+    def test_agent_project_scope_targets_cwd_relative_dir(self):
+        with tempfile.TemporaryDirectory() as proj:
+            r = run(INSTALL, ["--agent", "gemini", "--scope", "project", "--copy"], Path(proj))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertTrue((Path(proj) / ".gemini" / "skills" / "dev-lifecycle" / "SKILL.md").exists())
+            self.assertNotIn("not fully verified", r.stderr)  # gemini is vendor-documented
+
+    def test_weak_preset_warns_and_target_overrides_agent(self):
+        r = run(INSTALL, ["--agent", "antigravity", "--dry-run"], REPO)
+        self.assertIn("not fully verified", r.stderr)
+        self.assertIn("antigravity", r.stderr)
+        quiet = self.install("--agent", "antigravity", "--dry-run")  # --target given by helper
+        self.assertNotIn("not fully verified", quiet.stderr)
+        self.assertIn(str(self.target), quiet.stdout)
+
     def test_uninstall_leaves_foreign_copy_alone(self):
         self.install("--copy")
         u = self.install("--uninstall")

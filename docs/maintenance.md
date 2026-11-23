@@ -10,6 +10,7 @@ Skills age in two ways: the prompts drift from how agents actually behave, and t
 | Evals re-run on a real agent | After every SKILL.md edit; at least before each release | `evals/` (log results in `evals/README.md`) |
 | Lessons learned pruned and merged | Quarterly | `codebase-auditor/references/lessons-learned.md`, `test-case-writer/references/lessons-learned.md` |
 | Formatter/extension IDs checked | Every 6 months | `dev-lifecycle/references/formatter-setup.md` |
+| Agent skills directories re-checked (they move between releases) | Every 6 months | `AGENTS` table in `scripts/install.py` and the install table in `README.md` |
 
 `python scripts/validate-skills.py` warns when a `Next review:` date is in the past. The auditor also tells the user in its report when the date has passed.
 

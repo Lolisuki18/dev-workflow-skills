@@ -13,7 +13,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 - Anti-hallucination: cite `file:line` for every statement about existing code. Do not name libraries, tables or endpoints that do not exist unless marked **NEW**. Mark unknowns as "Open question", never guess.
 - Agent-agnostic: "inspect the repo", "list the files" — use whatever tools your environment has.
 - Mechanical steps (numbering, file creation, `.gitignore`) are done by `scripts/init-plan.py`, not by memory. Run it; do not hand-edit numbering.
-- **Running the script:** `scripts/init-plan.py` lives in THIS skill's folder (the folder containing this SKILL.md), not in the user's project. Run it with the working directory set to the USER'S PROJECT root, passing the script by its full path: `python "<this-skill-folder>/scripts/init-plan.py" ...` (use `python3` or `py` if `python` is missing). Wrong working directory = plans written in the wrong repo.
+- **Running the script:** `scripts/init-plan.py` lives in THIS skill's folder (the folder containing this SKILL.md), not in the user's project. Run it with the working directory set to the USER'S PROJECT root, passing the script by its full path: `python "<this-skill-folder>/scripts/init-plan.py" ...` (use `python3` or `py` if `python` is missing). Wrong working directory = plans written in the wrong repo. Always quote the script path (it may contain spaces): bash `python "/path with spaces/scripts/init-plan.py" --check`; PowerShell `python "C:\path with spaces\scripts\init-plan.py" --check` (quoting the path as an ARGUMENT of `python` is enough; only a path used as the command itself needs the `&` call operator, e.g. `& "C:\path\run.exe"`).
 
 ## Step 1 — Audit old plans (MANDATORY)
 
@@ -40,7 +40,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 2. Open the created file (structure in `references/plan-template.md`) and fill every section; write "None" where one does not apply. Place files and state the architecture per `references/architecture-conventions.md`. Fill the header `Level:` and `Architecture:` from the Spec Summary (ask if missing) and scale task granularity to the level: `fresh` small tasks (≤ ~4 h), `junior` ≤ ~1 day, `mid`/`senior` feature-level slices.
 3. Quality bar: every R is verifiable by a test; every file in section 3 maps to an R; every R appears in the test plan and in a slice; sections 3 and 4 cite real `file:line` for existing code and mark NEW items.
 
-**Fallback if Python is unavailable:** do the same by hand — create `plan/NNN-name.md` (next number), and append `plan/` on its own line to `.gitignore` if no line equals `plan/` or `/plan/`. Say that you did it manually.
+**Fallback if Python is unavailable:** do the same by hand — create `plan/NNN-name.md` (next number), and append `plan/` on its own line to `.gitignore` if no line equals `plan/` or `/plan/`. Say that you did it manually. The same applies to the status commands: edit the `Status:` line of the latest plan yourself (`Draft` → `Approved` only after the user's yes, then `In progress`, `Done`), and check it before coding. No Python also means the optional `plan-gate` hook cannot run.
 
 ## Step 3 — Tell the user
 

@@ -1,15 +1,16 @@
 # dev-workflow-skills
 
-A set of four independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/`) that cover the path from a rough idea to planned, implemented, tested and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
+Five independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/` and `scripts/`) covering the path from a rough idea to planned, implemented, tested, debugged and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
 
 ## Skills
 
-| Skill | Role | Status |
-|-------|------|--------|
-| `dev-lifecycle` | Orchestrator for 5 phases with hard stops | ready |
-| `feature-plan-writer` | Audits old plans, writes `plan/NNN-*.md`, git-ignores `plan/` | ready |
-| `test-case-writer` | Designs, writes and runs tests | ready |
-| `codebase-auditor` | Read-only audit of an existing codebase | ready |
+| Skill | Role |
+|-------|------|
+| [`dev-lifecycle`](dev-lifecycle) | Orchestrator for 5 phases with hard stops, plus a light mode for small tasks |
+| [`feature-plan-writer`](feature-plan-writer) | Audits old plans, writes `plan/NNN-*.md`, git-ignores `plan/` (via `scripts/init-plan.py`) |
+| [`test-case-writer`](test-case-writer) | Designs, writes and runs tests (happy / boundary / negative) |
+| [`codebase-auditor`](codebase-auditor) | Read-only audit of an existing codebase with `file:line` evidence |
+| [`bug-investigator`](bug-investigator) | Reproduce → evidence → root cause → minimal fix with regression test |
 
 ## Flow
 
@@ -25,27 +26,49 @@ Idea / feature request
 [Phase 4/5] Testing & Verification (test-case-writer, requirement traceability)
         │
 [Phase 5/5] Final Audit & Wrap-up (codebase-auditor checklists)
+        │
+(optional) PR step → pre-pr-self-review + pr-description-writer
 ```
 
-`codebase-auditor` can also be used standalone to audit a legacy repo (read-only).
+- `codebase-auditor` can be used standalone to audit a legacy repo (read-only).
+- `bug-investigator` handles bugs; `dev-lifecycle` hands over to it when a failure is unexplained.
+- Each `dev-lifecycle` reply starts with a `[Phase X/5: ...]` label so the agent does not forget the rules.
+- **Light mode:** trivial edits skip the workflow; small ones get a mini-plan and a quick test. Say "chạy đủ quy trình" to force all 5 phases or "làm nhanh thôi" to force light mode.
 
-Each `dev-lifecycle` reply starts with a `[Phase X/5: ...]` label so the agent does not forget the rules.
+## Related skills: PR workflow
+
+The optional last step uses two skills from a separate repo: **[Lolisuki18/pull-request-skills](https://github.com/Lolisuki18/pull-request-skills)**
+
+- `pre-pr-self-review`: checks your diff against the plan's requirements (R1..Rn) before opening a PR.
+- `pr-description-writer`: writes the PR title and description.
+
+They are not required. Install them the same way as below if you want `dev-lifecycle` to offer them at the end of Phase 5.
 
 ## Layout
 
 ```
-skills/
-├── dev-lifecycle/        SKILL.md, references/{phase-templates,formatter-setup}.md
-├── feature-plan-writer/  SKILL.md
-├── test-case-writer/     SKILL.md
-└── codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops}.md
+dev-lifecycle/        SKILL.md, references/{phase-templates,formatter-setup,architecture-guide}.md
+feature-plan-writer/  SKILL.md, scripts/init-plan.py, references/{plan-template,architecture-conventions}.md
+test-case-writer/     SKILL.md, references/lessons-learned.md
+codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,lessons-learned}.md
+bug-investigator/     SKILL.md, references/debug-playbook.md
+scripts/validate-skills.py   # repo checker (not a skill)
+LICENSE  README.md
 ```
 
-Skills reference each other by name only, so install all four together.
+Skills reference each other by name only, so install them together.
+
+### Architecture choice (Feature-based vs Clean)
+
+For greenfield projects `dev-lifecycle` explains both styles, recommends one for the chosen stack (Next.js, Spring Boot, .NET, NestJS/FastAPI, Flutter) and lets you pick. The choice is stored in the plan and used by `codebase-auditor` later.
+
+### Lessons learned (your own rules)
+
+`references/lessons-learned.md` in `codebase-auditor` and `test-case-writer` is a personal list of recurring mistakes. Skills check every rule and suggest new ones at the end of a report (`bug-investigator` suggests too); they only append after you approve.
 
 ## Installation
 
-Pick the skills directory your agent reads, then copy or symlink each folder under `skills/`.
+Pick the skills directory your agent reads, then copy or link each skill folder (every folder that contains a `SKILL.md`).
 
 | Agent | Project scope | User scope |
 |-------|---------------|------------|
@@ -59,9 +82,11 @@ Directory names vary by agent version; check your agent's docs if a skill is not
 ### macOS / Linux (symlink)
 
 ```bash
-git clone <this-repo> ~/dev-workflow-skills
+git clone https://github.com/Lolisuki18/dev-workflow-skills ~/dev-workflow-skills
 mkdir -p ~/.claude/skills
-for d in ~/dev-workflow-skills/skills/*/; do ln -s "$d" ~/.claude/skills/$(basename "$d"); done
+for d in ~/dev-workflow-skills/*/; do
+  [ -f "$d/SKILL.md" ] && ln -s "${d%/}" ~/.claude/skills/$(basename "$d")
+done
 ```
 
 Replace `~/.claude/skills` with the path from the table.
@@ -69,14 +94,16 @@ Replace `~/.claude/skills` with the path from the table.
 ### Windows (PowerShell)
 
 ```powershell
-git clone <this-repo> $HOME\dev-workflow-skills
+git clone https://github.com/Lolisuki18/dev-workflow-skills $HOME\dev-workflow-skills
 New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
-Get-ChildItem "$HOME\dev-workflow-skills\skills" -Directory | ForEach-Object {
-  New-Item -ItemType Junction -Path "$HOME\.claude\skills\$($_.Name)" -Target $_.FullName
-}
+Get-ChildItem "$HOME\dev-workflow-skills" -Directory |
+  Where-Object { Test-Path (Join-Path $_.FullName "SKILL.md") } |
+  ForEach-Object {
+    New-Item -ItemType Junction -Path "$HOME\.claude\skills\$($_.Name)" -Target $_.FullName
+  }
 ```
 
-Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requires Developer Mode or admin). Or simply copy the folders.
+Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requires Developer Mode or admin). Or simply copy the folders. Do not use `ln -s` in Git Bash on Windows: it silently makes copies.
 
 ## Usage
 
@@ -84,7 +111,22 @@ Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requ
 - "Lên plan cho tính năng đăng nhập" → `feature-plan-writer`.
 - "Viết test cho module này" → `test-case-writer`.
 - "Audit giúp tôi codebase này" → `codebase-auditor`.
+- "Debug giúp tôi lỗi này" → `bug-investigator`.
 
 ## About `plan/`
 
 Plans are saved in `plan/` and `plan/` is added to `.gitignore` automatically. To share or version them, delete the `plan/` line from `.gitignore`.
+
+## Validate the skills
+
+After editing any skill:
+
+```bash
+python scripts/validate-skills.py
+```
+
+It checks name = folder, `Do NOT use` in the description, ≤ 250 lines, and that every referenced file exists.
+
+## License
+
+[MIT](LICENSE)

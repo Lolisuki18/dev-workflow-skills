@@ -1,6 +1,6 @@
 ---
 name: dev-lifecycle
-description: "Orchestrates a 5-phase software development workflow (Discovery, Planning, Implementation, Testing, Final Audit) from a raw idea or a feature request in an existing repo to finished, tested code, with hard stops for user approval. Use when the user says 'build me an app', 'I want to make...', 'add a feature', 'implement end to end', 'start a new project', 'tôi muốn làm một ứng dụng', 'làm tính năng này từ đầu đến cuối', 'khởi tạo dự án', 'code giúp tôi cả quy trình', or gives a vague idea needing clarification. Do NOT use for only writing a plan file (use feature-plan-writer), only writing tests (use test-case-writer), or only auditing existing code without changing it (use codebase-auditor)."
+description: "Orchestrates a 5-phase software development workflow (Discovery, Planning, Implementation, Testing, Final Audit) from a raw idea or a feature request in an existing repo to finished, tested code, with hard stops for user approval. Use when the user says 'build me an app', 'I want to make...', 'add a feature', 'implement end to end', 'start a new project', 'tôi muốn làm một ứng dụng', 'làm tính năng này từ đầu đến cuối', 'khởi tạo dự án', 'code giúp tôi cả quy trình', or gives a vague idea needing clarification. Do NOT use for trivial edits (one file or a few lines, typo, rename, config tweak) which need no workflow, debugging or fixing a bug (use bug-investigator), only writing a plan file (use feature-plan-writer), only writing tests (use test-case-writer), or only auditing existing code without changing it (use codebase-auditor)."
 ---
 
 # Dev Lifecycle — 5-Phase Orchestrator
@@ -21,6 +21,16 @@ If the label is missing from your last reply, you have drifted: re-read this fil
 - Agent-agnostic: say "inspect the repo", "run the lint/test commands" — use whatever tools your environment offers.
 - Anti-hallucination: every claim about existing code cites `file:line`. Never import or recommend a library that is not installed or declared in the manifest unless you flag it as a NEW dependency and ask first.
 - Templates for each phase output live in `references/phase-templates.md`. Load it when producing a phase output.
+
+## Size the task first (light mode)
+
+Before Phase 1, judge the size from the request and a quick look at the repo:
+
+- **Trivial** (one file or a few lines; typo, rename, copy change, config tweak, obvious one-line bug): do NOT run the 5 phases. Say in one line that you are using light mode, make the change, run the project's format/lint/test commands for that file, and report. No plan file, no labels.
+- **Small** (one self-contained behavior, ≤ ~3 files, no schema/API/contract change): light mode with a mini-plan: state in 3–5 bullets what you will change, wait for the user's "ok", implement, then run or add the relevant tests (`test-case-writer`). Use `[Light mode]` as the label. Skip `plan/` files and the final audit.
+- **Normal / Large** (new feature, several modules, new data model or API, greenfield, anything the user calls a project): run all 5 phases below.
+
+When unsure, ask the user in one line: "Việc này nhỏ, làm nhanh luôn hay chạy đủ quy trình 5 pha?" The user can always force full mode ("chạy đủ quy trình") or light mode ("làm nhanh thôi"). If light mode work grows beyond its size (more files, contract changes), stop and switch to the full flow.
 
 ## Phase 1 — Discovery & Clarification
 
@@ -83,6 +93,14 @@ Quick scan of ONLY the code written in this session using the `codebase-auditor`
 - leftover debug logs, dead code, commented-out blocks, stray TODOs.
 
 Then deliver the wrap-up using the template: what was built, files changed, how to run, test results, remaining risks/tech debt, suggested next steps. Remind the user that `plan/` is git-ignored (see `feature-plan-writer`).
+
+### Optional PR step (separate skills, never required)
+
+If the user is about to open a pull request, offer the two skills from https://github.com/Lolisuki18/pull-request-skills when they are installed: `pre-pr-self-review` (check the diff against the plan's R1..Rn) and `pr-description-writer` (title and description). If they are not installed, mention the repo link once and move on. Do not block the wrap-up on them.
+
+## Bugs found along the way
+
+If a failing test or runtime error reveals a bug you cannot explain in one look, hand over to the `bug-investigator` skill instead of patching blindly, then resume the phase.
 
 ## Resuming
 

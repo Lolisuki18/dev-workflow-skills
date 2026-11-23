@@ -262,6 +262,24 @@ class InstallTests(unittest.TestCase):
         self.assertFalse((self.target / "dev-lifecycle").exists())
         self.assertTrue((REPO / "dev-lifecycle" / "SKILL.md").exists())  # source untouched
 
+    def test_only_installs_just_the_named_skills(self):
+        r = self.install("--copy", "--only", "dev-lifecycle,not-in-this-repo")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertTrue((self.target / "dev-lifecycle" / "SKILL.md").exists())
+        self.assertFalse((self.target / "bug-investigator").exists())
+
+    def test_only_with_no_match_is_a_noop(self):
+        r = self.install("--copy", "--only", "skill-from-another-repo")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("nothing to install", r.stdout)
+        self.assertFalse(any(self.target.iterdir()) if self.target.exists() else False)
+
+    def test_exclude_skips_named_skills(self):
+        r = self.install("--copy", "--exclude", "bug-investigator")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertTrue((self.target / "dev-lifecycle").exists())
+        self.assertFalse((self.target / "bug-investigator").exists())
+
     def test_list_agents_shows_presets_and_confidence(self):
         r = run(INSTALL, ["--list-agents"], REPO)
         self.assertEqual(r.returncode, 0)

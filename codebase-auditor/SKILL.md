@@ -17,7 +17,7 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
 1. Read the directory tree (depth 2–3), root configs and manifests (package.json, pyproject.toml, requirements, pom.xml/build.gradle, *.csproj, pubspec.yaml, Dockerfile, CI files, .env.example, README).
 2. Classify:
    - **Stack type:** Frontend / Backend / Full-stack (and framework, language, DB).
-   - **Scale:** MVP / student project vs Production. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
+   - **Scale / Level:** map to `fresh | junior | mid | senior` (see the table in dev-lifecycle's architecture guide: coursework, thesis/portfolio, production moderate, production complex). Use the level declared in `plan/` or README if present, otherwise infer and state it for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
 3. Propose **3–5 critical modules** to deep-scan (e.g. auth, payment, data access, main API layer, core UI state), each with one line of why.
 4. **STOP and ask** the user to approve or change the list (and the scale if unsure). Do not deep-scan before the answer. If the user said "scan everything", still confirm the module list in one message.
 
@@ -53,7 +53,7 @@ Use exactly this structure:
 
 ```markdown
 # Audit report — <project>
-Stack: ... | Scale: ... | Scope: <approved modules> | Date: YYYY-MM-DD
+Stack: ... | Level: ... | Scope: <approved modules> | Date: YYYY-MM-DD
 Commands run: <list with real results, or "none">
 
 ## Highlights (2–3 strengths)

@@ -11,13 +11,14 @@ Checklist turn 1
 - MUST: includes a Proactive Advisor section (simpler option, risk, reuse).
 - MUST: recommends format/editor setup for the stack and asks before creating `.editorconfig` / `.vscode/extensions.json`.
 - MUST: explains Feature-based vs Clean Architecture, recommends one for the stack with a reason, lets the user choose.
+- MUST: asks the project level (fresh/junior/mid/senior) with a recommended default, inside the same batch.
 - MUST: ends with an explicit stop waiting for the spec.
 - SHOULD: answers in Vietnamese; question list fits one screen.
 
 **Turn 2 (user):** `1A 2B 3A 4A 5A, có tạo sẵn file format, kiến trúc theo đề xuất của bạn`
 
 Checklist turn 2
-- MUST: label `[Phase 1/5...]` still present; gives a short Spec Summary including `Architecture:`.
+- MUST: label `[Phase 1/5...]` still present; gives a short Spec Summary including `Architecture:` and `Level:`.
 - MUST: does not start planning/coding before the user confirms (or treats the message as the confirmation and moves to Phase 2 with the label changed).
 
 **Turn 3 (user):** `chốt`

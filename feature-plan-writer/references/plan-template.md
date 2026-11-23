@@ -1,6 +1,8 @@
 # {number} — {title}
 Status: Draft
 Date: {date}
+Level: <fresh | junior | mid | senior>
+Architecture: <Feature-based | Clean | Hybrid> — <one-line reason>
 Related plans: none
 
 ## 1. Goal & Requirements
@@ -42,3 +44,12 @@ Mark NEW vs CHANGED; note backward compatibility. Write "None" if not applicable
 ## 9. Progress checklist
 - [ ] R1
 - [ ] R2
+- Testing: pending | done | skipped by user (reason)
+- Quality scan: pending | done | skipped by user (reason)
+
+## 10. Resume point
+Updated after every slice so a new session can continue from here alone.
+- Current slice: <n — name>
+- Done: <R-ids / files>
+- Next step: <one concrete action>
+- Open issues / decisions pending: <none>

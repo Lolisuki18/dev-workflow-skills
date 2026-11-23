@@ -39,6 +39,11 @@ Coverage rules for every requirement:
 
 Also read `references/lessons-learned.md` and add a case for each rule that applies to this feature.
 
+Scale the depth to the project `Level` (read it from the plan header or spec; if absent, infer from evidence and say so):
+- `fresh`: happy path + the key negative cases per requirement.
+- `junior`: add boundaries and integration tests for the main flows.
+- `mid` / `senior`: full set including auth/ownership (IDOR), rollback on partial failure, concurrency/idempotency where relevant; report coverage if the repo already has coverage tooling. Never invent a coverage threshold the user did not set.
+
 Prioritize: core business logic and requirements first; skip trivial getters, framework internals and third-party code. State what you deliberately do not test.
 
 ## Step 3 — Detect framework and style

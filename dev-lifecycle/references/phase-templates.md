@@ -11,6 +11,7 @@ Copy the structure, translate headings to the user's language. Replace `<...>`. 
 
 1. Nền tảng?  A) Web (khuyên dùng) B) Mobile C) Desktop D) CLI
 2. MVP gồm? A) <tính năng cốt lõi 1> B) <bộ 2–3 tính năng> C) Tôi tự liệt kê
+   Mức dự án (level)? A) fresh: đồ án/học tập B) junior: luận văn/portfolio C) mid: production vừa D) senior: production phức tạp
 3. Tech stack? A) <stack gợi ý phù hợp ý tưởng> B) <lựa chọn nhẹ hơn> C) Khác
    (+ sau khi chốt stack: giải thích Feature-based vs Clean Architecture và đề xuất theo
    references/architecture-guide.md, để người dùng chọn)
@@ -51,6 +52,8 @@ Mặc định nếu bạn không chọn: 1A 2B 3A 4A 5A.
 - Phạm vi MVP: ... | Ngoài phạm vi: ...
 - Stack: ... | Dữ liệu: ...
 - Ràng buộc: ...
+- Level: fresh | junior | mid | senior — <lý do>
+- Architecture: <Feature-based | Clean | Hybrid> — <lý do>
 ```
 
 ## Phase 2 — Plan hand-off message

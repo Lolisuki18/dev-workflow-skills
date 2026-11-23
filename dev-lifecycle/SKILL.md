@@ -40,9 +40,9 @@ First decide the mode by inspecting the repo:
 - **Brownfield** (repo already has code).
 
 ### Greenfield
-Ask ONE batched message of 4–5 questions covering: platform (web/mobile/desktop/CLI), MVP scope (3–5 must-have features), tech stack, data & storage, and auth/deployment. Give every question lettered options with a recommended default (A/B/C) so the user can answer with e.g. "1A 2B 3A". Use the template in `references/phase-templates.md`.
+Also settle the **project level** (`fresh | junior | mid | senior`, table in `references/architecture-guide.md`) in the same batch by folding it into the MVP or stack question, with a recommended default. Ask ONE batched message of 4–5 questions covering: platform (web/mobile/desktop/CLI), MVP scope (3–5 must-have features), tech stack, data & storage, and auth/deployment. Give every question lettered options with a recommended default (A/B/C) so the user can answer with e.g. "1A 2B 3A". Use the template in `references/phase-templates.md`.
 
-**Architecture choice:** when the stack is known, read `references/architecture-guide.md`. Briefly explain Feature-based vs Clean Architecture (what each is), recommend one for the user's stack with the reason, and let them choose (A/B/C). Skip the lecture if they already named a style. Record it as `Architecture: <style> — <reason>` in the Spec Summary.
+**Architecture choice:** when the stack is known, read `references/architecture-guide.md`. Briefly explain Feature-based vs Clean Architecture (what each is), recommend one for the user's stack with the reason, and let them choose (A/B/C). Skip the lecture if they already named a style. Record it as `Architecture: <style> — <reason>` and `Level: <level>` in the Spec Summary. For brownfield, infer the level from evidence and state it.
 
 **Code-format suggestion:** once the stack is known (or proposed), read `references/formatter-setup.md` and recommend the extensions/config for that stack. Ask whether the user wants you to generate `.editorconfig`, `.vscode/extensions.json` and the formatter config (Prettier/Ruff/etc.) during scaffolding. Do not create them without a yes.
 
@@ -76,6 +76,8 @@ Do NOT create or modify any source file until the user approves the plan; once t
 - Work in small **vertical slices** (one requirement end to end: data → logic → API/UI), in the order set by the approved plan.
 - Stay inside the plan's file list. If you discover a needed change outside it, stop and tell the user; update the plan first.
 - No unrelated refactors, no drive-by renames, no new dependencies that are not in the plan.
+- Fix-attempt limit: if a format/lint/type-check/build failure survives 3 distinct fix attempts, stop. Report the exact command, error and what you tried, then ask the user. Do not loop silently or loosen the check.
+- Keep the plan's "Resume point" (section 10) current after each slice: current slice, next step, open issues. A new session must be able to continue from it alone.
 - After each slice run, using the project's own commands: formatter, linter, type-check/compile. Fix issues you introduced before moving on. Report commands run and real results.
 - Keep the plan's checklist current (mark Rn done) so context survives long sessions.
 
@@ -85,6 +87,7 @@ Do NOT create or modify any source file until the user approves the plan; once t
 2. Build a **traceability table**: each Rn → implementing `file:line` → test name → pass/fail.
 3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user.
 4. Never fabricate results. If tests cannot be run, say so and why.
+5. Test depth follows the project `Level` (see `test-case-writer`). If the user chooses to skip tests or the quality scan, do not argue twice: record `Testing: skipped by user` (and/or `Quality scan: skipped by user`) in the plan's progress checklist, and repeat it in the Phase 5 wrap-up as a remaining risk ("chưa chạy test trước khi review/release"). The final report and any commit message must never imply that skipped checks passed.
 
 ## Phase 5 — Final Audit & Wrap-up
 

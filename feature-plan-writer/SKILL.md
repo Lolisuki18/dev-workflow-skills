@@ -37,7 +37,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
    - never overwrites an existing file;
    - ensures `plan/` is in the repo-root `.gitignore` (creates the file if absent, never duplicates the line, keeps other entries);
    - prints `plan_file=...` and `gitignore=added|already|created`.
-2. Open the created file (structure in `references/plan-template.md`) and fill every section; write "None" where one does not apply. Place files and state the architecture per `references/architecture-conventions.md`.
+2. Open the created file (structure in `references/plan-template.md`) and fill every section; write "None" where one does not apply. Place files and state the architecture per `references/architecture-conventions.md`. Fill the header `Level:` and `Architecture:` from the Spec Summary (ask if missing) and scale task granularity to the level: `fresh` small tasks (≤ ~4 h), `junior` ≤ ~1 day, `mid`/`senior` feature-level slices.
 3. Quality bar: every R is verifiable by a test; every file in section 3 maps to an R; every R appears in the test plan and in a slice; sections 3 and 4 cite real `file:line` for existing code and mark NEW items.
 
 **Fallback if Python is unavailable:** do the same by hand — create `plan/NNN-name.md` (next number), and append `plan/` on its own line to `.gitignore` if no line equals `plan/` or `/plan/`. Say that you did it manually.

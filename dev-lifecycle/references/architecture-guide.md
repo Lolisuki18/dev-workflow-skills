@@ -2,6 +2,19 @@
 
 Use when the stack is known or proposed. Do three things: (1) explain the two styles in plain words, (2) recommend one for THEIR stack with the reason, (3) let them pick. Never impose; record the choice in the Spec Summary and the plan.
 
+## Project level (ask with the stack, record it)
+
+The level sets how much rigor the whole workflow applies. Ask it in the greenfield batch (fold it into the MVP or stack question) with a recommended default; infer it for brownfield from evidence (tests, CI, deploy config, users) and state the inference. Record `Level: <level>` in the Spec Summary and the plan header. The user may change it later.
+
+| Level | Typical project | Default architecture | Test depth | QA / audit strictness | Plan granularity |
+|-------|-----------------|----------------------|------------|-----------------------|------------------|
+| `fresh` | Coursework, first project, demo | Feature-based, simple layers | Happy path + the key negative cases | Basic: no secrets, no obvious crashes | Small tasks (≤ ~4 h each) |
+| `junior` | Thesis, portfolio, side project | Feature-based with layered inside | Unit tests + integration for main flows, boundaries | Standard: validation, auth, error handling | Tasks ≤ ~1 day |
+| `mid` | Production app, moderate complexity | Hybrid or Clean | Full pyramid; auth/ownership, rollback, concurrency cases | Strict: security checklist, logging, CI | Feature-level |
+| `senior` | Production, high complexity or team-scale | Clean/DDD-style boundaries | As `mid` plus coverage target and critical-path regression suite | Enterprise: threat review, observability, rollback plan | Epic → feature split |
+
+Numbers are suggestions, not gates: do not invent coverage thresholds the user did not choose. Higher level means more checks, not more code: never add layers or tests the level does not call for.
+
 ## The two styles in plain words
 
 **Feature-based (tổ chức theo tính năng)**

@@ -75,6 +75,10 @@ Suggested new rule (repeat habit only): <bullet for lessons-learned, or none>
 
 If the bug is a repeat habit of the user (same mistake class seen before), propose a ready-to-paste bullet for `codebase-auditor/references/lessons-learned.md`; add it only after the user agrees.
 
+## Fix-attempt limit
+
+At most 3 distinct fix attempts per bug (each must rest on a confirmed cause, not a guess). If the 3rd still fails verification, STOP: report the symptom, the root cause you believe in, each attempt with its real result, and what evidence is missing, then ask the user how to proceed. Never hide a failing check, weaken a test or add a workaround to get a green result.
+
 ## When stuck
 
 After two failed hypotheses, stop guessing: widen the evidence (more logging, bisect, minimal repro in isolation, diff against a working environment) and tell the user what you ruled out and why. Do not apply speculative fixes "to see if it helps" unless the user explicitly asks and you label it as an experiment.

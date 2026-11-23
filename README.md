@@ -42,7 +42,18 @@ The optional last step uses two skills from a separate repo: **[Lolisuki18/pull-
 - `pre-pr-self-review`: checks your diff against the plan's requirements (R1..Rn) before opening a PR.
 - `pr-description-writer`: writes the PR title and description.
 
-They are not required. Install them the same way as below if you want `dev-lifecycle` to offer them at the end of Phase 5.
+They are not required. Install them the same way as below if you want `dev-lifecycle` to offer them at the end of Phase 5. If they are missing, `dev-lifecycle` mentions the link once and moves on.
+
+## Sibling repos
+
+| Repo | Covers |
+|---|---|
+| [`dev-workflow-skills`](https://github.com/Lolisuki18/dev-workflow-skills) (this one) | idea → plan → code → tests → audit, bug investigation |
+| [`pull-request-skills`](https://github.com/Lolisuki18/pull-request-skills) | PR description, PR review, review replies, pre-PR self-review, code comments |
+| [`qa-workflow-skills`](https://github.com/Lolisuki18/qa-workflow-skills) | QA/STLC: test plan, test matrix, E2E, defects, summary report |
+| [`docs-workflow-skills`](https://github.com/Lolisuki18/docs-workflow-skills) | README, diagrams, API docs, ADRs, SDLC reports, Review 2 pack |
+
+Each repo is self-contained; install only what you need.
 
 ## Layout
 
@@ -56,10 +67,10 @@ scripts/validate-skills.py   # repo checker (not a skill)
 scripts/install.py           # links/copies the skills into an agent's skills folder
 scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
 AGENTS.md  CHANGELOG.md  .gitattributes
-evals/                       # trigger tests + scenarios with pass/fail checklists
-tests/test_scripts.py        # automated tests for init-plan.py and plan-gate.py
-docs/hard-stop-enforcement.md
-LICENSE  README.md
+evals/                       # trigger tests + 7 scenarios with pass/fail checklists
+tests/test_scripts.py        # automated tests for init-plan.py, plan-gate.py and install.py
+docs/                        # hard-stop-enforcement.md, maintenance.md, release notes
+README.md
 ```
 
 Skills reference each other by name only, so install them together.
@@ -157,7 +168,7 @@ Written rules can be ignored in long contexts, so approval is also stored in the
 
 ## Evals
 
-[`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and six scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill.
+[`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and seven scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill; results are logged in [`evals/README.md`](evals/README.md). So far they were run on Claude agents only, not yet on Cursor, Gemini CLI or Codex.
 
 ## Keeping it current
 

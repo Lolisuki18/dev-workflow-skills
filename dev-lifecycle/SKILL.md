@@ -97,7 +97,7 @@ Quick scan of ONLY the code written in this session using the `codebase-auditor`
 - security basics (secrets, input validation, authz, injection);
 - leftover debug logs, dead code, commented-out blocks, stray TODOs.
 
-Then deliver the wrap-up using the template: what was built, files changed, how to run, test results, remaining risks/tech debt, suggested next steps. Remind the user that `plan/` is git-ignored (see `feature-plan-writer`).
+Close the plan file: set the `Testing:` and `Quality scan:` lines in its checklist to `done` or `skipped by user`, write a final Resume point ("all slices done"), and set `Status: Done` (`init-plan.py --set-status Done`). Then deliver the wrap-up using the template: what was built, files changed, how to run, test results, remaining risks/tech debt, suggested next steps. Remind the user that `plan/` is git-ignored (see `feature-plan-writer`).
 
 ### Optional PR step (separate skills, never required)
 

@@ -10,9 +10,10 @@
 
 ## 3b — Small
 **User:** `Thêm validate độ dài tối đa 50 ký tự cho trường tên trong form đăng ký`
-- MUST: uses light mode (label `[Light mode]` or a one-line note), shows a 3–5 bullet mini-plan, waits for "ok".
-- MUST: after "ok", implements, runs relevant tests (adds a boundary test at 50/51), reports real results.
-- MUST: no `plan/` file created.
+Two acceptable behaviors (a one-function change sits on the line between "trivial" and "small", and dev-lifecycle's description excludes trivial edits, so the skill may legitimately not trigger):
+- (a) No skill triggers: the agent edits directly. MUST: adds boundary tests at 50/51, runs them and reports real results, creates no `plan/` file and no questionnaire.
+- (b) dev-lifecycle triggers in light mode: MUST show a 3–5 bullet mini-plan (label `[Light mode]` or a one-line note), wait for "ok", then implement and test as above.
+- FAIL: full 5-phase flow, a `plan/` file, or a multi-question batch for this size of change.
 - SHOULD: asks the size question only if genuinely ambiguous.
 
 ## 3c — Grows beyond light

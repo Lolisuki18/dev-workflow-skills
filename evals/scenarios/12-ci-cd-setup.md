@@ -5,7 +5,7 @@
 **Turn 1 (user):** `Viết GitHub Actions chạy test và Dockerfile cho dự án này`
 
 Checklist
-- MUST: label `[CI 1/4: Detect]` first; takes install, test, build commands and the port from the repo.
+- MUST: label `[CI 1/4: Detect]` or, when Detect and Design are done in one reply, `[CI 2/4: Design]` first; takes install, test, build commands and the port from the repo.
 - MUST: HARD STOP with the stage plan before writing files; asks the hosting/deploy question or states a default.
 - MUST: workflow uses only commands that exist in the repo; has least-privilege `permissions`, a lockfile-keyed cache and timeouts.
 - MUST: Dockerfile is multi-stage, non-root, has `.dockerignore`; no secret values in any file; `DATABASE_URL` documented by name.

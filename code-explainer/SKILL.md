@@ -14,7 +14,7 @@ Begin EVERY response with a step label: `[Explain 1/4: Orient]` · `[Explain 2/4
 ## Ground rules
 
 - Strictly read-only. Do not edit files. Do not run commands with side effects; building or running tests only with the user's agreement.
-- Every statement about the code cites `file:line`. If something is a guess from naming or structure, label it "likely" and say what would confirm it.
+- Every statement about the code cites `file:line`. Take line numbers from tool output that prints them (`grep -n`, `cat -n`, a read with line numbers); never count lines by eye or from memory, and re-check them before the final reply. If something is a guess from naming or structure, label it "likely" and say what would confirm it.
 - Explain for the stated reader (new teammate, student, reviewer). Ask once if unknown; default to a developer new to this stack.
 - Reply in the user's language; keep identifiers and file names as they are.
 - Do not invent architecture that is not in the code. If the docs and code disagree, say so and trust the code.

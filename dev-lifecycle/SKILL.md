@@ -5,11 +5,11 @@ description: "Orchestrates a 5-phase software development workflow (Discovery, P
 
 # Dev Lifecycle — 5-Phase Orchestrator
 
-Drive work through five phases in order. Never skip a phase, never merge two hard stops into one.
+For Normal/Large work (see "Size the task first"), drive it through five phases in order. Never skip a phase, never merge two hard stops into one.
 
 ## Anchor rule (anti-forgetting)
 
-Begin EVERY response with a phase label, exactly one of:
+In full mode, begin EVERY response with a phase label, exactly one of (light mode uses `[Light mode]` or no label, see below):
 
 `[Phase 1/5: Discovery & Clarification]` · `[Phase 2/5: Planning]` · `[Phase 3/5: Implementation]` · `[Phase 4/5: Testing & Verification]` · `[Phase 5/5: Final Audit & Wrap-up]`
 
@@ -26,7 +26,7 @@ If the label is missing from your last reply, you have drifted: re-read this fil
 
 Before Phase 1, judge the size from the request and a quick look at the repo:
 
-- **Trivial** (one file or a few lines; typo, rename, copy change, config tweak, obvious one-line bug): do NOT run the 5 phases. Say in one line that you are using light mode, make the change, run the project's format/lint/test commands for that file, and report. No plan file, no labels.
+- **Trivial** (one file or a few lines; typo, rename, copy change, config tweak, obvious one-line bug): do NOT run the 5 phases. Say in one line that you are using light mode, make the change, run the project's format/lint/test commands for that file, and report. No plan file, no phase labels.
 - **Small** (one self-contained behavior, ≤ ~3 files, no schema/API/contract change): light mode with a mini-plan: state in 3–5 bullets what you will change, wait for the user's "ok", implement, then run or add the relevant tests (`test-case-writer`). Use `[Light mode]` as the label. Skip `plan/` files and the final audit.
 - **Normal / Large** (new feature, several modules, new data model or API, greenfield, anything the user calls a project): run all 5 phases below.
 
@@ -67,9 +67,11 @@ Stop after the questions + advisor notes. Wait until the user confirms the spec 
 2. Present a short summary of the plan (requirements R1..Rn, files to touch, risks).
 
 ### HARD STOP
-Do NOT create or modify any source file until the user approves the plan ("ok", "code đi", "approved", "go"). If the user requests changes, update the plan file and ask again. Scaffolding config files (formatter, `.editorconfig`) count as code: wait for approval too, unless the user already said yes in Phase 1.
+Do NOT create or modify any source file until the user approves the plan; once they do, have `feature-plan-writer` mark it approved (its `init-plan.py --approve`) ("ok", "code đi", "approved", "go"). If the user requests changes, update the plan file and ask again. Scaffolding config files (formatter, `.editorconfig`) count as code: wait for approval too, unless the user already said yes in Phase 1.
 
 ## Phase 3 — Implementation
+
+**Gate:** before the first code change, confirm the latest plan file says `Status: Approved` (or `In progress`); `feature-plan-writer`'s `init-plan.py --require-approved` exits 3 if not. If it is still `Draft`, you skipped the Phase 2 stop: go back and ask. Set `Status: In progress` in the plan once coding starts. Optional hard enforcement via a hook: `docs/hard-stop-enforcement.md`.
 
 - Work in small **vertical slices** (one requirement end to end: data → logic → API/UI), in the order set by the approved plan.
 - Stay inside the plan's file list. If you discover a needed change outside it, stop and tell the user; update the plan first.

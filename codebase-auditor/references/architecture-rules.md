@@ -1,5 +1,10 @@
 # Architecture Rules (audit against the project's own style)
 
+**Verification status (checked 2026-11-23 via web search of official/primary pages):**
+- Verified: Next.js 16 (`proxy.ts` replaces `middleware.ts`; official Data Access Layer guidance), Spring Boot 4 / Framework 7 (Jackson 3 default, JSpecify null-safety), MediatR v13+ licensing, FastAPI + Pydantic v2 status.
+- NOT re-verified against current docs: NestJS, Flutter, Firebase/Supabase, EF Core details, JPA details. Treat those sections as general practice.
+- Always detect the project's actual framework version first (lockfile/manifest, cite `file:line`) and judge against THAT version's docs; a rule below that does not apply to the installed version is not a finding.
+
 How to use:
 1. Determine the architecture the project DECLARES (README, `plan/` "Impact on architecture", docs) or, failing that, the one it clearly uses (folder structure). Cite the evidence.
 2. Judge the code against that style. Do NOT demand Clean Architecture from a feature-based MVP, or the reverse. Mixed/unclear structure is itself a Medium finding.
@@ -28,6 +33,9 @@ How to use:
 - Server vs client: `'use client'` only on leaf components that need state/effects/browser APIs; flag whole pages/layouts marked client without need.
 - DB/ORM calls only in server code (Server Components, Server Actions, route handlers, a data-access layer). Flag Prisma/Drizzle imports reachable from client components; prefer a `server-only` boundary.
 - Every Server Action and route handler: validates input with a schema (Zod), checks authentication AND authorization/ownership, returns a typed result; never trusts client-provided user ids.
+- Official guidance (Next.js data-security guide): prefer a server-only Data Access Layer that performs the authorization check and returns minimal DTOs, so components/actions never receive raw DB rows. Flag direct ORM rows passed to client components.
+- Server Actions are public POST endpoints: each needs its own authN/authZ check even if the page is protected. Proxy/middleware (Next.js 16: `proxy.ts`, formerly `middleware.ts`) is for optimistic redirects, not the only authorization layer; flag auth enforced only there or only in a layout.
+- Next.js ≥16: `middleware.ts` still works but is deprecated in favor of `proxy.ts` (Low, upgrade note). The experimental taint API is defense in depth only, not a substitute for DTOs.
 - Secrets never in `NEXT_PUBLIC_*`; env access centralized and validated.
 - `loading.tsx`/`error.tsx`/`not-found.tsx` present for data-driven segments; cache/revalidation (`revalidatePath/Tag`) after mutations is deliberate.
 - Prisma/Drizzle: client singleton (no new client per request in dev hot reload), migrations committed, multi-write operations in a transaction.
@@ -40,6 +48,7 @@ How to use:
 - Input validation with `@Valid` + Bean Validation on request DTOs; central `@RestControllerAdvice` for errors with a consistent error body.
 - JPA: LAZY relations accessed inside a transaction, N+1 (use fetch joins/entity graphs), pagination on lists, `equals/hashCode` sane on entities.
 - Security: method/route authorization rules present, ownership checks on resource ids, no secrets in `application.yml` committed.
+- Version check: Spring Boot 4 / Framework 7 make Jackson 3 the default JSON library (Jackson 2 deprecated) and adopt JSpecify null-safety annotations; Boot 3.x apps are not wrong, but note end-of-support dates (3.5 free support ends June 2026 per reported Spring timelines; verify on spring.io). After a 3→4 upgrade, serialization (dates, nulls, BigDecimal) and Spring Security 7 defaults need re-testing.
 - Clean/Hexagonal layout: `domain` has no Spring/JPA annotations (or a documented exception), adapters in/out packages, use-case classes per action.
 
 ## ASP.NET Core (.NET)
@@ -49,6 +58,7 @@ How to use:
 - DTOs/contracts separate from entities; validation (DataAnnotations or FluentValidation) on requests; global exception handling (`ProblemDetails`).
 - DI lifetimes correct (no scoped service captured by a singleton); options pattern for configuration; secrets via user-secrets/env, not `appsettings.json` committed.
 - If MediatR/CQRS is used: commands and queries separated, handlers small, cross-cutting concerns in pipeline behaviors. Do not flag its absence on small apps.
+- MediatR licensing: versions from v13 are dual-licensed (RPL-1.5 or commercial; the commercial Community edition is free below a revenue threshold per the author's announcement, check the current terms). Report as a Medium "license review" note for commercial projects using v13+ (cite the `.csproj` `PackageReference` line); v12 and earlier stay on the old license. Same note for AutoMapper v15+. Never claim it is a violation; recommend checking terms or alternatives (plain handlers/services, other mediator libraries).
 
 ## NestJS (TypeScript)
 - One module per feature (controller, service, dto, entity/schema); modules export only what others need; no circular module imports (`forwardRef` smell).
@@ -62,6 +72,7 @@ How to use:
 - Pydantic schemas separate from ORM models; response models declared (`response_model`) so internals/passwords do not leak.
 - Dependencies via `Depends` (DB session, current user); one session per request, closed properly; auth dependency on every protected router.
 - `async def` handlers do not call blocking I/O or sync ORM without a threadpool; consistent sync or async stack.
+- Version check: recent FastAPI releases require Pydantic v2 (v1 support was dropped in the 0.12x series per the official migration guide); Pydantic v1 code (`class Config`, `@validator`, `.dict()`) on a new FastAPI is a defect or a pinned-old-version smell. `@app.on_event` is deprecated in favor of a `lifespan` context manager (removal version not verified).
 - Settings via `pydantic-settings`; `DEBUG`/CORS configured per environment; migrations (Alembic) committed.
 
 ## Flutter (Dart) + Firebase/Supabase

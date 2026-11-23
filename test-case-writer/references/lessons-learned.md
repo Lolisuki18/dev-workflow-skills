@@ -6,11 +6,11 @@ Format: `- [area] Always test X — why / how it usually breaks. (added YYYY-MM-
 
 ## Rules
 
-<!-- Add new bullets below. Examples of the intended style (delete or replace with real ones):
-- [auth] Always test that user A cannot read/update/delete user B's resource (IDOR) — expect 403/404.
-- [backend] Always test rollback: force the 2nd step of a multi-step write to fail and assert the 1st is not persisted.
-- [frontend] Always test loading, empty-list and error states of every data-driven view.
--->
+- [auth] Always test that user A cannot read/update/delete user B's resource (IDOR) — expect 403/404, and that the data is unchanged. (added 2026-11-23, user-listed habit)
+- [backend] Always test rollback: force the 2nd step of a multi-step write to fail and assert the 1st step is not persisted. (added 2026-11-23, user-listed habit)
+- [frontend] Always test loading, empty-list and error states of every data-driven view. (added 2026-11-23, user-listed habit)
+
+<!-- Add new bullets above this line. -->
 
 ## How rules get added
 

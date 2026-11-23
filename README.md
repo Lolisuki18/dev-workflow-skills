@@ -53,6 +53,9 @@ test-case-writer/     SKILL.md, references/lessons-learned.md
 codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,lessons-learned}.md
 bug-investigator/     SKILL.md, references/debug-playbook.md
 scripts/validate-skills.py   # repo checker (not a skill)
+scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
+evals/                       # trigger tests + scenarios with pass/fail checklists
+docs/hard-stop-enforcement.md
 LICENSE  README.md
 ```
 
@@ -116,6 +119,14 @@ Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requ
 ## About `plan/`
 
 Plans are saved in `plan/` and `plan/` is added to `.gitignore` automatically. To share or version them, delete the `plan/` line from `.gitignore`.
+
+## Hard stops: how they are enforced
+
+Written rules can be ignored in long contexts, so approval is also stored in the plan file (`Status: Draft` → `Approved`) and checked before coding. An optional hook can block edits mechanically. See [docs/hard-stop-enforcement.md](docs/hard-stop-enforcement.md).
+
+## Evals
+
+[`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and six scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill.
 
 ## Validate the skills
 

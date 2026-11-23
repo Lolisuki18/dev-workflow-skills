@@ -13,10 +13,11 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 - Anti-hallucination: cite `file:line` for every statement about existing code. Do not name libraries, tables or endpoints that do not exist unless marked **NEW**. Mark unknowns as "Open question", never guess.
 - Agent-agnostic: "inspect the repo", "list the files" — use whatever tools your environment has.
 - Mechanical steps (numbering, file creation, `.gitignore`) are done by `scripts/init-plan.py`, not by memory. Run it; do not hand-edit numbering.
+- **Running the script:** `scripts/init-plan.py` lives in THIS skill's folder (the folder containing this SKILL.md), not in the user's project. Run it with the working directory set to the USER'S PROJECT root, passing the script by its full path: `python "<this-skill-folder>/scripts/init-plan.py" ...` (use `python3` or `py` if `python` is missing). Wrong working directory = plans written in the wrong repo.
 
 ## Step 1 — Audit old plans (MANDATORY)
 
-1. Run `python scripts/init-plan.py --check` (path relative to this skill folder; use `python3` if `python` is missing). It lists existing plans in `plan/` and fixes `.gitignore`.
+1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` and fixes `.gitignore`.
 2. If plans exist, read ALL of them. Keep a short internal digest of:
    - overall architecture and module boundaries;
    - naming conventions (files, classes, DB tables/columns, routes);
@@ -30,7 +31,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 
 ## Step 2 — Create the file and write the plan
 
-1. Run `python scripts/init-plan.py "<Feature name>"` from the repo root. It:
+1. Run `init-plan.py "<Feature name>"` from the project root. It:
    - creates `plan/` if missing;
    - picks the next number (`plan/001-name.md`, zero-padded) or, if existing plans use dates, `plan/YYYY-MM-DD-name.md` (force with `--date`);
    - never overwrites an existing file;
@@ -51,7 +52,7 @@ Use the script's `gitignore=` result to choose the wording, in the user's langua
 
 ## Step 4 — Hand-off
 
-Summarize in ≤10 lines: requirement list, files touched count, main risks, any open question. Ask the user to approve. Do not begin implementation; approval and coding belong to the caller (`dev-lifecycle` Phase 2 → 3) or the user. When approved, set the plan's `Status:` to `Approved`.
+Summarize in ≤10 lines: requirement list, files touched count, main risks, any open question. Ask the user to approve. Do not begin implementation; approval and coding belong to the caller (`dev-lifecycle` Phase 2 → 3) or the user. Only after the user approves, run `init-plan.py --approve` (sets `Status: Approved` in the latest plan; `--status` prints it, `--require-approved` exits 3 if not approved). Never mark it Approved on your own.
 
 ## Updating plans during implementation
 

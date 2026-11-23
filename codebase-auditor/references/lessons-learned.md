@@ -6,11 +6,11 @@ Format: `- [area] Rule — what to grep/inspect for. (added YYYY-MM-DD, from <pr
 
 ## Rules
 
-<!-- Add new bullets below. Examples of the intended style (delete or replace with real ones):
-- [backend] Multi-step writes must run in one transaction — look for 2+ repository save/update calls in one service method without a transaction annotation/block.
-- [security] Every "get/update/delete by id" checks ownership (IDOR) — compare resource.ownerId with the authenticated user in the handler or query.
-- [frontend] Every async view has loading, empty and error states — look for data fetching with no `isLoading`/empty branch.
--->
+- [backend] Multi-step writes must run in one transaction — look for 2+ repository save/update/delete calls in one service method without a transaction annotation/block. (added 2026-11-23, user-listed habit)
+- [security] Every "get/update/delete by id" checks ownership (IDOR) — compare the resource's owner id with the authenticated user in the handler or query; a route with only an id param and no user filter is a finding. (added 2026-11-23, user-listed habit)
+- [frontend] Every async view has loading, empty and error states — look for data fetching with no pending/loading branch, no empty-list branch, or no error branch. (added 2026-11-23, user-listed habit)
+
+<!-- Add new bullets above this line. -->
 
 ## How rules get added
 

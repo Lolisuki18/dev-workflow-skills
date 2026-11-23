@@ -99,7 +99,7 @@ def main() -> int:
     root = Path(args.skills_dir)
     # a skill is any direct subfolder holding SKILL.md (or a subfolder not starting with '.' / named scripts when root is a skills-only dir)
     dirs = (
-        sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith(".") and p.name != "scripts")
+        sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith(".") and p.name not in ("scripts", "evals", "hooks", "docs"))
         if root.is_dir()
         else []
     )

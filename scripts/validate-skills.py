@@ -89,6 +89,13 @@ def check_skill(d: Path):
                     inner = f.read_text(encoding="utf-8")
                     if re.search(r"`references/[A-Za-z0-9_./-]+`", inner):
                         warns.append(f"{d.name}: {rel} links to another references file (depth > 1)")
+    scripts_dir = d / "scripts"
+    if scripts_dir.is_dir():
+        for py in sorted(scripts_dir.glob("*.py")):
+            try:
+                compile(py.read_text(encoding="utf-8"), str(py), "exec")
+            except SyntaxError as e:
+                errors.append(f"{d.name}: {py.name} has a syntax error: {e}")
     return errors, warns
 
 

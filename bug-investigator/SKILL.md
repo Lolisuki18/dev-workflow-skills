@@ -54,7 +54,7 @@ Present the root cause and the proposed fix (what to change, risk, alternatives)
 ## Step 4 — Fix
 
 - Smallest change that removes the cause; no drive-by refactors, no unrelated renames or formatting churn.
-- First write a **regression test** that fails because of the bug (use the `test-case-writer` skill and the repo's own framework). Confirm it fails for the right reason, then apply the fix and confirm it passes.
+- First write a **regression test** that fails because of the bug (one focused test in the repo's own framework and style, following `test-case-writer`'s writing rules; skip its full case table). Confirm it fails for the right reason, then apply the fix and confirm it passes.
 - Fix other places with the same pattern only if the user agrees; otherwise list them.
 - Remove any temporary debug output. Run the project's formatter, lint and type-check on the touched files.
 

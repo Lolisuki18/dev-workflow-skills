@@ -8,6 +8,7 @@ Usage:
   python init-plan.py "Name" --root <dir>       # repo root (default: nearest .git upward, else cwd)
   python init-plan.py --status                  # print latest plan's Status
   python init-plan.py --approve                 # set latest plan Status: Approved (after the user said ok)
+  python init-plan.py --set-status "In progress"  # Draft | Approved | In progress | Done
   python init-plan.py --require-approved        # exit 3 unless latest plan is Approved / In progress
   (--plan NAME.md selects a plan other than the latest)
 
@@ -82,13 +83,15 @@ def main() -> int:
     ap.add_argument("--approve", action="store_true", help="set latest plan Status to Approved")
     ap.add_argument("--require-approved", action="store_true",
                     help="exit 3 unless the latest plan is Approved / In progress")
+    ap.add_argument("--set-status", choices=["Draft", "Approved", "In progress", "Done"],
+                    help="set latest plan Status to this value")
     ap.add_argument("--plan", help="plan file name to use instead of the latest")
     args = ap.parse_args()
 
     root = Path(args.root).resolve() if args.root else find_root(Path.cwd())
     plan_dir = root / "plan"
 
-    if args.status or args.approve or args.require_approved:
+    if args.status or args.approve or args.require_approved or args.set_status:
         plans = sorted(plan_dir.glob("*.md")) if plan_dir.is_dir() else []
         target = (plan_dir / args.plan) if args.plan else (plans[-1] if plans else None)
         if target is None or not target.exists():
@@ -96,6 +99,8 @@ def main() -> int:
             return 3 if args.require_approved else 1
         if args.approve:
             set_status(target, "Approved")
+        elif args.set_status:
+            set_status(target, args.set_status)
         st = get_status(target)
         print(f"plan_file={target.relative_to(root).as_posix()}")
         print(f"plan_status={st}")

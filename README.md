@@ -1,6 +1,26 @@
 # dev-workflow-skills
 
-Ten independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/` and `scripts/`) covering the path from a rough idea to planned, implemented, tested, debugged and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
+Eleven independent, cross-agent **Agent Skills** (open Agent Skills format: a folder with `SKILL.md` + optional `references/` and `scripts/`) covering the path from a rough idea to planned, implemented, tested, debugged and audited code. Works with Claude Code, Cursor, Gemini CLI, Codex and any agent that reads `SKILL.md`.
+
+## Skill index
+
+<!-- skills:start -->
+**11 skills.** This index is generated from each `SKILL.md`; run `python scripts/readme-index.py` to refresh it.
+
+| Skill | What it does |
+|---|---|
+| [`bug-investigator`](bug-investigator/SKILL.md) | Investigates a bug or failure before fixing it: reproduces it, gathers evidence from logs, stack traces and recent changes, ranks hypotheses with file:line, confirms the... |
+| [`ci-cd-setup`](ci-cd-setup/SKILL.md) | Sets up build, test and deploy automation for a project by reading its real stack first: writes a CI pipeline (GitHub Actions by default), a Dockerfile and compose file... |
+| [`code-explainer`](code-explainer/SKILL.md) | Explains an unfamiliar repository or module to a newcomer in strictly read-only mode: finds entry points, traces one real request or command end to end, maps modules and... |
+| [`codebase-auditor`](codebase-auditor/SKILL.md) | Audits an existing codebase in strictly read-only mode: surveys structure and stack, agrees on 3-5 key modules with the user, deep-scans using stack-specific checklists... |
+| [`dev-lifecycle`](dev-lifecycle/SKILL.md) | Orchestrates a 5-phase software development workflow (Discovery, Planning, Implementation, Testing, Final Audit) from a raw idea or a feature request in an existing repo... |
+| [`feature-plan-writer`](feature-plan-writer/SKILL.md) | Plans a feature or project by first auditing existing plan/ files for concept consistency, then writing a numbered plan (requirements R1..Rn, architecture impact, files... |
+| [`migration-writer`](migration-writer/SKILL.md) | Plans and writes safe migrations for a database schema change or a framework and dependency upgrade: inventories impact, chooses an expand-migrate-contract path, writes... |
+| [`performance-profiler`](performance-profiler/SKILL.md) | Finds and fixes a real performance problem by measuring first: records a baseline, profiles CPU, memory, queries or network to locate the hotspot, ranks hypotheses with... |
+| [`refactor-planner`](refactor-planner/SKILL.md) | Plans and performs a behavior-preserving refactor in small verified steps: pins current behavior with characterization tests first, splits the change into steps that... |
+| [`security-reviewer`](security-reviewer/SKILL.md) | Reviews code for security weaknesses in strictly read-only mode: maps entry points and trust boundaries, then checks authentication, authorization, input handling... |
+| [`test-case-writer`](test-case-writer/SKILL.md) | Designs a classified test-case table (happy path, boundary/edge, negative/error) from a plan and the code just written, writes tests in the repo's existing test... |
+<!-- skills:end -->
 
 ## Skills
 
@@ -16,6 +36,7 @@ Ten independent, cross-agent **Agent Skills** (open Agent Skills format: a folde
 | [`migration-writer`](migration-writer)       | Safe schema and framework/dependency migrations with rollback (expand → migrate → contract) |
 | [`code-explainer`](code-explainer)           | Read-only onboarding map of an unfamiliar repo, with one traced flow                       |
 | [`ci-cd-setup`](ci-cd-setup)                 | CI pipeline, Dockerfile and deploy/rollback guide from the repo's real commands            |
+| [`performance-profiler`](performance-profiler) | Measure first: baseline, profile the hotspot, one change at a time, report measured gains |
 
 ## Flow
 
@@ -75,6 +96,7 @@ security-reviewer/    SKILL.md, references/security-checklist.md
 migration-writer/     SKILL.md, references/migration-patterns.md
 code-explainer/       SKILL.md
 ci-cd-setup/          SKILL.md, references/pipeline-templates.md
+performance-profiler/ SKILL.md, references/profiling-playbook.md
 scripts/validate-skills.py   # repo checker (not a skill)
 scripts/install.py           # links/copies the skills into an agent's skills folder
 scripts/plan-gate.py         # optional Claude Code hook: blocks code edits while the plan is Draft
@@ -174,6 +196,7 @@ Junctions need no admin rights; use `-ItemType SymbolicLink` if you prefer (requ
 - "Thêm cột vào bảng users an toàn" → `migration-writer`.
 - "Giải thích repo này cho tôi" → `code-explainer`.
 - "Viết pipeline CI và Dockerfile" → `ci-cd-setup`.
+- "Endpoint này chạy chậm, tối ưu giúp tôi" → `performance-profiler`.
 
 ## About `plan/`
 

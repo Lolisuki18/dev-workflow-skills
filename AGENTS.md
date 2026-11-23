@@ -14,6 +14,7 @@ This repo is a set of Agent Skills (folders containing `SKILL.md`). If your agen
 | Schema change, framework or dependency upgrade | `migration-writer/SKILL.md` |
 | Understanding an unfamiliar repo | `code-explainer/SKILL.md` |
 | CI pipeline, Dockerfile, deploy guide | `ci-cd-setup/SKILL.md` |
+| Slow code, query or page (measure and optimize) | `performance-profiler/SKILL.md` |
 | Trivial edit (typo, rename, one-line tweak) | none: just do it |
 
 Rules that apply everywhere: cite `file:line` for claims about code, never fabricate test or command results, never edit source before the plan is approved (full-mode workflow), and answer in the user's language.

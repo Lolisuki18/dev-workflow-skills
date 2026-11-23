@@ -1,0 +1,21 @@
+{
+  "name": "dev-workflow-skills",
+  "version": "0.2.0",
+  "description": "Eleven agent skills from idea to audited code: lifecycle, plans, tests, audit, bug investigation, refactor, security review, migration, code explainer performance profiling and CI/CD setup.",
+  "author": {
+    "name": "Lolisuki18",
+    "url": "https://github.com/Lolisuki18"
+  },
+  "homepage": "https://github.com/Lolisuki18/dev-workflow-skills",
+  "repository": "https://github.com/Lolisuki18/dev-workflow-skills",
+  "license": "MIT",
+  "keywords": [
+    "dev",
+    "workflow",
+    "testing",
+    "refactor",
+    "security",
+    "ci-cd"
+  ],
+  "skills": "."
+}

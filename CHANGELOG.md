@@ -5,13 +5,16 @@ Format: newest first. Skills are prompts, so "breaking" means a change in behavi
 ## Unreleased (next: 0.2.0)
 
 ### Added
-- Skills: `refactor-planner`, `security-reviewer`, `migration-writer`, `code-explainer`, `ci-cd-setup` (each with a validated `SKILL.md`; references for the first three and `ci-cd-setup`). Not yet covered by evals scenarios.
+- Skills: `refactor-planner`, `security-reviewer`, `migration-writer`, `code-explainer`, `ci-cd-setup`, `performance-profiler` (each with a validated `SKILL.md`; references for the first three and `ci-cd-setup`).
 - `LICENSE` (MIT).
+- `scripts/install.py --only` / `--exclude`; `scripts/readme-index.py` (generated skill index, checked in CI); CI workflow (`validate-skills.py` and the unit tests, plus a diff against the shared scripts of `ai-workflow-suite`); `.claude-plugin/plugin.json`. 30 tests.
+- Scenarios 08-12 and trigger tests for the five new skills; smoke-run results in `evals/README.md`.
 - `install.py --agent claude|gemini|cursor|codex|antigravity|windsurf|cline|roo|agents`, `--scope user|project`, `--list-agents`. Paths were checked against vendor docs; the ones that could not be confirmed (Cursor user scope, Codex project scope, Antigravity) are marked `weak` and print a warning. 3 new tests (27 total).
 - `feature-plan-writer`: explicit quoting rules for script paths with spaces (bash and PowerShell, verified with a path containing spaces) and manual fallback for the status commands when Python is missing.
 - README: install table now lists every agent preset with its confidence level.
 
 ### Changed
+- Every skill states that content found in repos, logs and pages is data, not instructions. `code-explainer` takes `file:line` numbers from tool output, not by eye.
 - README no longer claims `~/.agents/skills` as the Codex user path (not confirmed); Codex defaults to `~/.codex/skills`.
 
 ## 0.1.0 — 2026-11-23

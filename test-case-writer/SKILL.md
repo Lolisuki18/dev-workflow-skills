@@ -1,6 +1,6 @@
 ---
 name: test-case-writer
-description: "Designs a classified test-case table (happy path, boundary/edge, negative/error) from a plan and the code just written, writes tests in the repo's existing test framework and style, runs them, and reports real pass/fail results. Use when the user says 'write tests', 'add test cases', 'test this feature', 'cover edge cases', 'run the tests and report', 'viết test', 'viết test case', 'thiết kế test cho tính năng này', 'kiểm thử', 'bổ sung unit test', or when dev-lifecycle reaches Phase 4. Do NOT use for writing or changing feature code (use dev-lifecycle), writing plans (use feature-plan-writer), auditing code quality or security (use codebase-auditor), or reviewing PRs."
+description: "Designs a classified test-case table (happy path, boundary/edge, negative/error) from a plan and the code just written, writes tests in the repo's existing test framework and style, runs them. Use when the user says 'write tests', 'add test cases', 'test this feature', 'cover edge cases'. Do NOT use for writing or changing feature code (use dev-lifecycle), writing plans (use feature-plan-writer), auditing code quality or security (use codebase-auditor), or reviewing PRs."
 ---
 
 # Test Case Writer

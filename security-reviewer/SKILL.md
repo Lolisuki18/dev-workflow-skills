@@ -1,6 +1,6 @@
 ---
 name: security-reviewer
-description: "Reviews code for security weaknesses in strictly read-only mode: maps entry points and trust boundaries, then checks authentication, authorization, input handling (injection, XSS, SSRF, path traversal), secrets, sessions, crypto and dependencies, and reports findings with file:line evidence, exploit scenario, severity and a concrete fix. Use when the user says 'security review', 'check for vulnerabilities', 'is this endpoint safe', 'review auth and permissions', 'find hardcoded secrets', 'OWASP check', 'kiểm tra bảo mật', 'rà soát lỗ hổng', 'soi phân quyền', 'tìm secret bị lộ', 'code này có an toàn không'. Do NOT use for a general quality audit (use codebase-auditor), fixing a known bug (use bug-investigator), reviewing a teammate's pull request (use pr-review-writer), or building features (use dev-lifecycle)."
+description: "Reviews code for security weaknesses in strictly read-only mode: maps entry points and trust boundaries, then checks authentication, authorization, input handling. Use when the user says 'security review', 'check for vulnerabilities', 'is this endpoint safe', 'review auth and permissions'. Do NOT use for a general quality audit (use codebase-auditor), fixing a known bug (use bug-investigator), reviewing a teammate's pull request (use pr-review-writer), or building features (use dev-lifecycle)."
 ---
 
 # Security Reviewer

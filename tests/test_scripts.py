@@ -194,7 +194,7 @@ class ValidateTests(unittest.TestCase):
         d = Path(root) / "demo-skill"
         (d / "references").mkdir(parents=True)
         (d / "SKILL.md").write_text(
-            '---\nname: demo-skill\ndescription: "Does demo things. Use when xin chào. '
+            '---\nname: demo-skill\ndescription: "Does demo things. Use when the user says \'run the demo\'. '
             'Do NOT use for others."\n---\nSee `references/rules.md`.\n', encoding="utf-8")
         (d / "references" / "rules.md").write_text(f"# Rules\n{review_line}\n", encoding="utf-8")
 
@@ -215,6 +215,22 @@ class ValidateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             self.make_skill(td, "Next review: soon")
             self.assertIn("invalid 'Next review:'", self.validate(td).stdout)
+
+    def test_non_english_description_fails_and_long_one_fails(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.make_skill(td, "Next review: 2999-01-01")
+            skill = Path(td) / "demo-skill" / "SKILL.md"
+            skill.write_text(skill.read_text(encoding="utf-8").replace("run the demo", "xin chào"), encoding="utf-8")
+            r = self.validate(td)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("English only", r.stdout)
+        with tempfile.TemporaryDirectory() as td:
+            self.make_skill(td, "Next review: 2999-01-01")
+            skill = Path(td) / "demo-skill" / "SKILL.md"
+            skill.write_text(skill.read_text(encoding="utf-8").replace("Does demo things.", "Does demo things " * 50), encoding="utf-8")
+            r = self.validate(td)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("chars >", r.stdout)
 
     def test_repo_architecture_rules_have_review_dates(self):
         text = (REPO / "codebase-auditor" / "references" / "architecture-rules.md").read_text(encoding="utf-8")

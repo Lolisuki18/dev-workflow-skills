@@ -11,7 +11,7 @@ Checks per skills/<name>/SKILL.md:
   ERROR  SKILL.md <= 250 lines
   ERROR  every `references/...` or `scripts/...` path mentioned exists
   WARN   description does not start with a third-person verb (heuristic: first word ends in 's')
-  WARN   description has no Vietnamese trigger (no diacritics found)
+  ERROR  description contains non-English (non-ASCII) letters; descriptions are English only
   WARN   a file in references/ or scripts/ is never mentioned in SKILL.md
   WARN   a references/ file links to another references/ file (depth > 1)
   WARN   a references/ file has `Next review: YYYY-MM-DD` in the past (rules may be stale)
@@ -23,7 +23,7 @@ from datetime import date
 from pathlib import Path
 
 MAX_LINES = 250
-MAX_DESC = 1024
+MAX_DESC = 650
 REVIEW_RE = re.compile(r"^Next review:\s*(\S+)\s*$", re.M)
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 PATH_RE = re.compile(r"`((?:references|scripts)/[A-Za-z0-9_./-]+)`")
@@ -71,8 +71,8 @@ def check_skill(d: Path):
     first = desc.split(" ", 1)[0] if desc else ""
     if not first.endswith("s"):
         warns.append(f"{d.name}: description may not be third person (starts '{first}')")
-    if not VI_RE.search(desc):
-        warns.append(f"{d.name}: description has no Vietnamese trigger keywords")
+    if VI_RE.search(desc):
+        errors.append(f"{d.name}: description must be English only (found Vietnamese letters)")
     if lines > MAX_LINES:
         errors.append(f"{d.name}: SKILL.md has {lines} lines > {MAX_LINES}")
 

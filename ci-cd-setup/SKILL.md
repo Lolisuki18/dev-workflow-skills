@@ -1,6 +1,6 @@
 ---
 name: ci-cd-setup
-description: "Sets up build, test and deploy automation for a project by reading its real stack first: writes a CI pipeline (GitHub Actions by default), a Dockerfile and compose file, environment and secrets handling, and a deploy and rollback guide, then checks them locally where possible. Use when the user says 'set up CI', 'write a GitHub Actions workflow', 'dockerize this app', 'add a Dockerfile', 'deploy this project', 'CI/CD pipeline', 'cache dependencies in CI', 'tạo pipeline CI/CD', 'viết Dockerfile', 'đóng gói docker cho dự án', 'cấu hình deploy', 'tự động chạy test khi push'. Do NOT use for fixing one failing CI job on a pull request (use ci-failure-triager from pull-request-skills), writing the project README (use readme-writer), changing application code (use dev-lifecycle), or database changes (use migration-writer)."
+description: "Sets up build, test and deploy automation for a project by reading its real stack first: writes a CI pipeline (GitHub Actions by default), a Dockerfile and compose file. Use when the user says 'set up CI', 'write a GitHub Actions workflow', 'dockerize this app', 'add a Dockerfile'. Do NOT use for fixing one failing CI job on a pull request (use ci-failure-triager from pull-request-skills), writing the project README (use readme-writer), changing application code (use dev-lifecycle), or database changes (use migration-writer)."
 ---
 
 # CI/CD Setup

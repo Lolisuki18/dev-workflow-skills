@@ -1,6 +1,6 @@
 ---
 name: bug-investigator
-description: "Investigates a bug or failure before fixing it: reproduces it, gathers evidence from logs, stack traces and recent changes, ranks hypotheses with file:line, confirms the root cause, then applies a minimal fix with a regression test. Use when the user says 'fix this bug', 'debug this', 'why is this failing', 'investigate this error', 'trace this log', 'it crashes when...', 'sửa lỗi này', 'debug giúp tôi', 'tìm nguyên nhân lỗi', 'truy vết log', 'tại sao bị lỗi', 'chạy ra kết quả sai'. Do NOT use for building new features (use dev-lifecycle), auditing a whole codebase for problems (use codebase-auditor), writing tests with no bug involved (use test-case-writer), or writing plans (use feature-plan-writer)."
+description: "Investigates a bug or failure before fixing it: reproduces it, gathers evidence from logs, stack traces and recent changes, ranks hypotheses with file:line, confirms the root cause. Use when the user says 'fix this bug', 'debug this', 'why is this failing', 'investigate this error'. Do NOT use for building new features (use dev-lifecycle), auditing a whole codebase for problems (use codebase-auditor), writing tests with no bug involved (use test-case-writer), or writing plans (use feature-plan-writer)."
 ---
 
 # Bug Investigator

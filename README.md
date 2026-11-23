@@ -8,8 +8,8 @@ A set of four independent, cross-agent **Agent Skills** (open Agent Skills forma
 |-------|------|--------|
 | `dev-lifecycle` | Orchestrator for 5 phases with hard stops | ready |
 | `feature-plan-writer` | Audits old plans, writes `plan/NNN-*.md`, git-ignores `plan/` | ready |
-| `test-case-writer` | Designs, writes and runs tests | coming |
-| `codebase-auditor` | Read-only audit of an existing codebase | coming |
+| `test-case-writer` | Designs, writes and runs tests | ready |
+| `codebase-auditor` | Read-only audit of an existing codebase | ready |
 
 ## Flow
 

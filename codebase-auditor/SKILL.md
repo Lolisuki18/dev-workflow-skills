@@ -33,6 +33,8 @@ Load ONLY the files that match the detected stack:
 
 ALWAYS also load `references/architecture-rules.md` (judge against the project's declared or evident style, only the sections for the detected stack) and `references/lessons-learned.md` (the user's own recurring-mistake rules; check each rule against the scoped modules and report hits as normal findings).
 
+If the `Next review:` date at the top of `architecture-rules.md` is in the past, say so in the report's "Could not verify" section (framework rules may be stale; judge against the installed version's current docs).
+
 Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 
 Method:

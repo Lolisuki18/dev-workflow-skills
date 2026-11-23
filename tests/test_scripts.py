@@ -186,6 +186,42 @@ class PlanGateTests(TempRepo):
         return run(INIT, list(args), self.root)
 
 
+VALIDATE = REPO / "scripts" / "validate-skills.py"
+
+
+class ValidateTests(unittest.TestCase):
+    def make_skill(self, root, review_line):
+        d = Path(root) / "demo-skill"
+        (d / "references").mkdir(parents=True)
+        (d / "SKILL.md").write_text(
+            '---\nname: demo-skill\ndescription: "Does demo things. Use when xin chào. '
+            'Do NOT use for others."\n---\nSee `references/rules.md`.\n', encoding="utf-8")
+        (d / "references" / "rules.md").write_text(f"# Rules\n{review_line}\n", encoding="utf-8")
+
+    def validate(self, root):
+        return run(VALIDATE, ["--skills-dir", str(root)], REPO)
+
+    def test_overdue_review_warns_but_does_not_fail(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.make_skill(td, "Next review: 2000-01-01")
+            r = self.validate(td)
+            self.assertEqual(r.returncode, 0, r.stdout)
+            self.assertIn("review overdue", r.stdout)
+
+    def test_future_review_is_quiet_and_bad_date_warns(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.make_skill(td, "Next review: 2999-01-01")
+            self.assertNotIn("overdue", self.validate(td).stdout)
+        with tempfile.TemporaryDirectory() as td:
+            self.make_skill(td, "Next review: soon")
+            self.assertIn("invalid 'Next review:'", self.validate(td).stdout)
+
+    def test_repo_architecture_rules_have_review_dates(self):
+        text = (REPO / "codebase-auditor" / "references" / "architecture-rules.md").read_text(encoding="utf-8")
+        self.assertRegex(text, r"(?m)^Last verified: \d{4}-\d{2}-\d{2}$")
+        self.assertRegex(text, r"(?m)^Next review: \d{4}-\d{2}-\d{2}$")
+
+
 INSTALL = REPO / "scripts" / "install.py"
 
 

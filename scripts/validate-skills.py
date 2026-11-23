@@ -14,14 +14,17 @@ Checks per skills/<name>/SKILL.md:
   WARN   description has no Vietnamese trigger (no diacritics found)
   WARN   a file in references/ or scripts/ is never mentioned in SKILL.md
   WARN   a references/ file links to another references/ file (depth > 1)
+  WARN   a references/ file has `Next review: YYYY-MM-DD` in the past (rules may be stale)
 """
 import argparse
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 MAX_LINES = 250
 MAX_DESC = 1024
+REVIEW_RE = re.compile(r"^Next review:\s*(\S+)\s*$", re.M)
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 PATH_RE = re.compile(r"`((?:references|scripts)/[A-Za-z0-9_./-]+)`")
 VI_RE = re.compile(r"[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", re.I)
@@ -87,6 +90,17 @@ def check_skill(d: Path):
                     warns.append(f"{d.name}: {rel} never mentioned in SKILL.md")
                 if sub == "references" and f.suffix == ".md":
                     inner = f.read_text(encoding="utf-8")
+                    review = REVIEW_RE.search(inner)
+                    if review:
+                        try:
+                            due = date.fromisoformat(review.group(1))
+                            if due < date.today():
+                                warns.append(
+                                    f"{d.name}: {rel} review overdue (Next review: {due}); "
+                                    "re-verify against current docs, see docs/maintenance.md"
+                                )
+                        except ValueError:
+                            warns.append(f"{d.name}: {rel} has an invalid 'Next review:' date")
                     if re.search(r"`references/[A-Za-z0-9_./-]+`", inner):
                         warns.append(f"{d.name}: {rel} links to another references file (depth > 1)")
     scripts_dir = d / "scripts"

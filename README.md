@@ -151,6 +151,10 @@ Written rules can be ignored in long contexts, so approval is also stored in the
 
 [`evals/`](evals) holds trigger tests (including prompts that must NOT trigger any skill) and six scenarios with MUST/SHOULD checklists. Run them on a real agent after editing a skill.
 
+## Keeping it current
+
+Framework rules are re-verified on a schedule (last verified 2026-11-23, next review 2027-05-23). See [docs/maintenance.md](docs/maintenance.md) for the review calendar, the prompt-drift routine and the release steps; version history is in [CHANGELOG.md](CHANGELOG.md).
+
 ## Validate the skills
 
 After editing any skill:

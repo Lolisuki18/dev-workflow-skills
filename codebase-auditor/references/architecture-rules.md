@@ -1,5 +1,9 @@
 # Architecture Rules (audit against the project's own style)
 
+Last verified: 2026-11-23
+Next review: 2027-05-23
+Review process: `docs/maintenance.md` in the repo (re-check each framework against its official docs, update the dates).
+
 **Verification status (checked 2026-11-23 via web search of official/primary pages):**
 - Verified: Next.js 16 (`proxy.ts` replaces `middleware.ts`; official Data Access Layer guidance), Spring Boot 4 / Framework 7 (Jackson 3 default, JSpecify null-safety), MediatR v13+ licensing, FastAPI + Pydantic v2 status.
 - Second pass (same date): NestJS `ValidationPipe` options, Flutter `BuildContext`/`mounted` lint, Supabase RLS and key handling, Spring `open-in-view`, EF Core tracking/lifetime/pooling were checked against search results (official docs where they were returned, otherwise reputable secondary sources).

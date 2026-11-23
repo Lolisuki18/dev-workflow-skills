@@ -2,13 +2,15 @@
 
 Format: newest first. Skills are prompts, so "breaking" means a change in behavior an agent will notice (labels, hard stops, script flags).
 
-## Unreleased
+## 0.1.0 — 2026-11-23
+
+First release (release notes: `docs/release-v0.1.0.md`; process: `docs/maintenance.md`).
 
 ### Added
 - `scripts/install.py`: links (or copies) every skill into an agent's skills directory; safe on Windows (junctions) and POSIX (symlinks), never overwrites. 4 new tests (21 total); the tests caught a junction-detection bug before release.
 - `.gitattributes` (LF line endings), `CHANGELOG.md`, root `AGENTS.md` for agents that read it instead of skills.
 
-## 0.1.0 — 2026-11-23
+- `docs/maintenance.md`: review calendar (framework rules every 6 months, evals after every edit), review and release procedures. `architecture-rules.md` now carries `Last verified` / `Next review` dates; `validate-skills.py` warns when a review is overdue, and the auditor reports it.
 
 ### Skills
 - `dev-lifecycle` (5 phases, hard stops, light mode, project level, architecture choice, optional PR step).

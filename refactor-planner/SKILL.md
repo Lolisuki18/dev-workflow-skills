@@ -1,6 +1,6 @@
 ---
 name: refactor-planner
-description: "Plans and performs a behavior-preserving refactor in small verified steps: pins current behavior with characterization tests first, splits the change into steps that each keep the build green, applies one step at a time and re-runs the checks after every step. Use when the user says 'refactor this', 'clean up this module', 'pay down tech debt', 'split this god class', 'extract this logic', 'remove duplication', 'dọn code giúp tôi', 'refactor module này', 'tách hàm quá dài', 'giảm nợ kỹ thuật', 'làm sạch code cũ'. Do NOT use for adding features or changing behavior (use dev-lifecycle), finding what is wrong in a codebase (use codebase-auditor), fixing a bug (use bug-investigator), or only writing tests (use test-case-writer)."
+description: "Plans and performs a behavior-preserving refactor in small verified steps: pins current behavior with characterization tests first, splits the change into steps that each keep the build green. Use when the user says 'refactor this', 'clean up this module', 'pay down tech debt', 'split this god class'. Do NOT use for adding features or changing behavior (use dev-lifecycle), finding what is wrong in a codebase (use codebase-auditor), fixing a bug (use bug-investigator), or only writing tests (use test-case-writer)."
 ---
 
 # Refactor Planner

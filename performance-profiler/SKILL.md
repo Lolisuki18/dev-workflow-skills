@@ -1,6 +1,6 @@
 ---
 name: performance-profiler
-description: "Finds and fixes a real performance problem by measuring first: records a baseline, profiles CPU, memory, queries or network to locate the hotspot, ranks hypotheses with file:line, changes one thing at a time and re-measures, keeping behavior unchanged and reporting only measured gains. Use when the user says 'this is slow', 'optimize this endpoint', 'profile this function', 'why is this query slow', 'reduce memory usage', 'speed up the build', 'app chạy chậm', 'tối ưu hiệu năng', 'phân tích điểm nghẽn', 'query này chậm', 'giảm dùng bộ nhớ'. Do NOT use for fixing a functional bug (use bug-investigator), restructuring code with no performance goal (use refactor-planner), load or stress test design for QA (use qa-nonfunctional-writer from qa-workflow-skills), or auditing a whole codebase (use codebase-auditor)."
+description: "Finds and fixes a real performance problem by measuring first: records a baseline, profiles CPU, memory, queries or network to locate the hotspot, ranks hypotheses with file:line. Use when the user says 'this is slow', 'optimize this endpoint', 'profile this function', 'why is this query slow'. Do NOT use for fixing a functional bug (use bug-investigator), restructuring code with no performance goal (use refactor-planner), load or stress test design for QA (use qa-nonfunctional-writer from qa-workflow-skills)."
 ---
 
 # Performance Profiler

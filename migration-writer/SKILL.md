@@ -1,6 +1,6 @@
 ---
 name: migration-writer
-description: "Plans and writes safe migrations for a database schema change or a framework and dependency upgrade: inventories impact, chooses an expand-migrate-contract path, writes the migration with a tested rollback, and lists verification and deploy order. Use when the user says 'write a migration', 'add a column safely', 'change the schema', 'upgrade this framework', 'upgrade dependencies', 'migrate from X to Y', 'rollback plan', 'viết migration', 'đổi schema database', 'nâng cấp phiên bản framework', 'cập nhật thư viện an toàn', 'kế hoạch rollback'. Do NOT use for building a whole feature (use dev-lifecycle), restructuring code with no schema or version change (use refactor-planner), fixing a failing build caused by a bug (use bug-investigator), or setting up pipelines (use ci-cd-setup)."
+description: "Plans and writes safe migrations for a database schema change or a framework and dependency upgrade: inventories impact, chooses an expand-migrate-contract path. Use when the user says 'write a migration', 'add a column safely', 'change the schema', 'upgrade this framework'. Do NOT use for building a whole feature (use dev-lifecycle), restructuring code with no schema or version change (use refactor-planner), fixing a failing build caused by a bug (use bug-investigator), or setting up pipelines (use ci-cd-setup)."
 ---
 
 # Migration Writer

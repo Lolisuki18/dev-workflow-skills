@@ -32,10 +32,12 @@ Send each prompt in a fresh session inside a small repo (or empty folder where n
 | 26 | Walk me through how a login request flows through this code | existing repo | code-explainer |
 | 27 | Viết GitHub Actions chạy test và Dockerfile cho dự án này | existing repo | ci-cd-setup |
 | 28 | CI trên PR của tôi bị đỏ, xem log giúp | PR with failing check | none from this repo (belongs to ci-failure-triager in pull-request-skills) |
+| 29 | Endpoint /orders chạy chậm, đo và tối ưu giúp tôi | repo with slow endpoint | performance-profiler |
+| 30 | Why is this SQL query taking 4 seconds? Profile it | repo with DB | performance-profiler (NOT bug-investigator) |
 
 ## Pass criteria
 
-- Rows 1–11, 17–27: the expected skill activates and no other workflow skill competes with it.
+- Rows 1–11, 17–27, 29–30: the expected skill activates and no other workflow skill competes with it.
 - Rows 12–16 and 28: no phase label, no plan file, no questionnaire. Trivial edits are done directly (row 13 and 15 may show a one-line "light mode" note).
 
 ## Record

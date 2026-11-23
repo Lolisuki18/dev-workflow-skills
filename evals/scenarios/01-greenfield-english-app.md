@@ -10,7 +10,8 @@ Checklist turn 1
 - MUST: no code, no files, no scaffolding created.
 - MUST: includes a Proactive Advisor section (simpler option, risk, reuse).
 - MUST: recommends format/editor setup for the stack and asks before creating `.editorconfig` / `.vscode/extensions.json`.
-- MUST: explains Feature-based vs Clean Architecture, recommends one for the stack with a reason, lets the user choose.
+- MUST: mentions the architecture choice (Feature-based vs Clean) and leans to one with a reason; the full plain-words explanation may come right after the stack is chosen (the skill says "when the stack is known").
+- MUST: stack options do not bundle a database (the data question is separate), so answers cannot contradict each other.
 - MUST: asks the project level (fresh/junior/mid/senior) with a recommended default, inside the same batch.
 - MUST: ends with an explicit stop waiting for the spec.
 - SHOULD: answers in Vietnamese; question list fits one screen.

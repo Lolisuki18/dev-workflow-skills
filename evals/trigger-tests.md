@@ -22,11 +22,21 @@ Send each prompt in a fresh session inside a small repo (or empty folder where n
 | 16 | Review PR này giúp tôi (dán diff) | any | none from this repo (belongs to pr-review-writer) |
 | 17 | Fix bug khiến đơn hàng bị tính tiền hai lần | repo with bug | bug-investigator (NOT dev-lifecycle) |
 | 18 | Tìm hết lỗi trong cả dự án | existing repo | codebase-auditor (NOT bug-investigator) |
+| 19 | Refactor module `billing` cho gọn, đừng đổi hành vi | repo with tests | refactor-planner |
+| 20 | Split this 600-line `OrderService` class safely | repo with tests | refactor-planner |
+| 21 | Kiểm tra bảo mật phần đăng nhập và phân quyền | existing repo | security-reviewer |
+| 22 | Is this endpoint vulnerable to injection or IDOR? | existing repo | security-reviewer (NOT codebase-auditor) |
+| 23 | Thêm cột `phone` vào bảng users mà không downtime | repo with migrations | migration-writer |
+| 24 | Upgrade this project from Spring Boot 2.7 to 3.x | existing repo | migration-writer |
+| 25 | Giải thích repo này cho tôi, bắt đầu đọc từ đâu | unfamiliar repo | code-explainer |
+| 26 | Walk me through how a login request flows through this code | existing repo | code-explainer |
+| 27 | Viết GitHub Actions chạy test và Dockerfile cho dự án này | existing repo | ci-cd-setup |
+| 28 | CI trên PR của tôi bị đỏ, xem log giúp | PR with failing check | none from this repo (belongs to ci-failure-triager in pull-request-skills) |
 
 ## Pass criteria
 
-- Rows 1–11, 17–18: the expected skill activates and no other workflow skill competes with it.
-- Rows 12–16: no phase label, no plan file, no questionnaire. Trivial edits are done directly (row 13 and 15 may show a one-line "light mode" note).
+- Rows 1–11, 17–27: the expected skill activates and no other workflow skill competes with it.
+- Rows 12–16 and 28: no phase label, no plan file, no questionnaire. Trivial edits are done directly (row 13 and 15 may show a one-line "light mode" note).
 
 ## Record
 

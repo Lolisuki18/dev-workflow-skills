@@ -4,13 +4,13 @@ Five independent, cross-agent **Agent Skills** (open Agent Skills format: a fold
 
 ## Skills
 
-| Skill | Role |
-|-------|------|
-| [`dev-lifecycle`](dev-lifecycle) | Orchestrator for 5 phases with hard stops, plus a light mode for small tasks |
+| Skill                                        | Role                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [`dev-lifecycle`](dev-lifecycle)             | Orchestrator for 5 phases with hard stops, plus a light mode for small tasks               |
 | [`feature-plan-writer`](feature-plan-writer) | Audits old plans, writes `plan/NNN-*.md`, git-ignores `plan/` (via `scripts/init-plan.py`) |
-| [`test-case-writer`](test-case-writer) | Designs, writes and runs tests (happy / boundary / negative) |
-| [`codebase-auditor`](codebase-auditor) | Read-only audit of an existing codebase with `file:line` evidence |
-| [`bug-investigator`](bug-investigator) | Reproduce → evidence → root cause → minimal fix with regression test |
+| [`test-case-writer`](test-case-writer)       | Designs, writes and runs tests (happy / boundary / negative)                               |
+| [`codebase-auditor`](codebase-auditor)       | Read-only audit of an existing codebase with `file:line` evidence                          |
+| [`bug-investigator`](bug-investigator)       | Reproduce → evidence → root cause → minimal fix with regression test                       |
 
 ## Flow
 
@@ -96,12 +96,12 @@ It uses junctions on Windows (no admin) and symlinks elsewhere, and never overwr
 
 Pick the skills directory your agent reads, then copy or link each skill folder (every folder that contains a `SKILL.md`).
 
-| Agent | Project scope | User scope |
-|-------|---------------|------------|
-| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
-| Cursor | `.cursor/skills/` (or `.agents/skills/`) | `~/.cursor/skills/` |
-| Gemini CLI | `.gemini/skills/` (or `.agents/skills/`) | `~/.gemini/skills/` |
-| Codex | `.agents/skills/` | `~/.agents/skills/` |
+| Agent       | Project scope                            | User scope          |
+| ----------- | ---------------------------------------- | ------------------- |
+| Claude Code | `.claude/skills/`                        | `~/.claude/skills/` |
+| Cursor      | `.cursor/skills/` (or `.agents/skills/`) | `~/.cursor/skills/` |
+| Gemini CLI  | `.gemini/skills/` (or `.agents/skills/`) | `~/.gemini/skills/` |
+| Codex       | `.agents/skills/`                        | `~/.agents/skills/` |
 
 Directory names vary by agent version; check your agent's docs if a skill is not discovered. The folder name must equal the `name` in the frontmatter.
 
@@ -164,7 +164,3 @@ It checks name = folder, `Do NOT use` in the description, ≤ 250 lines, that ev
 ```bash
 python -m unittest discover -s tests -v
 ```
-
-## License
-
-[MIT](LICENSE)

@@ -12,15 +12,15 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
 - **READ-ONLY.** Never edit, create, delete, format or auto-fix any project file while auditing. Do not run commands that modify the repo (formatters with write mode, migrations, installs, `git commit`). Running read-only commands (list files, lint/test in check mode, `git log`) is allowed. The only output is the report, in chat or, if the user asks, as a new file outside the source tree.
 - **Evidence or silence.** Every finding carries `file:line` (or `file:start-end`) that you actually opened. No evidence → do not report it; put it under "Could not verify" instead.
 - **No invented facts.** Never claim a library, framework or config exists unless found in manifests/lockfiles/code. Do not recommend a fix that relies on tools not installed without marking it as a NEW dependency.
-- Reply in the user's language. Be agent-agnostic: "inspect the repo", "search the code".
+- Reply in the user's language and start each reply with `[Audit X/3: <Step>]`. Be agent-agnostic: "inspect the repo", "search the code".
 
 ## Step 1 — Survey & scope (CHECKPOINT)
 
 1. Read the directory tree (depth 2–3), root configs and manifests (package.json, pyproject.toml, requirements, pom.xml/build.gradle, *.csproj, pubspec.yaml, Dockerfile, CI files, .env.example, README).
 2. Classify:
    - **Stack type:** Frontend / Backend / Full-stack (and framework, language, DB).
-   - **Scale / Level:** map to `fresh | junior | mid | senior` = coursework/demo, thesis/portfolio, production of moderate complexity, production of high complexity. Use the level declared in `plan/` or README if present, otherwise infer and state it for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
-3. Propose **3–5 critical modules** to deep-scan (e.g. auth, payment, data access, main API layer, core UI state), each with one line of why.
+   - **Scale / Level:** map to `fresh | junior | mid | senior` = coursework/demo, thesis/portfolio, production of moderate complexity, production of high complexity. Use the level declared in `plan/` or README if present, otherwise infer and mark `[Inferred from code — needs confirmation]` for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
+3. Propose **3–5 critical modules** to deep-scan (or all modules if fewer than 3 exist), each with one line of why.
 4. **STOP and ask** the user to approve or change the list (and the scale if unsure). Do not deep-scan before the answer. If the user said "scan everything", still confirm the module list in one message.
 
 ## Step 2 — Deep scan with the matching references
@@ -37,7 +37,7 @@ ALWAYS also load `references/architecture-rules.md` (judge against the project's
 
 If the `Next review:` date at the top of `architecture-rules.md` is in the past, say so in the report's "Could not verify" section (framework rules may be stale; judge against the installed version's current docs).
 
-If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, use only the generic backend and `security-and-ops` references, and do not force-fit a framework rule.
+If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, do not force-fit a framework rule, and still load `references/backend.md` / `references/frontend.md` / `references/security-and-ops.md` as applicable to the detected surfaces.
 
 Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 

@@ -5,7 +5,7 @@
 | Change | Safe sequence |
 |---|---|
 | Add nullable column | One release: add column. Code writes it, tolerates null on read. |
-| Add NOT NULL column | Add nullable → backfill in batches → add default or constraint → switch code. |
+| Add NOT NULL column | Add nullable → backfill in batches → add default or constraint → switch code. (SQLite note: SQLite lacks `ALTER COLUMN ... SET NOT NULL`, whereas `ALTER TABLE ADD COLUMN ... NOT NULL DEFAULT <const>` is O(1) metadata-only.) |
 | Rename column | Add new → dual write → backfill → switch reads → stop writing old → drop old in a later release. |
 | Drop column | Stop reading and writing first; deploy; drop in a later release after a backup. |
 | Change type | Add new column of the new type → backfill with conversion and error report → switch → drop old. |

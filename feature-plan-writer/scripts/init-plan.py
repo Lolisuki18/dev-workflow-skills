@@ -140,7 +140,13 @@ def main() -> int:
         return 0
 
     if args.status or args.approve or args.require_approved or args.set_status:
-        plans = sorted(plan_dir.glob("*.md")) if plan_dir.is_dir() else []
+        def _plan_key(p: Path) -> tuple[int, int, str]:
+            m = NUM_RE.match(p.name)
+            if m and not DATE_RE.match(p.name):
+                return (0, int(m.group(1)), p.name)
+            return (1, 0, p.name)
+
+        plans = sorted(plan_dir.glob("*.md"), key=_plan_key) if plan_dir.is_dir() else []
         target = (plan_dir / args.plan) if args.plan else (plans[-1] if plans else None)
         if target is None or not target.exists():
             print("plan_status=none")
@@ -159,9 +165,7 @@ def main() -> int:
     if not args.title and not args.check:
         ap.error("title required unless --check")
 
-    plan_dir.mkdir(exist_ok=True)
-
-    names = sorted(p.name for p in plan_dir.glob("*.md"))
+    names = sorted(p.name for p in plan_dir.glob("*.md")) if plan_dir.is_dir() else []
     numbered = [n for n in names if NUM_RE.match(n) and not DATE_RE.match(n)]
     dated = [n for n in names if DATE_RE.match(n)]
     use_date = args.date or (dated and len(dated) > len(numbered))
@@ -177,6 +181,8 @@ def main() -> int:
 
     if args.check:
         return 0
+
+    plan_dir.mkdir(exist_ok=True)
 
     slug = slugify(args.title)
     today = date.today().isoformat()

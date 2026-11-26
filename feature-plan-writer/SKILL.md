@@ -11,15 +11,15 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 
 ## Ground rules
 
-- Reply in the user's language; write the plan in the same language (keep identifiers in English).
-- Anti-hallucination: cite `file:line` for every statement about existing code. Do not name libraries, tables or endpoints that do not exist unless marked **NEW**. Mark unknowns as "Open question", never guess.
+- Reply in the user's language; write the plan in the same language (keep identifiers in English). Start each reply with `[Plan X/4: <Step>]`.
+- Anti-hallucination: cite `file:line` for every statement about existing code. Do not name libraries, tables or endpoints that do not exist unless marked **NEW**. Mark unknowns as `[Needs input: ...]` / `[Inferred from code — needs confirmation]`, never guess.
 - Agent-agnostic: "inspect the repo", "list the files" — use whatever tools your environment has.
 - Mechanical steps (numbering, file creation, `.gitignore`) are done by `scripts/init-plan.py`, not by memory. Run it; do not hand-edit numbering.
 - **Running the script:** `scripts/init-plan.py` lives in THIS skill's folder (the folder containing this SKILL.md), not in the user's project. Run it with the working directory set to the USER'S PROJECT root, passing the script by its full path: `python "<this-skill-folder>/scripts/init-plan.py" ...` (use `python3` or `py` if `python` is missing). Wrong working directory = plans written in the wrong repo. Always quote the script path (it may contain spaces): bash `python "/path with spaces/scripts/init-plan.py" --check`; PowerShell `python "C:\path with spaces\scripts\init-plan.py" --check` (quoting the path as an ARGUMENT of `python` is enough; only a path used as the command itself needs the `&` call operator, e.g. `& "C:\path\run.exe"`).
 
 ## Step 1 — Audit old plans (MANDATORY)
 
-1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` and fixes `.gitignore` (side effect: it creates or updates `.gitignore` even though it makes no plan file).
+1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` without creating `plan/` and updates `.gitignore` if needed. If multiple plans exist in the same repo, clarify whether `R1..Rn` are scoped per plan (`002:R1`) or continue sequentially.
 2. If plans exist, read ALL of them. Keep a short internal digest of:
    - overall architecture and module boundaries;
    - naming conventions (files, classes, DB tables/columns, routes);

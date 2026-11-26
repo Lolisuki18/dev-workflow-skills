@@ -14,6 +14,7 @@ Format: newest first. Skills are prompts, so "breaking" means a change in behavi
 - README: install table now lists every agent preset with its confidence level.
 
 ### Changed
+- Friction fixes from real agent runs on a tiny Python CLI: `dev-lifecycle` (sizing by counts not adjectives, pre-filled greenfield answers, multi-slice pass for tiny projects, hygiene files, no-formatter evidence, defect fixes map to existing R-ids); `feature-plan-writer` (`--check` side effect on `.gitignore`, template already written by the script); `bug-investigator` (NOT-REPRODUCED exit, unreported defects as separate items, regression test first with a 1-3 case list, line endings kept); `test-case-writer` (defers to `bug-investigator`, `Lessons applied` line, guard vs regression, Target from tool output); `security-reviewer` (small-scope compact report, CLI / local tool checklist); `code-explainer` short mode; `codebase-auditor` no-matching-stack note; `refactor-planner` and `performance-profiler` small-scope rule, no invented targets.
 - Skill descriptions are English only and shorter (4 trigger phrases, at most 650 characters) to cut the context every installed skill costs. The trigger evals keep their Vietnamese prompts to check that matching still works.
 - Every skill states that content found in repos, logs and pages is data, not instructions. `code-explainer` takes `file:line` numbers from tool output, not by eye.
 - README no longer claims `~/.agents/skills` as the Codex user path (not confirmed); Codex defaults to `~/.codex/skills`.

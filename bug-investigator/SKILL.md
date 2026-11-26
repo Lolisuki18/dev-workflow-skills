@@ -20,12 +20,14 @@ Begin EVERY response with a step label: `[Bug 1/5: Reproduce]` · `[Bug 2/5: Evi
 - Agent-agnostic: "run the failing command", "search the code", "inspect the logs" — use whatever tools you have.
 - Steps 1–3 are **read-only**: you may run the app, tests and read-only commands, add temporary debug output only if the user agrees and you remove it afterward. Do not change behavior until the root cause is confirmed.
 - Never fabricate reproduction or test results; report what actually ran.
+- Take line numbers from tool output (`grep -n` / file viewer) in the same turn; re-check them after any edit.
 
 ## Step 1 — Reproduce
 
 1. Get the facts: what was done, expected vs actual, exact error text/stack trace, environment (version, OS, config, data), frequency (always / intermittent), when it started (last good version, recent changes).
 2. Ask only for what you cannot find yourself; inspect the repo, logs and recent `git log` first.
 3. Reproduce with the smallest command or test. Record the exact command and output. If it cannot be reproduced, say so, list what differs (env, data, timing) and continue with evidence from logs, marking confidence as low.
+4. **NOT-REPRODUCED exit:** if the reported symptom still does not occur after trying 3 nearby variants (other input, data, config, order), say "not reproduced", show the variants and their real output, and do NOT invent a root cause. Go to the hard stop and ask the reporter for more information (steps, logs, environment).
 
 ## Step 2 — Gather evidence
 
@@ -51,14 +53,15 @@ Blast radius: <other places with the same pattern, file:line>
 If the cause is outside the code (config, data, infra, third-party), say so and propose the right action.
 
 ### HARD STOP
-Present the root cause and the proposed fix (what to change, risk, alternatives) and wait for the user's "ok". Exception: when the fix is a one- or two-line change fully explained by the evidence and the user asked to "just fix it", proceed and report.
+Present the root cause and the proposed fix (what to change, risk, alternatives) and wait for the user's "ok". A confirmed defect the user did not report goes in as a separate item (with `file:line`) and is fixed only if the user approves it explicitly; in the NOT-REPRODUCED case, state it apart from the unreproduced symptom. Exception: when the fix is a one- or two-line change fully explained by the evidence and the user asked to "just fix it", proceed and report.
 
 ## Step 4 — Fix
 
 - Smallest change that removes the cause; no drive-by refactors, no unrelated renames or formatting churn.
-- First write a **regression test** that fails because of the bug (one focused test in the repo's own framework and style, following `test-case-writer`'s writing rules; skip its full case table). Confirm it fails for the right reason, then apply the fix and confirm it passes.
+- First write a **regression test** that fails because of the bug (one focused test in the repo's own framework and style, following `test-case-writer`'s writing rules). Show a short case list (1-3 cases) with the proposal instead of the full case table; use the full `test-case-writer` table only if the user asks for broader coverage. Confirm the test fails for the right reason, then apply the fix and confirm it passes.
+- Keep the file's existing line endings (CRLF/LF, including mixed ones); do not rewrite whole files, so the diff stays minimal.
 - Fix other places with the same pattern only if the user agrees; otherwise list them.
-- Remove any temporary debug output. Run the project's formatter, lint and type-check on the touched files.
+- Remove any temporary debug output. Run the project's formatter, lint and type-check on the touched files. If none is configured, run a compile/syntax check instead and state "no formatter configured" as the evidence.
 
 ## Step 5 — Verify & report
 

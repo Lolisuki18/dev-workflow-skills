@@ -37,6 +37,8 @@ ALWAYS also load `references/architecture-rules.md` (judge against the project's
 
 If the `Next review:` date at the top of `architecture-rules.md` is in the past, say so in the report's "Could not verify" section (framework rules may be stale; judge against the installed version's current docs).
 
+If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, use only the generic backend and `security-and-ops` references, and do not force-fit a framework rule.
+
 Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 
 Method:

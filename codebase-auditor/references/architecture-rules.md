@@ -14,7 +14,7 @@ Review process: `docs/maintenance.md` in the repo (re-check each framework again
 How to use:
 1. Determine the architecture the project DECLARES (README, `plan/` "Impact on architecture", docs) or, failing that, the one it clearly uses (folder structure). Cite the evidence.
 2. Judge the code against that style. Do NOT demand Clean Architecture from a feature-based MVP, or the reverse. Mixed/unclear structure is itself a Medium finding.
-3. Apply the matching stack section below. Skip sections for stacks not present. Cite `file:line` for every violation.
+3. Apply the matching stack section below. Skip sections for stacks not present. If no listed stack matches (for example a plain stdlib CLI), say "no stack-specific rules apply" and do not force-fit one. Cite `file:line` for every violation.
 
 ## Style rules
 

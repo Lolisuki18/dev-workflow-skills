@@ -21,6 +21,8 @@ Begin EVERY response with a step label: `[Explain 1/4: Orient]` · `[Explain 2/4
 - Reply in the user's language; keep identifiers and file names as they are.
 - Do not invent architecture that is not in the code. If the docs and code disagree, say so and trust the code.
 
+**Short mode:** when the user asks for a short or quick explanation, or the target is one file under ~150 lines, give ONE reply labelled `[Explain 1/4-4/4: short]` (the four steps merged) with only the module map, flow and conventions that are needed. The `file:line` rule still applies in full.
+
 ## Step 1 — Orient
 
 1. Read the manifest and top-level files: package or build file, entry points, `README`, config, folder layout, `docker-compose`, CI.

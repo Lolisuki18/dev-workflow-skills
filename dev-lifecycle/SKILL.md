@@ -32,6 +32,8 @@ Before Phase 1, judge the size from the request and a quick look at the repo:
 - **Small** (one self-contained behavior, ≤ ~3 files, no schema/API/contract change): light mode with a mini-plan: state in 3–5 bullets what you will change, wait for the user's "ok", implement, then run or add the relevant tests (`test-case-writer`). Use `[Light mode]` as the label. Skip `plan/` files and the final audit.
 - **Normal / Large** (new feature, several modules, new data model or API, greenfield, anything the user calls a project): run all 5 phases below.
 
+Size by counting files, requirements and behaviors in the request and the repo, never by the user's adjective: "a small app" or "a tiny tool" that needs several modules, a data model or a CLI plus storage is still Normal.
+
 When unsure, ask the user in one line: "Việc này nhỏ, làm nhanh luôn hay chạy đủ quy trình 5 pha?" The user can always force full mode ("chạy đủ quy trình") or light mode ("làm nhanh thôi"). If light mode work grows beyond its size (more files, contract changes), stop and switch to the full flow.
 
 ## Phase 1 — Discovery & Clarification
@@ -42,7 +44,7 @@ First decide the mode by inspecting the repo:
 - **Brownfield** (repo already has code).
 
 ### Greenfield
-Ask ONE batched message of 4–5 questions covering: platform (web/mobile/desktop/CLI), MVP scope (3–5 must-have features), tech stack, data & storage, and auth/deployment. Fold the **project level** (`fresh | junior | mid | senior`, table in `references/architecture-guide.md`) into the MVP or stack question so the batch stays at 4–5 questions. Give every question lettered options with a recommended default (A/B/C) so the user can answer with e.g. "1A 2B 3A". Use the template in `references/phase-templates.md`.
+Ask ONE batched message of 4–5 questions covering: platform (web/mobile/desktop/CLI), MVP scope (3–5 must-have features), tech stack, data & storage, and auth/deployment. Fold the **project level** (`fresh | junior | mid | senior`, table in `references/architecture-guide.md`) into the MVP or stack question so the batch stays at 4–5 questions. Give every question lettered options with a recommended default (A/B/C) so the user can answer with e.g. "1A 2B 3A". Use the template in `references/phase-templates.md`. If the request already answers a question (for example "a Python CLI" answers platform and stack), do not ask it: list the pre-filled answers in one line for confirmation and ask only what is missing (as in brownfield).
 
 **Architecture choice:** when the stack is known, read `references/architecture-guide.md`. Briefly explain Feature-based vs Clean Architecture (what each is), recommend one for the user's stack with the reason, and let them choose (A/B/C). Skip the lecture if they already named a style. Record it as `Architecture: <style> — <reason>` and `Level: <level>` in the Spec Summary. For brownfield, infer the level from evidence and state it.
 
@@ -76,11 +78,12 @@ Do NOT create or modify any source file until the user approves the plan ("ok", 
 **Gate:** before the first code change, confirm the latest plan file says `Status: Approved` (or `In progress`); `feature-plan-writer`'s `init-plan.py --require-approved` exits 3 if not. If it is still `Draft`, you skipped the Phase 2 stop: go back and ask. Set `Status: In progress` once coding starts (`init-plan.py --set-status "In progress"`), and `Done` after Phase 5. Optional hard enforcement via a hook: `docs/hard-stop-enforcement.md`.
 
 - Work in small **vertical slices** (one requirement end to end: data → logic → API/UI), in the order set by the approved plan.
-- Stay inside the plan's file list. If you discover a needed change outside it, stop and tell the user; update the plan first.
+- Stay inside the plan's file list. If you discover a needed change outside it, stop and tell the user; update the plan first. Exception: hygiene files (`.gitignore` entries such as `__pycache__/`, lock files) are allowed without a stop; list them in the phase output.
+- Tiny projects (≤ ~4 modules): several slices may be implemented in one pass, but the report must still list each slice's check result separately.
 - No unrelated refactors, no drive-by renames, no new dependencies that are not in the plan.
 - Fix-attempt limit: if a format/lint/type-check/build failure survives 3 distinct fix attempts, stop. Report the exact command, error and what you tried, then ask the user. Do not loop silently or loosen the check.
 - Keep the plan's "Resume point" (section 10) current after each slice: current slice, next step, open issues. A new session must be able to continue from it alone.
-- After each slice run, using the project's own commands: formatter, linter, type-check/compile. Fix issues you introduced before moving on. Report commands run and real results.
+- After each slice run, using the project's own commands: formatter, linter, type-check/compile. Fix issues you introduced before moving on. Report commands run and real results. If no formatter or linter is configured, run instead a compile/syntax check (for example `python -m compileall`) and the test run with warnings as errors where supported, and state "no formatter configured" as the evidence; do not add one without asking.
 - Mark each Rn done in the plan's checklist as its slice finishes.
 
 ## Phase 4 — Testing & Verification
@@ -111,7 +114,7 @@ After the wrap-up, offer (never start without a yes): `security-reviewer` when t
 
 ## Bugs found along the way
 
-If a failing test or runtime error reveals a bug you cannot explain in one look, hand over to the `bug-investigator` skill instead of patching blindly, then resume the phase.
+If a failing test or runtime error reveals a bug you cannot explain in one look, hand over to the `bug-investigator` skill instead of patching blindly, then resume the phase. A defect fix needs no new plan: map it to the existing R-ids and note it in the plan's Resume point or notes, so the plan can still reach `Done` (the `delivery-lifecycle` gate checks that).
 
 ## Resuming
 

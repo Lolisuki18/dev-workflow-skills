@@ -25,7 +25,8 @@ Begin EVERY response with a step label: `[Refactor 1/5: Scope]` · `[Refactor 2/
 
 1. Get the target (files, module, function) and the goal in one sentence: readability, duplication, testability, a smaller class, a dependency direction. If the user pasted an audit report, take the findings from it.
 2. Read the target and its callers. List the public surface that must not change (exports, routes, DB columns, CLI flags, event names).
-3. Estimate size and risk: lines touched, callers, test coverage today. Write "out of scope" items explicitly.
+3. **Small scope:** for a tiny repo (≤ ~5 files) with no stated goal, say "no refactor target; nothing to do" instead of proposing one.
+4. Estimate size and risk: lines touched, callers, test coverage today. Write "out of scope" items explicitly.
 
 ## Step 2 — Safety net
 

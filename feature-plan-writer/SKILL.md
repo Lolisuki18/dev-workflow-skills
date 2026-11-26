@@ -19,7 +19,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 
 ## Step 1 — Audit old plans (MANDATORY)
 
-1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` and fixes `.gitignore`.
+1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` and fixes `.gitignore` (side effect: it creates or updates `.gitignore` even though it makes no plan file).
 2. If plans exist, read ALL of them. Keep a short internal digest of:
    - overall architecture and module boundaries;
    - naming conventions (files, classes, DB tables/columns, routes);
@@ -39,14 +39,14 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
    - never overwrites an existing file;
    - ensures `plan/` is in the repo-root `.gitignore` (creates the file if absent, never duplicates the line, keeps other entries);
    - prints `plan_file=...` and `gitignore=added|already|created`.
-2. Open the created file (structure in `references/plan-template.md`) and fill every section; write "None" where one does not apply. Place files and state the architecture per `references/architecture-conventions.md`. Fill the header `Level:` and `Architecture:` from the Spec Summary (ask if missing) and scale task granularity to the level: `fresh` small tasks (≤ ~4 h), `junior` ≤ ~1 day, `mid`/`senior` feature-level slices.
+2. The script already wrote the template (number, title and date filled in) into the plan file, so open that file and fill it in place; you need not read `references/plan-template.md` separately unless you want the section guidance. Fill every section; write "None" where one does not apply. Place files and state the architecture per `references/architecture-conventions.md`. Fill the header `Level:` and `Architecture:` from the Spec Summary (ask if missing) and scale task granularity to the level: `fresh` small tasks (≤ ~4 h), `junior` ≤ ~1 day, `mid`/`senior` feature-level slices.
 3. Quality bar: every R is verifiable by a test; every file in section 3 maps to an R; every R appears in the test plan and in a slice; sections 3 and 4 cite real `file:line` for existing code and mark NEW items.
 
 **Fallback if Python is unavailable:** do the same by hand — create `plan/NNN-name.md` (next number), and append `plan/` on its own line to `.gitignore` if no line equals `plan/` or `/plan/`. Say that you did it manually. The same applies to the status commands: edit the `Status:` line of the latest plan yourself (`Draft` → `Approved` only after the user's yes, then `In progress`, `Done`), and check it before coding. No Python also means the optional `plan-gate` hook cannot run.
 
 ## Step 3 — Tell the user
 
-Use the script's `gitignore=` result to choose the wording, in the user's language:
+Use the script's `gitignore=` result to choose the wording, in the user's language. `--check` in Step 1 can already have created or updated `.gitignore`, so the last call may print `already`: if EITHER call printed `added` or `created`, report "added to .gitignore" (use the `already` wording only when both calls said `already`).
 
 - `added` / `created`:
 > Đã lưu plan tại `plan/<file>.md` và đưa `plan/` vào `.gitignore` để không đẩy lên GitHub. Nếu bạn muốn chia sẻ hoặc lưu lịch sử plan trên GitHub, chỉ cần xóa dòng `plan/` khỏi `.gitignore`.

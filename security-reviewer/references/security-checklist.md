@@ -39,6 +39,16 @@ Use only the parts that match the stack. Each line is a question to answer from 
 - Name each vulnerable package with version and advisory id only after checking the advisory source; do not guess CVE numbers.
 - Install scripts and unusual packages (typosquats, abandoned) flagged.
 
+## CLI / local tool
+- Untrusted file paths (arguments, config, data files) are not trusted to stay inside an intended directory.
+- Symlinks: the tool does not follow a link into a file the user did not name.
+- Temp files are created with safe names and permissions (not predictable, not world-writable).
+- Writes are atomic (write to a temp file, then rename); a crash does not leave a partial or empty data file.
+- Data printed to the terminal (names, notes, file contents) cannot inject escape sequences that rewrite the screen.
+- Concurrent runs cannot cause a lost update (read-modify-write without a lock).
+- Secrets are not passed in command-line arguments or environment variables that other users or logs can see.
+- Integrity-only issues (a user damaging their own local file) are Low; raise severity only when another user or a privilege boundary is involved.
+
 ## Business logic
 - Price, quantity, discount and balance computed on the server; negative and huge values rejected.
 - Workflows cannot skip steps (pay before ship, verify before login).

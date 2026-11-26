@@ -16,6 +16,7 @@ Turn requirements and code into a verified test suite. Honest results only.
 - **No unrequested frameworks.** Use the test framework already present in the repo. If none exists, propose 1–2 options and ASK before installing anything.
 - Anti-hallucination: cite `file:line` for the code under test; only call functions, fixtures and helpers that actually exist. Do not mock modules you have not opened.
 - Agent-agnostic: "inspect the repo", "run the test command" — use your environment's tools.
+- For a bug-fix regression test, `bug-investigator` leads: its Step 4 sets the order (test first, 1-3 case list instead of the full table); use the full table here only if the user asks for broader coverage.
 - Do not change production code to make tests pass. If a test reveals a bug, report it (see Step 5) and let the user/dev-lifecycle decide.
 
 ## Step 1 — Gather context
@@ -39,7 +40,9 @@ Coverage rules for every requirement:
 - **Boundary / edge:** min/max length and values, empty/zero/one/many, off-by-one, first/last item, unicode and whitespace, duplicates, date/timezone limits, pagination edges, concurrency where relevant.
 - **Negative / error:** invalid type/format, missing required field, unauthorized/forbidden, not found, conflict, dependency failure (DB/network down), malformed payload. Assert the specific error, not just "throws".
 
-Also read `references/lessons-learned.md` and add a case for each rule that applies to this feature.
+Also read `references/lessons-learned.md` and add a case for each rule that applies to this feature. If none apply, say so in the report (`Lessons applied: none apply because <reason>`).
+
+Target column: take the function name and line from tool output (`grep -n` / viewer) in the same turn, not from memory.
 
 Scale the depth to the project `Level` (read it from the plan header or spec; if absent, infer from evidence and say so):
 - `fresh`: happy path + the key negative cases per requirement.
@@ -72,6 +75,7 @@ If the test command is unclear, read the README/scripts/CI config rather than gu
 - Prefer real objects and in-memory fixtures; mock only external boundaries (HTTP, email, clock, payment).
 - Each test must be able to FAIL: assert concrete values, not just "no exception". Avoid snapshot-only assertions for logic.
 - Reference the case ID or requirement in the test name or a short comment (`// R2 boundary`) to keep traceability.
+- A regression test must be run against the unfixed code first and must fail there; a case that passes before the fix cannot catch the bug, so label it "guard, not regression".
 - Do not weaken or delete existing tests; do not leave `skip`/`only` behind.
 
 ## Step 5 — Run and report (real results)
@@ -94,6 +98,7 @@ Framework: <name> | Command: `<cmd>`
 | T1 | R1 | Happy | tests/x.test.ts:10 | PASS |
 | T3 | R1 | Negative | tests/x.test.ts:34 | FAIL — expected 400, got 500 |
 
+Lessons applied: <rules used> | none apply because <reason>
 Summary: <passed>/<total> passed, <failed> failed, <skipped> skipped (real run output).
 Requirement coverage: R1 ✔ R2 ✔ R3 ✘ (no test: reason)
 Defects found: <list with file:line> | Not tested on purpose: <list>

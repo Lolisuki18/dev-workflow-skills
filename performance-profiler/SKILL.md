@@ -24,7 +24,7 @@ Begin EVERY response with a step label: `[Perf 1/5: Target]` · `[Perf 2/5: Base
 
 ## Step 1 — Target
 
-1. Get the symptom in numbers if possible: what is slow (endpoint, query, function, page, build), how slow, how slow it should be, and for what input size. If the user has no target, propose one and mark it a proposal.
+1. Get the symptom in numbers if possible: what is slow (endpoint, query, function, page, build), how slow, how slow it should be, and for what input size. If the user has no target, propose one and mark it a proposal. Never invent a target or input size (such as 100k rows) the user did not give. For a tiny repo (≤ ~5 files) with no stated symptom, say "no profile target; nothing to do" instead of proposing one.
 2. Identify the stack and the profiling tools already present or standard for it. Load `references/profiling-playbook.md` for tools by stack.
 
 ## Step 2 — Baseline

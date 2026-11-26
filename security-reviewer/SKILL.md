@@ -18,6 +18,7 @@ Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep 
 - Strictly **read-only**. Never edit code, never run exploits against real or production systems, never send requests to third-party hosts. Local tests and read-only commands are allowed.
 - Every finding cites `file:line` and a concrete scenario (who, what input, what they gain). No scenario means no finding; downgrade it to a note.
 - Say what you could not see (infra, WAF, gateway rules, runtime config). Do not assume a control exists or is missing without evidence.
+- Take line numbers from tool output (`grep -n` / viewer) in the same turn; re-check them after any edit.
 - Mask secrets in the report: show the file, line and type, never the value.
 - Reply in the user's language; keep identifiers in English.
 
@@ -26,10 +27,11 @@ Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep 
 1. Identify the stack and entry points: HTTP routes, GraphQL, message consumers, cron jobs, CLI, file uploads, webhooks.
 2. Map trust boundaries: who calls what (anonymous, user, admin, service), where untrusted data enters and where it reaches a sink (DB, shell, file system, HTML, outbound request).
 3. Agree on 3-5 priority areas with the user in one short list (auth, payments, uploads, admin), unless they named them. Wait for their answer before step 2 when scope is large.
+4. **Small scope:** for a repo with ≤ ~5 source files or a local tool, skip the priority-area wait, check everything, and use a compact report: a findings table with Severity, Where, Scenario, Fix only.
 
 ## Step 2 — Deep check
 
-Load `references/security-checklist.md` and apply the parts that match the stack. Cover at least:
+Load `references/security-checklist.md` and apply the parts that match the stack (for a CLI or local tool, the "CLI / local tool" block; issues that only affect integrity of the user's own files are Low). Cover at least:
 
 - **Authentication:** password storage, login throttling, token lifetime, reset flow, session fixation.
 - **Authorization:** every route checks permission on the server; object-level checks (user A reading user B's data); role checks not only in the UI.

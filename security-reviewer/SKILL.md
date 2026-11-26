@@ -26,8 +26,8 @@ Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep 
 
 1. Identify the stack and entry points: HTTP routes, GraphQL, message consumers, cron jobs, CLI, file uploads, webhooks.
 2. Map trust boundaries: who calls what (anonymous, user, admin, service), where untrusted data enters and where it reaches a sink (DB, shell, file system, HTML, outbound request).
-3. Agree on 3-5 priority areas with the user in one short list (auth, payments, uploads, admin), unless they named them. Wait for their answer before step 2 when scope is large.
-4. **Small scope:** for a repo with ≤ ~5 source files or a local tool, skip the priority-area wait, check everything, and use a compact report: a findings table with Severity, Where, Scenario, Fix only.
+3. Agree on 3-5 priority areas with the user in one short list (auth, payments, uploads, admin), unless they named them. **Hard stop:** wait for explicit approval before step 2 when scope is large.
+4. **Small scope:** for a repo with ≤ ~5 source files or a local tool, skip the priority-area wait, check everything, and use a compact report: a findings table with `Severity, Where, Scenario, Fix, Evidence` (`*traced*`/`*ran*`/`*assumed*`) only. If 0 findings are found, state so explicitly with what was checked.
 
 ## Step 2 — Deep check
 

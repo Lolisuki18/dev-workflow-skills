@@ -31,7 +31,7 @@ Begin EVERY response with a step label: `[Refactor 1/5: Scope]` · `[Refactor 2/
 ## Step 2 — Safety net
 
 1. Run the existing tests and record the real baseline (pass/fail counts, command). If they already fail, stop and tell the user: a refactor on a red build cannot be verified.
-2. Find the uncovered behavior of the target. Write **characterization tests** that pin what the code does today, even when that looks odd. Use the repo's own framework and style (see `test-case-writer` for conventions). Name each test after the behavior it pins.
+2. Find the uncovered behavior of the target. Propose **characterization tests** that pin what the code does today, even when that looks odd (use `../test-case-writer/` conventions; ask approval before creating/editing test files if the user only asked for a plan). Name each test after the behavior it pins.
 3. Confirm each new test passes on the unchanged code. A characterization test that fails on current code is wrong.
 4. If tests cannot be written (UI-only, no seam), say what manual check will stand in and mark confidence as lower.
 

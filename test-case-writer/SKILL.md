@@ -11,7 +11,7 @@ Turn requirements and code into a verified test suite. Honest results only.
 
 ## Ground rules
 
-- Reply in the user's language; code and test names follow the repo's conventions.
+- Reply in the user's language; code and test names follow the repo's conventions. Start each reply with `[Tests X/5: <Step>]`.
 - **Never fabricate results.** Report only what a real test run printed. If tests cannot be run (missing runtime, broken env), say exactly why and mark the status "NOT RUN". Never write "all tests pass" without having run them.
 - **No unrequested frameworks.** Use the test framework already present in the repo. If none exists, propose 1–2 options and ASK before installing anything.
 - Anti-hallucination: cite `file:line` for the code under test; only call functions, fixtures and helpers that actually exist. Do not mock modules you have not opened.
@@ -27,7 +27,7 @@ Turn requirements and code into a verified test suite. Honest results only.
 
 ## Step 2 — Design the test-case table
 
-Produce the table BEFORE writing test code, and show it to the user (short; for dev-lifecycle just include it in the phase output).
+Produce the table BEFORE writing test code, and show it to the user. In standalone mode, **Hard stop** for explicit approval (`approved`, `ok proceed`) before writing test files in Step 4 (or stop here with `NOT RUN` if the user only asked for test-case design); for `dev-lifecycle`, include it in the phase output.
 
 | ID | Req | Category | Scenario | Input / Setup | Expected | Target (file:line) |
 |----|-----|----------|----------|---------------|----------|--------------------|
@@ -59,6 +59,7 @@ Inspect manifests and config, then existing test files:
 |--------|-----------|
 | package.json scripts/devDeps, `jest.config*`, `vitest.config*` | Jest / Vitest (+ Testing Library, Supertest, Playwright if present) |
 | `pytest.ini`, `pyproject.toml [tool.pytest]`, `conftest.py` | Pytest |
+| `tests/test_*.py` or `import unittest` in Python files | Python `unittest` |
 | `pom.xml`/`build.gradle` with JUnit, `src/test/java` | JUnit (+ Mockito, Spring Test if present) |
 | `*.csproj` with xunit/nunit/mstest | xUnit / NUnit / MSTest |
 | `pubspec.yaml` dev_dependencies `flutter_test`, `test/` | Flutter test |

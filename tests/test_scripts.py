@@ -137,6 +137,38 @@ class InitPlanTests(TempRepo):
         self.assertFalse((self.root / "plan" / ".no-gate").exists())
 
 
+class LatestPlanTests(TempRepo):
+    """init-plan.py and plan-gate.py must pick the same latest plan (numbered wins, by integer)."""
+
+    def make(self, name, status):
+        d = self.root / "plan"
+        d.mkdir(exist_ok=True)
+        (d / name).write_text(f"Status: {status}" + chr(10), encoding="utf-8")
+
+    def gate(self):
+        payload = json.dumps({"tool_input": {"file_path": str(self.root / "src" / "a.ts")},
+                              "cwd": str(self.root)})
+        return run(GATE, [], self.root, stdin=payload)
+
+    def test_numbered_beats_dated_in_both_scripts(self):
+        self.make("2026-11-01-old.md", "Approved")
+        self.make("001-new.md", "Draft")
+        self.assertEqual(kv(run(INIT, ["--status"], self.root).stdout)["plan_file"], "plan/001-new.md")
+        self.assertEqual(self.gate().returncode, 2)
+
+    def test_unpadded_numbers_sort_by_integer_in_both_scripts(self):
+        self.make("9-a.md", "Approved")
+        self.make("10-b.md", "Draft")
+        self.assertEqual(kv(run(INIT, ["--status"], self.root).stdout)["plan_file"], "plan/10-b.md")
+        self.assertEqual(self.gate().returncode, 2)
+
+    def test_gate_stays_open_on_unreadable_plan(self):
+        d = self.root / "plan"
+        d.mkdir()
+        (d / "001-x.md").write_bytes(bytes([255, 254, 0, 98]))
+        self.assertEqual(self.gate().returncode, 0)
+
+
 class PlanGateTests(TempRepo):
     def call(self, rel_path, env=None, raw=None):
         payload = raw if raw is not None else json.dumps({

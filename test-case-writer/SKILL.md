@@ -11,7 +11,7 @@ Turn requirements and code into a verified test suite. Honest results only.
 
 ## Ground rules
 
-- Reply in the user's language; code and test names follow the repo's conventions. Start each reply with `[Tests X/5: <Step>]`.
+- Reply in the user's language; code and test names follow the repo's conventions. Start each reply with `[Tests X/5: <Step>]`. Inside dev-lifecycle keep its `[Phase X/5: ...]` label; use this label only when the skill runs standalone.
 - **Never fabricate results.** Report only what a real test run printed. If tests cannot be run (missing runtime, broken env), say exactly why and mark the status "NOT RUN". Never write "all tests pass" without having run them.
 - **No unrequested frameworks.** Use the test framework already present in the repo. If none exists, propose 1–2 options and ASK before installing anything.
 - Anti-hallucination: cite `file:line` for the code under test; only call functions, fixtures and helpers that actually exist. Do not mock modules you have not opened.

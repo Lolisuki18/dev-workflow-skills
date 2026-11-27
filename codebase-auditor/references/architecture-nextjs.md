@@ -1,0 +1,11 @@
+## Next.js (App Router) + TypeScript + Prisma/Drizzle
+- `app/` holds routing, layouts and thin pages; business logic and queries live in `features/`/`lib/`, not inside page components.
+- Server vs client: `'use client'` only on leaf components that need state/effects/browser APIs; flag whole pages/layouts marked client without need.
+- DB/ORM calls only in server code (Server Components, Server Actions, route handlers, a data-access layer). Flag Prisma/Drizzle imports reachable from client components; prefer a `server-only` boundary.
+- Every Server Action and route handler: validates input with a schema (Zod), checks authentication AND authorization/ownership, returns a typed result; never trusts client-provided user ids.
+- Official guidance (Next.js data-security guide): prefer a server-only Data Access Layer that performs the authorization check and returns minimal DTOs, so components/actions never receive raw DB rows. Flag direct ORM rows passed to client components.
+- Server Actions are public POST endpoints: each needs its own authN/authZ check even if the page is protected. Proxy/middleware (Next.js 16: `proxy.ts`, formerly `middleware.ts`) is for optimistic redirects, not the only authorization layer; flag auth enforced only there or only in a layout.
+- Next.js ≥16: `middleware.ts` still works but is deprecated in favor of `proxy.ts` (Low, upgrade note). The experimental taint API is defense in depth only, not a substitute for DTOs.
+- Secrets never in `NEXT_PUBLIC_*`; env access centralized and validated.
+- `loading.tsx`/`error.tsx`/`not-found.tsx` present for data-driven segments; cache/revalidation (`revalidatePath/Tag`) after mutations is deliberate.
+- Prisma/Drizzle: client singleton (no new client per request in dev hot reload), migrations committed, multi-write operations in a transaction.

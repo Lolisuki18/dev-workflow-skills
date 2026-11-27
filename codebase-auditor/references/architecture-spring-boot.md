@@ -1,0 +1,11 @@
+## Spring Boot (Java)
+- Controller → Service → Repository; controllers contain no business logic or repository calls; services do not touch `HttpServletRequest`.
+- DTOs (records) separate from JPA entities; entities never serialized to clients; mapping in a mapper/assembler.
+- `@Transactional` on service methods (public, called from another bean — self-invocation does not apply it); read-only for queries; no transactions in controllers.
+- Constructor injection (flag field `@Autowired`); configuration via `@ConfigurationProperties`, not scattered `@Value` strings.
+- Input validation with `@Valid` + Bean Validation on request DTOs; central `@RestControllerAdvice` for errors with a consistent error body.
+- JPA: LAZY relations accessed inside a transaction, N+1 (use fetch joins/entity graphs), pagination on lists, `equals/hashCode` sane on entities.
+- Open Session in View: `spring.jpa.open-in-view` is enabled when unset (Spring logs a startup warning). It keeps the persistence context open for the whole request, hiding N+1 queries and holding DB connections longer. If the property is unset or `true` on a non-trivial API, report Medium and recommend setting it explicitly (usually `false`, then fixing lazy loading with fetch joins, entity graphs or DTO projections). Whether the default changes in Boot 4 was still being discussed in the project's issue tracker; check the version's reference docs.
+- Security: method/route authorization rules present, ownership checks on resource ids, no secrets in `application.yml` committed.
+- Version check: Spring Boot 4 / Framework 7 make Jackson 3 the default JSON library (Jackson 2 deprecated) and adopt JSpecify null-safety annotations; Boot 3.x apps are not wrong, but note end-of-support dates (3.5 free support ends June 2026 per reported Spring timelines; verify on spring.io). After a 3→4 upgrade, serialization (dates, nulls, BigDecimal) and Spring Security 7 defaults need re-testing.
+- Clean/Hexagonal layout: `domain` has no Spring/JPA annotations (or a documented exception), adapters in/out packages, use-case classes per action.

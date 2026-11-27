@@ -12,7 +12,7 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
 - **READ-ONLY.** Never edit, create, delete, format or auto-fix any project file while auditing. Do not run commands that modify the repo (formatters with write mode, migrations, installs, `git commit`). Running read-only commands (list files, lint/test in check mode, `git log`) is allowed. The only output is the report, in chat or, if the user asks, as a new file outside the source tree.
 - **Evidence or silence.** Every finding carries `file:line` (or `file:start-end`) that you actually opened. No evidence → do not report it; put it under "Could not verify" instead.
 - **No invented facts.** Never claim a library, framework or config exists unless found in manifests/lockfiles/code. Do not recommend a fix that relies on tools not installed without marking it as a NEW dependency.
-- Reply in the user's language and start each reply with `[Audit X/3: <Step>]`. Be agent-agnostic: "inspect the repo", "search the code".
+- Reply in the user's language and start each reply with `[Audit X/3: <Step>]`. Inside dev-lifecycle keep its `[Phase X/5: ...]` label; use this label only when the skill runs standalone. Be agent-agnostic: "inspect the repo", "search the code".
 
 ## Step 1 — Survey & scope (CHECKPOINT)
 
@@ -20,9 +20,9 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
 2. Classify:
    - **Stack type:** Frontend / Backend / Full-stack (and framework, language, DB).
    - **Scale / Level:** map to `fresh | junior | mid | senior` = coursework/demo, thesis/portfolio, production of moderate complexity, production of high complexity. Use the level declared in `plan/` or README if present, otherwise infer and mark `[Inferred from code — needs confirmation]` for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
-3. Propose **3–5 critical modules** to deep-scan (or all modules if fewer than 3 exist), each with one line of why.
-4. **STOP and ask** the user to approve or change the list (and the scale if unsure). Do not deep-scan before the answer. If the user said "scan everything", still confirm the module list in one message.
-5. **Small scope:** for a target scope (or repo) with ≤ ~5 source files, skip the Step 1 approval wait and go directly to Step 2–3.
+3. **Small scope (read-only skill):** if the target scope (or repo) has about 5 or fewer source files, skip the module-selection stop below: audit all of them and go directly to Step 2–3.
+4. Otherwise propose **3–5 critical modules** to deep-scan (or all modules if fewer than 3 exist), each with one line of why.
+5. **STOP and ask** the user to approve or change the list (and the scale if unsure). Do not deep-scan before the answer. If the user said "scan everything", still confirm the module list in one message.
 
 ## Step 2 — Deep scan with the matching references
 

@@ -11,7 +11,7 @@ Find the real cause before touching code. Guessing and patching symptoms is the 
 
 ## Anchor rule
 
-Begin EVERY response with a step label: `[Bug 1/5: Reproduce]` · `[Bug 2/5: Evidence]` · `[Bug 3/5: Root cause]` · `[Bug 4/5: Fix]` · `[Bug 5/5: Verify & Report]`.
+Begin EVERY response with a step label: `[Bug 1/5: Reproduce]` · `[Bug 2/5: Evidence]` · `[Bug 3/5: Root cause]` · `[Bug 4/5: Fix]` · `[Bug 5/5: Verify & Report]`. Inside dev-lifecycle keep its `[Phase X/5: ...]` label; use this label only when the skill runs standalone.
 
 ## Ground rules
 

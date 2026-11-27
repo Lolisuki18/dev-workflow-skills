@@ -17,6 +17,8 @@ In full mode, begin EVERY response with a phase label, exactly one of (light mod
 
 If the label is missing from your last reply, you have drifted: re-read this file and restate the current phase.
 
+Sub-skills invoked from a phase (`feature-plan-writer`, `test-case-writer`, `codebase-auditor`, `bug-investigator`) keep this `[Phase X/5: ...]` label; their own step labels apply only when they run standalone.
+
 ## Ground rules
 
 - Reply in the user's language (Vietnamese in, Vietnamese out). Keep code identifiers in English.
@@ -56,6 +58,8 @@ Before asking anything:
 2. Read existing files in `plan/` (if any) to learn established architecture, naming, data model and decisions.
 3. Only then ask about what is genuinely ambiguous. Do not ask what the code already answers; state what you found with `file:line`.
 
+**New module inside an existing repo** (greenfield module, brownfield repo): the module gets its own folder (`<module>/` or the repo's existing layout for modules). Existing sibling modules are not touched, audited or refactored. Plans stay in the repo's `plan/`, numbered; when several plans exist, write requirement ids as `<plan number>:Rn` (for example `002:R3`). Put QA and docs output in `qa-artifacts/<module>/` and `docs/<module>/` (the `ai-workflow-suite` convention, stated here because it may not be installed).
+
 ### Proactive Advisor (always include)
 End the clarification with a short section **Cố vấn chủ động / Proactive Advisor**:
 - a cleaner or simpler solution than what the user described, if one exists;
@@ -90,7 +94,7 @@ Do NOT create or modify any source file until the user approves the plan ("ok", 
 
 1. Invoke the `test-case-writer` skill to design, write and run tests: happy path, boundary, negative.
 2. Build a **traceability table**: each Rn → implementing `file:line` → test name → pass/fail.
-3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user.
+3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user. A requirement that cannot be unit-tested (keyboard use, phone-width layout, visual states) but was verified by actually running the app (browser or emulation) counts as `manual (ran)` with an evidence line: what you did, what you saw. If it was not run, mark it `not run`; it stays a gap. For a browser UI, run the "Frontend check" in `references/frontend-check.md` (keyboard path, visible focus, 360px width without horizontal scroll, console errors, empty/error/loading states).
 4. Never fabricate results. If tests cannot be run, say so and why.
 5. Test depth follows the project `Level` (see `test-case-writer`). If the user chooses to skip tests or the quality scan, do not argue twice: record `Testing: skipped by user` (and/or `Quality scan: skipped by user`) in the plan's progress checklist, and repeat it in the Phase 5 wrap-up as a remaining risk ("chưa chạy test trước khi review/release"). The final report and any commit message must never imply that skipped checks passed.
 
@@ -101,6 +105,8 @@ Quick scan of ONLY the code written in this session using the `codebase-auditor`
 - architecture & layering consistent with `plan/` concepts;
 - security basics (secrets, input validation, authz, injection);
 - leftover debug logs, dead code, commented-out blocks, stray TODOs.
+
+After ANY fix made in this phase, re-run the Phase 4 checks (tests, and the frontend check for UI changes) and say so in the wrap-up.
 
 Close the plan file: set the `Testing:` and `Quality scan:` lines in its checklist to `done` or `skipped by user`, write a final Resume point ("all slices done"), and set `Status: Done` (`init-plan.py --set-status Done`). Then deliver the wrap-up using the template: what was built, files changed, how to run, test results, remaining risks/tech debt, suggested next steps. Remind the user that `plan/` is git-ignored (see `feature-plan-writer`).
 
@@ -114,7 +120,7 @@ After the wrap-up, offer (never start without a yes): `security-reviewer` when t
 
 ## Bugs found along the way
 
-If a failing test or runtime error reveals a bug you cannot explain in one look, hand over to the `bug-investigator` skill instead of patching blindly, then resume the phase. A defect fix needs no new plan: map it to the existing R-ids and note it in the plan's Resume point or notes, so the plan can still reach `Done` (the `delivery-lifecycle` gate checks that).
+If a failing test or runtime error reveals a bug you cannot explain in one look, hand over to the `bug-investigator` skill instead of patching blindly, then resume the phase. A defect fix needs no new plan: map it to the existing R-ids and note it in the plan's Resume point or notes, so the plan can still reach `Done`.
 
 ## Resuming
 

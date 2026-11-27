@@ -57,7 +57,8 @@ Inspect manifests and config, then existing test files:
 
 | Signal | Framework |
 |--------|-----------|
-| package.json scripts/devDeps, `jest.config*`, `vitest.config*` | Jest / Vitest (+ Testing Library, Supertest, Playwright if present) |
+| `package.json` (`node --test`) or `import ... from "node:test"` | Node.js built-in (`node:test`) |
+| `package.json` scripts/devDeps, `jest.config*`, `vitest.config*` | Jest / Vitest (+ Testing Library, Supertest, Playwright if present) |
 | `pytest.ini`, `pyproject.toml [tool.pytest]`, `conftest.py` | Pytest |
 | `tests/test_*.py` or `import unittest` in Python files | Python `unittest` |
 | `pom.xml`/`build.gradle` with JUnit, `src/test/java` | JUnit (+ Mockito, Spring Test if present) |

@@ -24,8 +24,8 @@ jobs:
       - uses: actions/setup-<runtime>@<pinned>
         with:
           <runtime>-version: "<from the repo>"
-          cache: "<package manager>"
-      - run: <install command from the repo>
+          cache: "<package manager>"        # omit when no dependencies / no lockfile
+      - run: <install command from the repo> # omit for zero-dependency stdlib projects
       - run: <lint command>
       - run: <test command>
       - run: <build command>

@@ -8,7 +8,7 @@ Checklist
 - MUST: reads `plan/001-auth.md` before writing anything (cites it).
 - MUST: warns about the conflicts BEFORE writing the plan: token storage (cookie vs localStorage), table name/naming (`users` snake_case vs `UserAccount`), possibly duplicate user entity.
 - MUST: gives 2–3 options with a recommendation and asks which to lock in; does not write the new plan yet.
-- MUST: `plan/` is added to `.gitignore` (script `--check` or equivalent) without duplicating it.
+- MUST: `plan/` is added to `.gitignore` (by the plan-creation call of the script, not by `--check`, which is read-only) without duplicating it.
 
 **Turn 2 (user):** `Theo đề xuất của bạn, giữ cookie và bảng users`
 

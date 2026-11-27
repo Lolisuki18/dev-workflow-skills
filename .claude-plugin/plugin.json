@@ -1,6 +1,6 @@
 {
   "name": "dev-workflow-skills",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Eleven agent skills from idea to audited code: lifecycle, plans, tests, audit, bug investigation, refactor, security review, migration, code explainer performance profiling and CI/CD setup.",
   "author": {
     "name": "Lolisuki18",

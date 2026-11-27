@@ -33,6 +33,17 @@ jobs:
 
 Add services (database, cache) under `services:` only when tests need them, with a health check.
 
+## Stack variants (replace the runtime steps above; pin versions from the repo)
+
+| Stack | Runner | Setup and cache | Commands | Lockfile |
+|---|---|---|---|---|
+| Go | `ubuntu-latest` | `actions/setup-go` with the version from `go.mod` (`go-version-file`); module cache keyed by `go.sum` (check the action version's default) | `go vet ./...`, `go test ./...` (add `-race` where supported), `go build ./...`; `golangci-lint run` if configured | `go.sum` committed |
+| Rust | `ubuntu-latest` | Rust toolchain action pinned to the repo's toolchain (`rust-toolchain.toml` if present); cache `~/.cargo` registry and `target/` keyed by `Cargo.lock` (for example `Swatinem/rust-cache`) | `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`, `cargo build --release`; `--locked` fails if `Cargo.lock` would change | `Cargo.lock` committed for binaries |
+| Android (Gradle) | `ubuntu-latest` | `actions/setup-java` (JDK version required by the Android Gradle Plugin); Gradle caching via `gradle/actions/setup-gradle` | `./gradlew lint test assembleDebug`; instrumented tests need an emulator and are slower, run them in a separate job | `gradle/wrapper` committed; version catalog `gradle/libs.versions.toml`; Gradle dependency locking only if the repo uses it |
+| iOS (xcodebuild) | `macos-latest` (check which Xcode the image has; macOS minutes cost more) | Select the Xcode version the project needs; cache SwiftPM checkouts keyed by `Package.resolved` | `xcodebuild test -scheme <scheme> -destination 'platform=iOS Simulator,name=<device>'`; add `CODE_SIGNING_ALLOWED=NO` for unsigned CI builds | `Package.resolved` committed |
+
+Release signing (Android keystore, iOS certificates and profiles) comes from the provider's secret store and runs only on protected branches or tags, never on pull requests from forks.
+
 ## Dockerfile skeleton (multi-stage)
 
 ```dockerfile

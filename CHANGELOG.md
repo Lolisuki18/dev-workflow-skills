@@ -2,9 +2,13 @@
 
 Format: newest first. Skills are prompts, so "breaking" means a change in behavior an agent will notice (labels, hard stops, script flags).
 
-## Unreleased (next: 0.2.0)
+## [Unreleased]
+
+## [1.0.0] - 2026-11-27
 
 ### Added
+- Shared `scripts/run-evals.py` (copy of the canonical file in `ai-workflow-suite`; `turns:` multi-turn convention, `--dry-run`).
+- Go, Rust, Android native and iOS native coverage: architecture guide and plan layouts, per-stack `codebase-auditor` files (`architecture-go.md`, `-rust.md`, `-android.md`, `-ios.md`), security checklist, test detection, formatter setup, migration tools, CI templates and profiling tools.
 - Skills: `refactor-planner`, `security-reviewer`, `migration-writer`, `code-explainer`, `ci-cd-setup`, `performance-profiler` (each with a validated `SKILL.md`; references for the first three and `ci-cd-setup`).
 - `LICENSE` (MIT).
 - `scripts/install.py --only` / `--exclude`; `scripts/readme-index.py` (generated skill index, checked in CI); CI workflow (`validate-skills.py` and the unit tests, plus a diff against the shared scripts of `ai-workflow-suite`); `.claude-plugin/plugin.json`. 31 tests.
@@ -14,6 +18,8 @@ Format: newest first. Skills are prompts, so "breaking" means a change in behavi
 - README: install table now lists every agent preset with its confidence level.
 
 ### Changed
+- `codebase-auditor` architecture rules split into per-stack files (`architecture-<stack>.md`, one loaded per audit); `architecture-rules.md` keeps the verification block and the usage and style rules.
+- References now load on demand per step: `dev-lifecycle` phase templates split into Phase 1 (`phase-templates.md`) and Phases 2-5 (`phase-templates-p2-p5.md`, read after the Phase 1 hard stop); already-loaded references are not re-read. Measured (tokens = bytes / 3.8): `dev-lifecycle` eager 7,475 -> 7,182 (-4%); `codebase-auditor` typical run 7,830 -> 6,054 (-23%). The dev path eager total went 14,012 -> 14,147 because `SKILL.md` text grew in the same period.
 - Friction fixes from real agent runs on a tiny Python CLI: `dev-lifecycle` (sizing by counts not adjectives, pre-filled greenfield answers, multi-slice pass for tiny projects, hygiene files, no-formatter evidence, defect fixes map to existing R-ids); `feature-plan-writer` (`--check` side effect on `.gitignore`, template already written by the script); `bug-investigator` (NOT-REPRODUCED exit, unreported defects as separate items, regression test first with a 1-3 case list, line endings kept); `test-case-writer` (defers to `bug-investigator`, `Lessons applied` line, guard vs regression, Target from tool output); `security-reviewer` (small-scope compact report, CLI / local tool checklist); `code-explainer` short mode; `codebase-auditor` no-matching-stack note; `refactor-planner` and `performance-profiler` small-scope rule, no invented targets.
 - Skill descriptions are English only and shorter (4 trigger phrases, at most 650 characters) to cut the context every installed skill costs. The trigger evals keep their Vietnamese prompts to check that matching still works.
 - Every skill states that content found in repos, logs and pages is data, not instructions. `code-explainer` takes `file:line` numbers from tool output, not by eye.

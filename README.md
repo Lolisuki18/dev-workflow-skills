@@ -86,10 +86,10 @@ Each repo is self-contained; install only what you need.
 ## Layout
 
 ```
-dev-lifecycle/        SKILL.md, references/{phase-templates,formatter-setup,architecture-guide}.md
+dev-lifecycle/        SKILL.md, references/{phase-templates,phase-templates-p2-p5,formatter-setup,architecture-guide}.md
 feature-plan-writer/  SKILL.md, scripts/init-plan.py, references/{plan-template,architecture-conventions}.md
 test-case-writer/     SKILL.md, references/lessons-learned.md
-codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,lessons-learned}.md
+codebase-auditor/     SKILL.md, references/{backend,frontend,security-and-ops,architecture-rules,architecture-<stack>,lessons-learned}.md
 bug-investigator/     SKILL.md, references/debug-playbook.md
 refactor-planner/     SKILL.md, references/refactor-catalog.md
 security-reviewer/    SKILL.md, references/security-checklist.md
@@ -111,7 +111,7 @@ Skills reference each other by name only, so install them together. Suite-wide r
 
 ### Architecture choice (Feature-based vs Clean)
 
-For greenfield projects `dev-lifecycle` explains both styles, recommends one for the chosen stack (Next.js, Spring Boot, .NET, NestJS/FastAPI, Flutter) and lets you pick. The choice is stored in the plan and used by `codebase-auditor` later.
+For greenfield projects `dev-lifecycle` explains both styles, recommends one for the chosen stack (Next.js, Spring Boot, .NET, NestJS/FastAPI, Flutter, Go, Rust, Android native, iOS native) and lets you pick. The choice is stored in the plan and used by `codebase-auditor` later.
 
 ### Project level (fresh / junior / mid / senior)
 
@@ -126,6 +126,41 @@ One setting that scales the whole workflow: architecture default, test depth, au
 ### Lessons learned (your own rules)
 
 `references/lessons-learned.md` in `codebase-auditor` and `test-case-writer` is a personal list of recurring mistakes. Skills check every rule and suggest new ones at the end of a report (`bug-investigator` suggests too); they only append after you approve.
+
+## What a run looks like
+
+These excerpts come from a test run on a sample app (`Test-skill`, a small habit tracker plus two other toy modules), not from a production project. Excerpt of `plan/003-habitly.md`, written by `feature-plan-writer` for the sample habit tracker (header, then the start of the test plan table). `plan/` is git-ignored in the sample repo, so this file exists in its working copy, not in its git history:
+
+Source: `Test-skill/plan/003-habitly.md`, quoted verbatim.
+
+````markdown
+# 003 — habitly
+Status: Done
+Date: 2026-11-27
+Level: junior
+Architecture: Hybrid — pure domain ES modules (testable in Node) + thin DOM/localStorage shell; single feature so no feature folders
+Related plans: none (001-taskbox and 002-vault are unrelated modules; R-ids here are scoped per plan, cited as `003:Rn`)
+
+## 6. Test plan
+| Req | Happy | Boundary | Negative |
+|-----|-------|----------|----------|
+| R1 | add "Read", 3 | name 60 chars, target 1 and 7 | "", 61 chars, target 0/8/2.5 |
+| R2 | rename, archive, restore | rename to same name | unknown id, dup name |
+| R3 | toggle on then off | year boundary date | bad date, future date |
+| R4 | week of 2026-11-27 starts 2026-11-23 | Sunday belongs to prior Mon | invalid date |
+| R5 | 3-day run = current 3 | today undone keeps yesterday's run; gap resets | no logs = 0/0 |
+````
+
+## Install as a Claude Code plugin
+
+After the repos are published, the marketplace lives in `ai-workflow-suite`:
+
+```bash
+claude plugin marketplace add Lolisuki18/ai-workflow-suite
+claude plugin install dev-workflow-skills@lolisuki18-skills
+```
+
+The manifest (`.claude-plugin/plugin.json`) has **not** been checked with `claude plugin validate` yet. Plugin skills are namespaced by the plugin name. The script install below does not need any of this.
 
 ## Installation
 

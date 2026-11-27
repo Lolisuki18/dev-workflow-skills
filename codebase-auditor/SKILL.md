@@ -16,7 +16,7 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
 
 ## Step 1 — Survey & scope (CHECKPOINT)
 
-1. Read the directory tree (depth 2–3), root configs and manifests (package.json, pyproject.toml, requirements, pom.xml/build.gradle, *.csproj, pubspec.yaml, Dockerfile, CI files, .env.example, README).
+1. Read the directory tree (depth 2–3), root configs and manifests (package.json, pyproject.toml, requirements, pom.xml/build.gradle(.kts), *.csproj, pubspec.yaml, go.mod, Cargo.toml, Package.swift/*.xcodeproj, Dockerfile, CI files, .env.example, README).
 2. Classify:
    - **Stack type:** Frontend / Backend / Full-stack (and framework, language, DB).
    - **Scale / Level:** map to `fresh | junior | mid | senior` = coursework/demo, thesis/portfolio, production of moderate complexity, production of high complexity. Use the level declared in `plan/` or README if present, otherwise infer and mark `[Inferred from code — needs confirmation]` for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
@@ -34,11 +34,26 @@ Load ONLY the files that match the detected stack:
 | Frontend / UI / mobile client | `references/frontend.md` |
 | Any stack (secrets, auth, config, deploy, logging, deps) | `references/security-and-ops.md` |
 
-ALWAYS also load `references/architecture-rules.md` (judge against the project's declared or evident style, only the sections for the detected stack) and `references/lessons-learned.md` (the user's own recurring-mistake rules; check each rule against the scoped modules and report hits as normal findings).
+ALWAYS also load `references/architecture-rules.md` (judge against the project's declared or evident style; it holds the style rules, and the per-stack rules live in separate files, so load only the one for the detected stack from the table below) and `references/lessons-learned.md` (the user's own recurring-mistake rules; check each rule against the scoped modules and report hits as normal findings).
+
+Per-stack architecture rules (load only the matching file, in addition to `references/architecture-rules.md`):
+
+| Detected | Load |
+|----------|------|
+| Next.js (App Router) + TypeScript + Prisma/Drizzle | `references/architecture-nextjs.md` |
+| Spring Boot (Java) | `references/architecture-spring-boot.md` |
+| ASP.NET Core (.NET) | `references/architecture-aspnet-core.md` |
+| NestJS (TypeScript) | `references/architecture-nestjs.md` |
+| FastAPI (Python) | `references/architecture-fastapi.md` |
+| Flutter (Dart) + Firebase/Supabase | `references/architecture-flutter.md` |
+| Go (services / CLIs) | `references/architecture-go.md` |
+| Rust (services / CLIs / libraries) | `references/architecture-rust.md` |
+| Android native (Kotlin, Jetpack Compose, Room) | `references/architecture-android.md` |
+| iOS native (Swift, SwiftUI) | `references/architecture-ios.md` |
 
 If the `Next review:` date at the top of `architecture-rules.md` is in the past, say so in the report's "Could not verify" section (framework rules may be stale; judge against the installed version's current docs).
 
-If a listed stack matches only partly (for example Next.js without Prisma), say "partially applicable: used sections X, skipped Y" instead of forcing the next sentence. If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, do not force-fit a framework rule, and still load `references/backend.md` / `references/frontend.md` / `references/security-and-ops.md` as applicable to the detected surfaces.
+If a listed stack matches only partly (for example Next.js without Prisma), say "partially applicable: used sections X, skipped Y" instead of forcing the next sentence. If no stack in the per-stack table above matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, do not force-fit a framework rule, and still load `references/backend.md` / `references/frontend.md` / `references/security-and-ops.md` as applicable to the detected surfaces.
 
 Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 
@@ -93,4 +108,4 @@ Rules for the report:
 
 ## Use inside dev-lifecycle Phase 5
 
-When called for a quick scan of newly written code, skip the module checkpoint, limit the scope to files changed in this session, load the relevant references, and report only the findings table plus verdict.
+When called for a quick scan of newly written code, skip the module checkpoint, limit the scope to files changed in this session, load the relevant references (skip any already loaded in this session), and report only the findings table plus verdict.

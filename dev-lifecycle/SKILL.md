@@ -24,7 +24,7 @@ Sub-skills invoked from a phase (`feature-plan-writer`, `test-case-writer`, `cod
 - Reply in the user's language (Vietnamese in, Vietnamese out). Keep code identifiers in English.
 - Agent-agnostic: say "inspect the repo", "run the lint/test commands" — use whatever tools your environment offers.
 - Anti-hallucination: every claim about existing code cites `file:line`. Never import or recommend a library that is not installed or declared in the manifest unless you flag it as a NEW dependency and ask first.
-- Templates for each phase output live in `references/phase-templates.md`. Load it when producing a phase output.
+- Templates for each phase output: Phase 1 in `references/phase-templates.md` (load it when producing the first Phase 1 output); Phases 2-5 in `references/phase-templates-p2-p5.md` (load it once, when the Phase 1 hard stop is answered and you start Phase 2, or when you resume at a later phase).
 - Do not run `git commit` or `git push` unless the user asked (say so once); the plan's Resume point, not a commit, carries progress.
 
 ## Size the task first (light mode)
@@ -41,7 +41,7 @@ When unsure, ask the user in one line: "Việc này nhỏ, làm nhanh luôn hay 
 
 ## Phase 1 — Discovery & Clarification
 
-First decide the mode by inspecting the repo:
+Phase 1 creates no files and runs no script except the read-only `init-plan.py --check`: the plan file is created in Phase 2, after the Phase 1 approval. First decide the mode by inspecting the repo:
 
 - **Greenfield** (empty directory, or only a raw idea such as "I want an English-learning app").
 - **Brownfield** (repo already has code).
@@ -55,7 +55,7 @@ Ask ONE batched message of 4–5 questions covering: platform (web/mobile/deskto
 
 ### Brownfield
 Before asking anything:
-1. Inspect the repo layout, manifests (package.json, pyproject.toml, pom.xml, *.csproj, pubspec.yaml...), and code related to the request.
+1. Inspect the repo layout, manifests (package.json, pyproject.toml, pom.xml, *.csproj, pubspec.yaml, go.mod, Cargo.toml, build.gradle.kts, Package.swift...), and code related to the request.
 2. Read existing files in `plan/` (if any) to learn established architecture, naming, data model and decisions.
 3. Only then ask about what is genuinely ambiguous. Do not ask what the code already answers; state what you found with `file:line`.
 
@@ -95,7 +95,7 @@ Do NOT create or modify any source file until the user approves the plan ("ok", 
 
 ## Phase 4 — Testing & Verification
 
-1. Invoke the `test-case-writer` skill, in this order: (a) first print the test-case table (Req | case | class | expected); (b) only then write the test files; (c) run them. A table printed after the test code does not count.
+1. Invoke the `test-case-writer` skill, in this order: (a) first write the test-case table (Req | case | class | expected) into the plan's Test plan section and print it; (b) only then create the test files, in a later step, never in the same step as the table; (c) run them. A table printed or written after the first test file exists does not count. If you notice you already wrote test code first, say so in the report instead of back-dating the table.
 2. After the tests ran, build the **traceability table** (a different table from the test-case table): each Rn → implementing `file:line` → test name → pass/fail.
 3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user. A requirement that cannot be unit-tested (keyboard use, phone-width layout, visual states) but was verified by actually running the app (browser or emulation) counts as `manual (ran)` with an evidence line: what you did, what you saw. If it was not run, mark it `not run` with the reason (tooling or environment cannot start the UI); never claim it; it stays a gap. For a browser UI, run the "Frontend check" in `references/frontend-check.md` (keyboard path, visible focus, 360px width without horizontal scroll, console errors, empty/error/loading states).
 4. Never fabricate results. If tests cannot be run, say so and why.
@@ -103,7 +103,7 @@ Do NOT create or modify any source file until the user approves the plan ("ok", 
 
 ## Phase 5 — Final Audit & Wrap-up
 
-Quick scan of ONLY the code written in this session using the `codebase-auditor` checklists (read its `references/` files matching the stack; stay read-only in this phase except for fixing issues you introduced, which you list):
+Quick scan of ONLY the code written in this session using the `codebase-auditor` checklists (read its `references/` files matching the stack, skipping any already loaded in this session; stay read-only in this phase except for fixing issues you introduced, which you list):
 
 - architecture & layering consistent with `plan/` concepts;
 - security basics (secrets, input validation, authz, injection);

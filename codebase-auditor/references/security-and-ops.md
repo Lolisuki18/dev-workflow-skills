@@ -29,7 +29,7 @@ Stack-agnostic. Cite `file:line`. Calibrate severity to the project's scale (MVP
 
 ## Dependencies & supply chain
 - Lockfile committed; unpinned or very outdated critical dependencies; unused dependencies.
-- Run the ecosystem's audit command if available (e.g. `npm audit`, `pip-audit`, `mvn dependency-check`, `dotnet list package --vulnerable`, `flutter pub outdated`) and cite real output; if not runnable, state that.
+- Run the ecosystem's audit command if available (e.g. `npm audit`, `pip-audit`, `mvn dependency-check`, `dotnet list package --vulnerable`, `flutter pub outdated`, `govulncheck ./...` for Go, `cargo audit` for Rust; for Gradle/SwiftPM use the project's configured dependency-check tooling) and cite real output; if not runnable, state that.
 - Suspicious/typosquatted packages, install scripts, packages fetched from unknown registries or git URLs.
 
 ## Logging, monitoring & errors

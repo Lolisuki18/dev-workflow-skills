@@ -25,7 +25,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 ```
 
-(Use `indent_size = 4` for Python, Java, C#; tabs for Go.)
+(Use `indent_size = 4` for Python, Java, C#, Rust, Kotlin; tabs for Go. For Swift follow the project's formatter config.)
 
 ## JavaScript / TypeScript / React / Next.js / Node
 
@@ -57,6 +57,27 @@ trim_trailing_whitespace = true
 
 - Dart `Dart-Code.dart-code` and Flutter `Dart-Code.flutter`.
 - Built-in `dart format .`; lints via `analysis_options.yaml` and `flutter analyze`.
+
+## Go
+
+- Go extension `golang.go`. Formatting is built in and non-negotiable: `gofmt -l .` (list unformatted files) and `gofmt -w .` (rewrite).
+- `go vet ./...` for built-in checks; optional `golangci-lint run` with `.golangci.yml` (check the installed version's config format).
+- Tabs are the Go convention; do not set `indent_style = space` for `*.go` in `.editorconfig`.
+
+## Rust
+
+- rust-analyzer `rust-lang.rust-analyzer`.
+- `cargo fmt` (config in `rustfmt.toml`; `cargo fmt --check` for CI) and `cargo clippy` (strict CI form: `cargo clippy --all-targets -- -D warnings`).
+
+## Android (Kotlin)
+
+- Android Studio / IntelliJ IDEA is the normal editor; no VS Code extension is required.
+- ktlint and/or detekt through their Gradle plugins (for example `./gradlew ktlintCheck`, `./gradlew detekt` only if the plugin is configured); Android Lint via `./gradlew lint`. Check the project's plugin and Gradle versions before adding config files.
+
+## iOS (Swift)
+
+- Xcode is the normal editor; VS Code users can use the Swift extension `swiftlang.swift-vscode`.
+- SwiftLint (`swiftlint`, config `.swiftlint.yml`) and/or swift-format (config `.swift-format`); check the installed version for the exact command (`swift format` ships with newer toolchains, otherwise install `swift-format`).
 
 ## Example `.vscode/extensions.json` (TS project, Option A)
 

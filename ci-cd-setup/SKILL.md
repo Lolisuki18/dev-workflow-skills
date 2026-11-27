@@ -19,7 +19,7 @@ Begin EVERY response with a step label: `[CI 1/4: Detect]` · `[CI 2/4: Design]`
 - Commands in the pipeline must exist in the repo (`package.json` scripts, `Makefile`, build files). Never invent a script, flag, image tag or action version: check the repo and the official docs, and cite what you used.
 - **Secrets:** never write a real secret, token or password into any file. Use the CI provider's secret store and document the names. Add `.env` to ignore files and provide `.env.example`.
 - Never trigger a real deploy, push an image or create cloud resources. Writing files and local checks only, unless the user explicitly asks for more.
-- Pin versions of actions and base images; prefer the minimal image that works.
+- Pin versions of actions and base images; prefer the minimal image that works. If versions cannot be verified from docs (offline): pin to a major version tag already used elsewhere in the repo, or write `[Needs input: confirm latest major of <action>]`. Never invent a version.
 
 ## Step 1 — Detect
 
@@ -32,7 +32,7 @@ Begin EVERY response with a step label: `[CI 1/4: Detect]` · `[CI 2/4: Design]`
 Present a short plan: stages (install → lint → type-check → test → build → package → deploy), triggers, caches, matrix (versions or OS only if the project supports them), environments and approvals, secret names needed. Keep the first version small: a green build and test on every PR beats an elaborate pipeline.
 
 ### HARD STOP
-Wait for approval before writing files. Hosting and deploy choices are the user's.
+Wait for approval before writing files. Hosting and deploy choices are the user's. Small scope (≤ ~5 files, e.g. one workflow file): state the plan, wait for approval, then write; no separate stops.
 
 ## Step 3 — Write
 
@@ -45,7 +45,7 @@ Load `references/pipeline-templates.md` for structure and adapt it to the detect
 
 ## Step 4 — Verify & hand over
 
-1. Run what can run locally: lint the YAML, build the image (`docker build`), run the container's health or test command, run the test command the pipeline uses. Report real results; say what could not be run (the pipeline itself only runs on the provider).
+1. Run what can run locally: lint the YAML (if no YAML parser is installed, state "syntax not machine-checked" and list the manual checks: indentation, keys; do not claim it validated), build the image (`docker build`), run the container's health or test command, run the test command the pipeline uses. Report real results; say what could not be run (the pipeline itself only runs on the provider).
 2. List the manual steps the user must do: add secrets, enable branch protection, set up environments.
 3. Report:
 

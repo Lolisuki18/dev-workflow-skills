@@ -38,14 +38,14 @@ ALWAYS also load `references/architecture-rules.md` (judge against the project's
 
 If the `Next review:` date at the top of `architecture-rules.md` is in the past, say so in the report's "Could not verify" section (framework rules may be stale; judge against the installed version's current docs).
 
-If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, do not force-fit a framework rule, and still load `references/backend.md` / `references/frontend.md` / `references/security-and-ops.md` as applicable to the detected surfaces.
+If a listed stack matches only partly (for example Next.js without Prisma), say "partially applicable: used sections X, skipped Y" instead of forcing the next sentence. If no stack listed in `architecture-rules.md` matches (for example a plain stdlib CLI), say "no stack-specific rules apply" in the report, do not force-fit a framework rule, and still load `references/backend.md` / `references/frontend.md` / `references/security-and-ops.md` as applicable to the detected surfaces.
 
 Full-stack → load all three stack files. Pure frontend with no server → frontend + security-and-ops. Do not load files that are not relevant.
 
 Method:
 - Work module by module from the approved list. Read the real code; follow calls across layers.
 - Use search to confirm patterns (hard-coded secrets, raw SQL string concatenation, unused exports, `console.log`/`print` leftovers, TODO/FIXME).
-- Run existing read-only checks if available (lint, type-check, tests, dependency audit) and cite the output; if you cannot run them, say so.
+- Run existing read-only checks if available (lint, type-check, tests, dependency audit) and cite the output; if you cannot run them, say so. To verify a finding you may also run the project's own tests and start the app on a free local port (set `PYTHONDONTWRITEBYTECODE=1` or the equivalent to keep the tree clean), never against shared environments or real data.
 - Record each finding as you go: severity, file:line, what, why it matters, suggested fix (describe it, do not apply it).
 
 Severity guide:

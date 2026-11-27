@@ -15,7 +15,7 @@ In full mode, begin EVERY response with a phase label, exactly one of (light mod
 
 `[Phase 1/5: Discovery & Clarification]` · `[Phase 2/5: Planning]` · `[Phase 3/5: Implementation]` · `[Phase 4/5: Testing & Verification]` · `[Phase 5/5: Final Audit & Wrap-up]`
 
-If the label is missing from your last reply, you have drifted: re-read this file and restate the current phase.
+If the label is missing from your last reply, you have drifted: re-read this file and restate the current phase. A phase message reports only that phase's work; do not mention later-phase findings in it.
 
 Sub-skills invoked from a phase (`feature-plan-writer`, `test-case-writer`, `codebase-auditor`, `bug-investigator`) keep this `[Phase X/5: ...]` label; their own step labels apply only when they run standalone.
 
@@ -25,6 +25,7 @@ Sub-skills invoked from a phase (`feature-plan-writer`, `test-case-writer`, `cod
 - Agent-agnostic: say "inspect the repo", "run the lint/test commands" — use whatever tools your environment offers.
 - Anti-hallucination: every claim about existing code cites `file:line`. Never import or recommend a library that is not installed or declared in the manifest unless you flag it as a NEW dependency and ask first.
 - Templates for each phase output live in `references/phase-templates.md`. Load it when producing a phase output.
+- Do not run `git commit` or `git push` unless the user asked (say so once); the plan's Resume point, not a commit, carries progress.
 
 ## Size the task first (light mode)
 
@@ -75,7 +76,7 @@ Stop after the questions + advisor notes. Wait until the user confirms the spec 
 2. Present a short summary of the plan (requirements R1..Rn, files to touch, risks).
 
 ### HARD STOP
-Do NOT create or modify any source file until the user approves the plan ("ok", "code đi", "approved", "go"). Once they do, have `feature-plan-writer` mark it approved (its `init-plan.py --approve`). If the user requests changes, update the plan file and ask again. Scaffolding config files (formatter, `.editorconfig`) count as code: wait for approval too, unless the user already said yes in Phase 1.
+Do NOT create or modify any source file until the user approves the plan ("ok", "code đi", "approved", "go"). Once they do, run `init-plan.py --approve` (via `feature-plan-writer`) right after the user's yes and show its output; never edit `Status` by hand. If the user requests changes, update the plan file and ask again. Scaffolding config files (formatter, `.editorconfig`) count as code: wait for approval too, unless the user already said yes in Phase 1.
 
 ## Phase 3 — Implementation
 
@@ -83,18 +84,20 @@ Do NOT create or modify any source file until the user approves the plan ("ok", 
 
 - Work in small **vertical slices** (one requirement end to end: data → logic → API/UI), in the order set by the approved plan.
 - Stay inside the plan's file list. If you discover a needed change outside it, stop and tell the user; update the plan first. Exception: hygiene files (`.gitignore` entries such as `__pycache__/`, lock files) are allowed without a stop; list them in the phase output.
-- Tiny projects (≤ ~4 modules): several slices may be implemented in one pass, but the report must still list each slice's check result separately.
+- Tiny projects (≤ ~4 modules): several slices may be implemented in one pass, but the report must still list each slice's check result separately, and the Resume point is still updated per slice.
+- Baseline first: before changing code, run the project's checks once (format, lint, type-check, tests) and record items that already fail (e.g. an existing `tsc` error). Only NEW failures block a slice; list the baseline failures in the report.
+- Keep each file's existing line endings (CRLF or LF) and edit in place; do not rewrite whole files.
 - No unrelated refactors, no drive-by renames, no new dependencies that are not in the plan.
 - Fix-attempt limit: if a format/lint/type-check/build failure survives 3 distinct fix attempts, stop. Report the exact command, error and what you tried, then ask the user. Do not loop silently or loosen the check.
-- Keep the plan's "Resume point" (section 10) current after each slice: current slice, next step, open issues. A new session must be able to continue from it alone.
+- Update the plan's "Resume point" (section 10) after each slice, also when several slices are batched in one pass: current slice, next step, open issues. A new session must be able to continue from it alone.
 - After each slice run, using the project's own commands: formatter, linter, type-check/compile. Fix issues you introduced before moving on. Report commands run and real results. If no formatter or linter is configured, run instead a compile/syntax check (for example `python -m compileall`) and the test run with warnings as errors where supported, and state "no formatter configured" as the evidence; do not add one without asking.
 - Mark each Rn done in the plan's checklist as its slice finishes.
 
 ## Phase 4 — Testing & Verification
 
-1. Invoke the `test-case-writer` skill to design, write and run tests: happy path, boundary, negative.
-2. Build a **traceability table**: each Rn → implementing `file:line` → test name → pass/fail.
-3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user. A requirement that cannot be unit-tested (keyboard use, phone-width layout, visual states) but was verified by actually running the app (browser or emulation) counts as `manual (ran)` with an evidence line: what you did, what you saw. If it was not run, mark it `not run`; it stays a gap. For a browser UI, run the "Frontend check" in `references/frontend-check.md` (keyboard path, visible focus, 360px width without horizontal scroll, console errors, empty/error/loading states).
+1. Invoke the `test-case-writer` skill, in this order: (a) first print the test-case table (Req | case | class | expected); (b) only then write the test files; (c) run them. A table printed after the test code does not count.
+2. After the tests ran, build the **traceability table** (a different table from the test-case table): each Rn → implementing `file:line` → test name → pass/fail.
+3. Any requirement without code or without a passing test is reported as a gap and fixed (back to Phase 3 for that slice) or explicitly accepted by the user. A requirement that cannot be unit-tested (keyboard use, phone-width layout, visual states) but was verified by actually running the app (browser or emulation) counts as `manual (ran)` with an evidence line: what you did, what you saw. If it was not run, mark it `not run` with the reason (tooling or environment cannot start the UI); never claim it; it stays a gap. For a browser UI, run the "Frontend check" in `references/frontend-check.md` (keyboard path, visible focus, 360px width without horizontal scroll, console errors, empty/error/loading states).
 4. Never fabricate results. If tests cannot be run, say so and why.
 5. Test depth follows the project `Level` (see `test-case-writer`). If the user chooses to skip tests or the quality scan, do not argue twice: record `Testing: skipped by user` (and/or `Quality scan: skipped by user`) in the plan's progress checklist, and repeat it in the Phase 5 wrap-up as a remaining risk ("chưa chạy test trước khi review/release"). The final report and any commit message must never imply that skipped checks passed.
 

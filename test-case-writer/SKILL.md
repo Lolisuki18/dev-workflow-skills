@@ -27,7 +27,7 @@ Turn requirements and code into a verified test suite. Honest results only.
 
 ## Step 2 — Design the test-case table
 
-Produce the table BEFORE writing test code, and show it to the user. In standalone mode, **Hard stop** for explicit approval (`approved`, `ok proceed`) before writing test files in Step 4 (or stop here with `NOT RUN` if the user only asked for test-case design); for `dev-lifecycle`, include it in the phase output.
+First print the test-case table (Req | case | class | expected); only then write test files. A table printed after the test code does not count. The traceability table that dev-lifecycle builds later is a different table. In standalone mode, **Hard stop** for explicit approval (`approved`, `ok proceed`) before writing test files in Step 4 (or stop here with `NOT RUN` if the user only asked for test-case design); for `dev-lifecycle`, include it in the phase output.
 
 | ID | Req | Category | Scenario | Input / Setup | Expected | Target (file:line) |
 |----|-----|----------|----------|---------------|----------|--------------------|
@@ -79,6 +79,7 @@ If the test command is unclear, read the README/scripts/CI config rather than gu
 - Reference the case ID or requirement in the test name or a short comment (`// R2 boundary`) to keep traceability.
 - A regression test must be run against the unfixed code first and must fail there; a case that passes before the fix cannot catch the bug, so label it "guard, not regression".
 - Do not weaken or delete existing tests; do not leave `skip`/`only` behind.
+- A test that exposes a REAL defect stays in the suite only with an explicit expected-failure marker the framework supports (`unittest.expectedFailure`, pytest `xfail(strict=True)`, `test.fails`...) and a link to the defect; otherwise report it in chat without committing a red test. Never leave CI silently red.
 
 ## Step 5 — Run and report (real results)
 

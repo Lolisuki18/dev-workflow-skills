@@ -130,6 +130,20 @@ class InitPlanTests(TempRepo):
         self.assertEqual(kv(r.stdout)["gitignore"], "skipped-tracked")
         self.assertNotIn("plan/", self.gitignore())
 
+    def test_check_is_read_only(self):
+        (self.root / ".gitignore").write_text("node_modules", encoding="utf-8")
+        r = self.init("--check")
+        k = kv(r.stdout)
+        self.assertEqual((k["gitignore"], k["plan_dir"], k["next_plan"]), ("would-add", "missing", "001"))
+        self.assertEqual(self.gitignore(), "node_modules")
+        self.assertFalse((self.root / "plan").exists())
+        (self.root / ".gitignore").unlink()
+        self.assertEqual(kv(self.init("--check").stdout)["gitignore"], "would-create")
+        self.assertIsNone(self.gitignore())
+        self.init("Demo")
+        k = kv(self.init("--check").stdout)
+        self.assertEqual((k["gitignore"], k["plan_dir"], k["next_plan"]), ("already", "exists", "002"))
+
     def test_gate_marker_toggle(self):
         self.init("--gate", "off")
         self.assertTrue((self.root / "plan" / ".no-gate").exists())

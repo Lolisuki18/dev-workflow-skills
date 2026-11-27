@@ -45,7 +45,9 @@ Write the plan as numbered steps, each small enough to review alone and each lea
 For each step: what moves, files touched, the check that proves it (command), and how to revert (one commit per step). Order steps so risky ones come after the safety net is wider.
 
 ### HARD STOP
-Present the plan and wait for approval. If the plan has more than about 8 steps, propose splitting it into separate PRs.
+Small scope (≤ ~5 files touched): merge this stop with the Step 2 stop into ONE: show baseline, tests and plan together, wait for approval, then execute.
+
+Otherwise present the plan and wait for approval. If the plan has more than about 8 steps, propose splitting it into separate PRs.
 
 ## Step 4 — Execute
 

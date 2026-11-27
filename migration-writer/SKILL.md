@@ -23,8 +23,8 @@ Begin EVERY response with a step label: `[Migrate 1/5: Impact]` · `[Migrate 2/5
 
 ## Step 1 — Impact
 
-1. Identify the migration type: **schema** (table, column, index, constraint), **data** (backfill, transform), **version** (framework, runtime, library).
-2. Find the tool in use (Flyway, Liquibase, EF Core, Prisma, Alembic, Knex, Rails, Django, npm/pip/maven/gradle) from the repo, and follow its naming and folder conventions.
+1. Identify the migration type: **schema** (table, column, index, constraint), **data** (backfill, transform), **version** (framework, runtime, library). If no schema, data, or version change is needed/requested, say "no migration needed; nothing to do" and stop.
+2. Find the tool in use (Flyway, Liquibase, EF Core, Prisma, Alembic, Knex, Rails, Django, npm/pip/maven/gradle) from the repo, and follow its naming and folder conventions. For raw SQL / `CREATE TABLE IF NOT EXISTS` repos with no migration tool (e.g., stdlib SQLite), use idempotent `PRAGMA user_version` / schema checks unless the user explicitly asks to add a migration framework.
 3. Inventory impact with `file:line`: code that reads or writes the affected columns or APIs, queries, ORM models, seeds, tests, docs, scheduled jobs and other services sharing the DB.
 4. Record table size and traffic if known (locks matter above roughly a million rows). If unknown, ask.
 

@@ -53,3 +53,8 @@ Use only the parts that match the stack. Each line is a question to answer from 
 - Price, quantity, discount and balance computed on the server; negative and huge values rejected.
 - Workflows cannot skip steps (pay before ship, verify before login).
 - Race conditions on balance, stock and coupon use have locking or unique constraints.
+
+## BaaS, Mobile & Framework Pitfalls
+- Supabase/Firebase: Row Level Security (RLS) enabled with explicit policies on every exposed table; `service_role` / admin credentials never shipped in client bundles.
+- ASP.NET Core Minimal APIs: DataAnnotations (`[Range]`, `[Required]`) are ignored unless `builder.Services.AddValidation()` (.NET 10+) or an endpoint filter is registered.
+- NestJS: `ValidationPipe` needs `forbidNonWhitelisted: true` (alongside `whitelist: true`) to reject unknown fields, and `@UseGuards` / `APP_GUARD` on protected routes.

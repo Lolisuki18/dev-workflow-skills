@@ -2,21 +2,23 @@
 """Create the next plan file in plan/ and make sure plan/ is git-ignored.
 
 Usage:
-  python init-plan.py "Feature name"            # create plan file (+ fix .gitignore)
+  python init-plan.py "Feature name"            # create plan file (+ .gitignore entry)
   python init-plan.py "Feature name" --date     # force YYYY-MM-DD-name.md naming
-  python init-plan.py --check                   # only list plans + fix .gitignore
+  python init-plan.py --check                   # read-only: list plans, next number, .gitignore state
   python init-plan.py "Name" --root <dir>       # repo root (default: nearest .git upward, else cwd)
   python init-plan.py --status                  # print latest plan's Status
   python init-plan.py --approve                 # set latest plan Status: Approved (after the user said ok)
   python init-plan.py --set-status "In progress"  # Draft | Approved | In progress | Done
   python init-plan.py --share                   # team mode: stop ignoring plan/ (plans get committed)
   python init-plan.py --gate off|on             # create/remove plan/.no-gate for the optional hook
-  (gitignore= result: created | added | already | skipped-tracked | removed | not-present)
+  (gitignore= result: created | added | already | skipped-tracked | removed | not-present;
+   --check only reports: would-create | would-add | already | skipped-tracked)
   python init-plan.py --require-approved        # exit 3 unless latest plan is Approved / In progress
   (--plan NAME.md selects a plan other than the latest)
 
 Stdlib only. Never overwrites an existing plan. Prints key=value lines:
   plan_file=..., scheme=..., gitignore=added|already|created, existing_plans=N
+  --check adds: plan_dir=exists|missing, next_plan=<number or date>; it changes nothing on disk
 Exit codes: 0 ok, 1 error.
 """
 import argparse
@@ -118,6 +120,18 @@ def ensure_gitignore(root: Path) -> str:
     return "added"
 
 
+def gitignore_state(root: Path) -> str:
+    """Read-only twin of ensure_gitignore for --check: what the plan-creation call would do."""
+    if plan_is_tracked(root):
+        return "skipped-tracked"
+    gi = root / ".gitignore"
+    if not gi.exists():
+        return "would-create"
+    if any(ln.strip() in IGNORE_LINES for ln in gi.read_text(encoding="utf-8").splitlines()):
+        return "already"
+    return "would-add"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("title", nargs="?", help="feature name")
@@ -181,6 +195,20 @@ def main() -> int:
     for n in names:
         print(f"existing={n}")
 
+    today = date.today().isoformat()
+    if use_date:
+        number = today
+    else:
+        nums = [int(NUM_RE.match(n).group(1)) for n in numbered]
+        number = f"{(max(nums) + 1 if nums else 1):03d}"
+
+    if args.check and not args.share:
+        # Read-only: report only, so a brownfield repo is untouched before the plan is approved.
+        print(f"plan_dir={'exists' if plan_dir.is_dir() else 'missing'}")
+        print(f"next_plan={number}")
+        print(f"gitignore={gitignore_state(root)}")
+        return 0
+
     status = remove_gitignore_entry(root) if args.share else ensure_gitignore(root)
     print(f"gitignore={status}")
 
@@ -190,14 +218,7 @@ def main() -> int:
     plan_dir.mkdir(exist_ok=True)
 
     slug = slugify(args.title)
-    today = date.today().isoformat()
-    if use_date:
-        fname = f"{today}-{slug}.md"
-        number = today
-    else:
-        nums = [int(NUM_RE.match(n).group(1)) for n in numbered]
-        number = f"{(max(nums) + 1 if nums else 1):03d}"
-        fname = f"{number}-{slug}.md"
+    fname = f"{today}-{slug}.md" if use_date else f"{number}-{slug}.md"
 
     target = plan_dir / fname
     if target.exists():

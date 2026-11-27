@@ -39,7 +39,7 @@ Begin EVERY response with a step label: `[Perf 1/5: Target]` · `[Perf 2/5: Base
 2. State 2-3 hypotheses with the evidence for and against each, ranked, and the quickest experiment that would falsify the top one. Check for the usual causes: N+1 queries, missing index, work inside loops, repeated parsing, unbounded memory, synchronous I/O, oversized payloads, no caching where data is stable.
 
 ### HARD STOP
-Present baseline, hotspot, the proposed change, its risk and the expected effect (labelled as an expectation). Wait for the user's "ok".
+Present baseline, hotspot, the proposed change, its risk and the expected effect (labelled as an expectation). Wait for the user's "ok". With one metric and a one-change fix, this is the only stop: state the target, plan and change together, wait for approval, then execute.
 
 ## Step 4 — Change
 

@@ -37,12 +37,12 @@ Load `references/migration-patterns.md` and choose the path:
 - Present the plan as ordered releases (R1, R2…), what each deploys, and what is reversible.
 
 ### HARD STOP
-Wait for the user's approval of the strategy before writing files.
+Wait for the user's approval of the strategy before writing files. Small scope (one additive column or table on a small project): one stop only; state the strategy, wait, then write.
 
 ## Step 3 — Write
 
 - Migration file(s) in the tool's convention, small and idempotent where the tool allows.
-- Matching **down / rollback** script or revert steps.
+- Matching **down / rollback** script or revert steps. Do not put rollback files where the migration runner globs for migrations (an `002_x.down.sql` beside the up files would run as an UP migration): check the runner and its naming first, then use a `down/` folder or the tool's own convention.
 - Backfills in batches with a stop condition, not one giant transaction.
 - Code changes needed to stay compatible during the transition (dual write, feature flag, tolerant reader) as separate, listed changes.
 

@@ -22,6 +22,7 @@ description: "Audits an existing codebase in strictly read-only mode: surveys st
    - **Scale / Level:** map to `fresh | junior | mid | senior` = coursework/demo, thesis/portfolio, production of moderate complexity, production of high complexity. Use the level declared in `plan/` or README if present, otherwise infer and mark `[Inferred from code — needs confirmation]` for the user to correct. Evidence: tests, CI, deploy config, users, logging, migrations. Calibrate severity to scale (a missing rate limiter is Low for a coursework demo, High for a public API).
 3. Propose **3–5 critical modules** to deep-scan (or all modules if fewer than 3 exist), each with one line of why.
 4. **STOP and ask** the user to approve or change the list (and the scale if unsure). Do not deep-scan before the answer. If the user said "scan everything", still confirm the module list in one message.
+5. **Small scope:** for a target scope (or repo) with ≤ ~5 source files, skip the Step 1 approval wait and go directly to Step 2–3.
 
 ## Step 2 — Deep scan with the matching references
 

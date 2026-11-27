@@ -36,6 +36,6 @@ Add to `.claude/settings.json` of a project (or `~/.claude/settings.json` for al
 Behavior to know:
 - It only acts in projects that have a `plan/` folder whose latest plan is Draft. Projects without `plan/` are unaffected.
 - Light-mode edits are blocked too while a Draft plan exists. Options: approve the plan (`init-plan.py --approve`), mark it Done (`--set-status Done`), delete the draft, or bypass deliberately: `init-plan.py --gate off` (creates `plan/.no-gate`; `--gate on` removes it) or set the environment variable `PLAN_GATE=off`. The block message tells the agent to ask you first and never bypass by itself.
-- Automated tests: `python -m unittest discover -s tests -v` (17 tests cover numbering, gitignore handling, status commands, `--share`, tracked plans, the hook's block/allow/bypass/fail-open paths).
+- Automated tests: `python -m unittest discover -s tests -v` (see `tests/`: numbering, gitignore handling, status commands, `--share`, tracked plans, latest-plan choice, the hook's block/allow/bypass/fail-open paths).
 - Real-agent check: scenario 07 in `evals/scenarios/`.
 - Other agents (Cursor, Gemini CLI, Codex) have their own hook mechanisms; layers 1–2 still apply.

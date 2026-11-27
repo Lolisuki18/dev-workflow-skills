@@ -11,7 +11,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 
 ## Ground rules
 
-- Reply in the user's language; write the plan in the same language (keep identifiers in English). Start each reply with `[Plan X/4: <Step>]`.
+- Reply in the user's language; write the plan in the same language (keep identifiers in English). Start each reply with `[Plan X/4: <Step>]`. Inside dev-lifecycle keep its `[Phase X/5: ...]` label; use this label only when the skill runs standalone.
 - Anti-hallucination: cite `file:line` for every statement about existing code. Do not name libraries, tables or endpoints that do not exist unless marked **NEW**. Mark unknowns as `[Needs input: ...]` / `[Inferred from code — needs confirmation]`, never guess.
 - Agent-agnostic: "inspect the repo", "list the files" — use whatever tools your environment has.
 - Mechanical steps (numbering, file creation, `.gitignore`) are done by `scripts/init-plan.py`, not by memory. Run it; do not hand-edit numbering.
@@ -20,6 +20,7 @@ Produce a plan that is consistent with every earlier plan, concrete enough to co
 ## Step 1 — Audit old plans (MANDATORY)
 
 1. Run `init-plan.py --check` (see "Running the script"). It lists existing plans in `plan/` without creating `plan/` and updates `.gitignore` if needed. If multiple plans exist in the same repo, clarify whether `R1..Rn` are scoped per plan (`002:R1`) or continue sequentially.
+   **New module in an existing repo:** the plan covers only the new module, in its own folder; sibling modules are not touched or audited. The plan stays in `plan/` (numbered). When several plans exist, write requirement ids as `<plan number>:Rn`. Say in section 3 that QA and docs output goes to `qa-artifacts/<module>/` and `docs/<module>/` (the `ai-workflow-suite` convention, stated here because it may not be installed).
 2. If plans exist, read ALL of them. Keep a short internal digest of:
    - overall architecture and module boundaries;
    - naming conventions (files, classes, DB tables/columns, routes);

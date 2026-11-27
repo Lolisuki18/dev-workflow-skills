@@ -46,6 +46,8 @@ Split code into layers by responsibility: Domain (pure business rules) → Appli
 | 3 | React/Next.js + ASP.NET Core + SQL Server/PostgreSQL | **Clean Architecture** (Domain/Application/Infrastructure/Api projects), optionally Vertical Slice | The .NET community standard; separate projects enforce the dependency rule at compile time; EF Core stays in Infrastructure | Small API → Vertical Slice (feature-based) with Minimal APIs is lighter |
 | 4 | React/Vue + NestJS or FastAPI + PostgreSQL | **Feature-based** (NestJS modules / FastAPI feature routers) | NestJS modules and FastAPI routers are already per-feature; fast iteration; Pydantic/DTO validation at the edges is enough structure | Complex domain → Hybrid with `domain/` and `use-cases/` inside the feature |
 | 5 | Flutter + Firebase/Supabase | **Feature-first with data/domain/presentation inside** (Hybrid) | Flutter apps grow by screens/features; splitting each feature into UI, state and data keeps widgets free of backend calls and makes testing easy | Tiny app → plain feature folders without a domain layer |
+| 6 | Vanilla JS browser app (ES modules, no build, no framework) | **Feature-based, small layers**: pure logic modules, a storage adapter, a DOM layer | No build step means few files and no framework conventions; keeping logic free of the DOM makes it testable with `node:test` | Several unrelated screens → one folder per feature with the same three parts inside |
+| 7 | Plain stdlib script / CLI (Python or Node, no packages) | **Flat modules**: pure logic, I/O (files, args) at the edge, a thin `main` | Small surface; pure functions are testable with `unittest` / `node:test` without mocks | Grows past ~5 modules → feature folders |
 
 ## How to present (template)
 

@@ -70,6 +70,13 @@ trim_trailing_whitespace = true
 }
 ```
 
+## When the user says "no third-party packages"
+
+Do not recommend npm or pip tools (Prettier, ESLint, Ruff, ...). Use the built-ins instead and record `no formatter configured` as the evidence:
+- JavaScript: `node --check <file>` for each source file, and tests with `node --test`.
+- Python: `python -m compileall <dir>` and `python -W error -m unittest discover -s tests` (warnings as errors).
+Still offer `.editorconfig` (it needs no package).
+
 ## Not on VS Code?
 
 The same tools work elsewhere: `.editorconfig` is supported by JetBrains/Neovim/etc.; Prettier, ESLint, Biome, Ruff and `dart format` run from the CLI in any editor or CI. Mention the CLI command alongside the extension ID.

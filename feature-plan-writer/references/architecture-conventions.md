@@ -30,6 +30,24 @@ Clean: `src/{Domain, Application, Infrastructure, Api}` (+ `tests/`). Applicatio
 ### FastAPI
 `app/features/<feature>/{router.py, schemas.py, service.py, repository.py, models.py}`; `app/core/{config.py, security.py, db.py}`; `alembic/`.
 
+### Vanilla JS browser app (ES modules, no build)
+```
+index.html  styles.css
+src/logic/<feature>.js      # pure functions, no DOM, no storage
+src/storage.js              # adapter over localStorage / fetch; the only place that touches them
+src/ui/<feature>.js         # DOM layer: render, event handlers; calls logic and storage
+src/main.js                 # wiring
+tests/<feature>.test.js     # node:test on src/logic (and storage with a fake)
+```
+
+### Plain stdlib script / CLI (Python or Node)
+```
+<pkg>/core.py (or src/core.js)   # pure logic
+<pkg>/io.py                      # files, args, stdin/stdout at the edge
+<pkg>/__main__.py (or bin/cli.js)# thin entry point
+tests/test_core.py (unittest) or tests/core.test.js (node:test)
+```
+
 ### Flutter
 `lib/features/<feature>/{data, domain, presentation}`; `lib/core/` (theme, routing, network); `lib/shared/widgets/`.
 

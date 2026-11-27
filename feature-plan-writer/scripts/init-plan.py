@@ -46,6 +46,17 @@ def slugify(text: str) -> str:
     return slug or "feature"
 
 
+def plan_key(p: Path) -> tuple[int, int, str]:
+    """Sort key: other names, then date-named, then numbered (by integer). The last item is the latest plan.
+    Keep identical to plan_key in scripts/plan-gate.py (tests check both)."""
+    m = NUM_RE.match(p.name)
+    if m and not DATE_RE.match(p.name):
+        return (2, int(m.group(1)), p.name)
+    if DATE_RE.match(p.name):
+        return (1, 0, p.name)
+    return (0, 0, p.name)
+
+
 STATUS_RE = re.compile(r"^Status:\s*(.+?)\s*$", re.M)
 
 
@@ -140,13 +151,7 @@ def main() -> int:
         return 0
 
     if args.status or args.approve or args.require_approved or args.set_status:
-        def _plan_key(p: Path) -> tuple[int, int, str]:
-            m = NUM_RE.match(p.name)
-            if m and not DATE_RE.match(p.name):
-                return (0, int(m.group(1)), p.name)
-            return (1, 0, p.name)
-
-        plans = sorted(plan_dir.glob("*.md"), key=_plan_key) if plan_dir.is_dir() else []
+        plans = sorted(plan_dir.glob("*.md"), key=plan_key) if plan_dir.is_dir() else []
         target = (plan_dir / args.plan) if args.plan else (plans[-1] if plans else None)
         if target is None or not target.exists():
             print("plan_status=none")

@@ -16,7 +16,19 @@ import sys
 from pathlib import Path
 
 STATUS_RE = re.compile(r"^Status:\s*(.+?)\s*$", re.M)
+NUM_RE = re.compile(r"^(\d+)-.+\.md$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-.+\.md$")
 ALLOW_TOP = {"plan", ".gitignore"}
+
+
+def plan_key(p: Path) -> tuple[int, int, str]:
+    """Same key as plan_key in feature-plan-writer/scripts/init-plan.py: numbered plans win, by integer."""
+    m = NUM_RE.match(p.name)
+    if m and not DATE_RE.match(p.name):
+        return (2, int(m.group(1)), p.name)
+    if DATE_RE.match(p.name):
+        return (1, 0, p.name)
+    return (0, 0, p.name)
 
 
 def find_root(start: Path) -> Path:
@@ -39,7 +51,7 @@ def main() -> int:
             target = (cwd / target).resolve()
         root = find_root(cwd)
         plan_dir = root / "plan"
-        plans = sorted(plan_dir.glob("*.md")) if plan_dir.is_dir() else []
+        plans = sorted(plan_dir.glob("*.md"), key=plan_key) if plan_dir.is_dir() else []
         if not plans:
             return 0
         # Escape hatches: env var or marker file (init-plan.py --gate off)

@@ -11,7 +11,7 @@ Find vulnerabilities that a real attacker could use, and prove each one with cod
 
 ## Anchor rule
 
-Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep check]` · `[Sec 3/4: Verify findings]` · `[Sec 4/4: Report]`.
+Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep check]` · `[Sec 3/4: Verify findings]` · `[Sec 4/4: Report]`. Inside dev-lifecycle keep its `[Phase X/5: ...]` label; use this label only when the skill runs standalone.
 
 ## Ground rules
 
@@ -26,8 +26,8 @@ Begin EVERY response with a step label: `[Sec 1/4: Surface]` · `[Sec 2/4: Deep 
 
 1. Identify the stack and entry points: HTTP routes, GraphQL, message consumers, cron jobs, CLI, file uploads, webhooks.
 2. Map trust boundaries: who calls what (anonymous, user, admin, service), where untrusted data enters and where it reaches a sink (DB, shell, file system, HTML, outbound request).
-3. Agree on 3-5 priority areas with the user in one short list (auth, payments, uploads, admin), unless they named them. **Hard stop:** wait for explicit approval before step 2 when scope is large.
-4. **Small scope:** for a target scope (or repo) with ≤ ~5 source files or a local tool, skip the priority-area wait, check everything, and use a compact report: the findings table (omitting `ID` and `Issue` if trivial: `Severity, Where, Scenario, Fix, Evidence` (`*traced*`/`*ran*`/`*assumed*`)). If 0 findings are found, state so explicitly with what was checked.
+3. **Small scope** (about 5 or fewer source files, or a local tool): skip the priority-area wait, check everything, and use the compact report in Step 4. If there are 0 findings, say so and list what was checked.
+4. **Larger scope:** agree on 3-5 priority areas with the user in one short list (auth, payments, uploads, admin), unless they named them. **Hard stop:** wait for explicit approval before Step 2 when more than about 5 source files are in scope.
 
 ## Step 2 — Deep check
 
@@ -57,6 +57,8 @@ Summary: N findings (Critical a, High b, Medium c, Low d)
 Not checked: <infra, third-party services, runtime config>
 Positive controls seen: <short list, so the user knows what to keep>
 ```
+
+Compact report (small scope): the same header, and the table `Severity | Where | Scenario | Fix | Evidence` (evidence = traced / ran / assumed); drop the `ID` and `Issue` columns when the scenario already says it.
 
 Severity: **Critical** = remote, unauthenticated or easy exploit with data loss or takeover; **High** = needs a normal user account or a common precondition; **Medium** = needs unusual conditions; **Low** = hardening. Order findings by severity.
 

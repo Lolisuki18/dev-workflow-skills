@@ -16,7 +16,10 @@ Pick tools already in the repo first. Check each tool's current docs for exact f
 | Python | `cProfile` + `pstats`, `timeit`, `tracemalloc` for memory, `py-spy` for a running process |
 | Java / Kotlin | JFR (Java Flight Recorder), VisualVM, JMH for micro-benchmarks |
 | .NET | `dotnet-trace`, `dotnet-counters`, BenchmarkDotNet |
-| Go | `pprof`, `go test -bench` |
+| Go | `pprof` (`go tool pprof`), `go test -bench` (add `-benchmem` for allocations), `go tool trace` |
+| Rust | Criterion benchmarks or `cargo bench`, `cargo flamegraph` (cargo-flamegraph), `perf` on Linux; always measure `--release` builds |
+| Android | Android Studio Profiler, Perfetto / system traces, Jetpack Macrobenchmark, Layout Inspector for Compose recomposition counts |
+| iOS | Instruments (Time Profiler, Allocations, Leaks), Xcode Organizer / MetricKit for field data, XCTest `measure` blocks |
 | SQL | `EXPLAIN` / `EXPLAIN ANALYZE`, slow query log, check the plan before and after adding an index |
 | Browser / front end | DevTools Performance and Network panels, Lighthouse, bundle analyzer |
 | Build and CI | timing per step, cache hit rates, `time` on each command |
@@ -30,6 +33,7 @@ Pick tools already in the repo first. Check each tool's current docs for exact f
 | High CPU in app code | work repeated inside loops, regex compiled each call, repeated JSON parsing, sorting large lists repeatedly |
 | Growing memory | unbounded caches or lists, listeners never removed, loading a whole file or table |
 | Slow only under concurrency | lock contention, connection pool too small, synchronous I/O in a hot path |
+| Jank or slow start in a mobile app | work on the main/UI thread, large images decoded at full size, unnecessary recomposition (Compose) or view-body re-evaluation (SwiftUI), synchronous disk or database access at launch |
 | Slow first load in the browser | large bundles, render-blocking requests, unoptimized images, no compression or caching headers |
 | Slow build | no dependency cache, tests run serially that could be split, rebuilding unchanged parts |
 

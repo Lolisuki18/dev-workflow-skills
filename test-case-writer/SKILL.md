@@ -64,7 +64,11 @@ Inspect manifests and config, then existing test files:
 | `pom.xml`/`build.gradle` with JUnit, `src/test/java` | JUnit (+ Mockito, Spring Test if present) |
 | `*.csproj` with xunit/nunit/mstest | xUnit / NUnit / MSTest |
 | `pubspec.yaml` dev_dependencies `flutter_test`, `test/` | Flutter test |
-| Go `_test.go`, Rust `#[cfg(test)]`, PHPUnit config | built-in / PHPUnit |
+| `go.mod`, `*_test.go` | `go test` with the `testing` package (table-driven tests with `t.Run` subtests; testify only if already in `go.mod`) |
+| `Cargo.toml`, `#[cfg(test)]` modules, `tests/` | `cargo test` (unit tests in-module, integration tests in `tests/`) |
+| Android: `build.gradle(.kts)` with `junit`, `androidx.test`, `compose-ui-test`; `src/test`, `src/androidTest` | JUnit (local, `src/test`); Espresso / Compose test rule (instrumented, `src/androidTest`) |
+| iOS: `Package.swift` or `*.xcodeproj` with `import XCTest` or `import Testing` | XCTest / Swift Testing (use whichever the repo already uses) |
+| PHPUnit config | PHPUnit |
 
 Then match the style of 1–2 neighbouring test files: file location and naming, describe/it vs function names, assertion style, fixtures/factories, mocking approach, setup/teardown, test data conventions. Put new tests where existing ones live.
 

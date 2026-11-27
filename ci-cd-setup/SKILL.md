@@ -24,7 +24,7 @@ Begin EVERY response with a step label: `[CI 1/4: Detect]` · `[CI 2/4: Design]`
 ## Step 1 — Detect
 
 1. Read the stack: language and version, package manager and lockfile, build tool, test command, lint and type-check commands, ports, required services (DB, cache), env variables used in code.
-2. Find what exists already: `.github/workflows`, `Dockerfile`, `docker-compose*`, `Makefile`, deploy scripts. Extend, do not overwrite without asking.
+2. Find what exists already: `.github/workflows`, `Dockerfile`, `docker-compose*`, `Makefile`, deploy scripts. Extend, do not overwrite without asking. If existing CI (and container/deploy config if requested) already satisfies the requirements, say "existing CI is sufficient; nothing to do" and stop.
 3. Ask only what the repo cannot tell: hosting target, branching model, environments, who may deploy. Offer defaults (GitHub Actions, build and test on every PR, deploy manually from `main`).
 
 ## Step 2 — Design
@@ -38,10 +38,10 @@ Wait for approval before writing files. Hosting and deploy choices are the user'
 
 Load `references/pipeline-templates.md` for structure and adapt it to the detected commands.
 
-- Workflow file(s) with least-privilege `permissions`, dependency cache keyed by the lockfile, and timeouts.
-- `Dockerfile`: multi-stage, non-root user, `.dockerignore`, no secrets in layers, healthcheck when the app has an endpoint.
+- Workflow file(s) with least-privilege `permissions`, dependency cache keyed by the lockfile (skip when no external dependencies or lockfile exist), and timeouts.
+- `Dockerfile` (when containerization is in scope): multi-stage, non-root user, `.dockerignore`, no secrets in layers, healthcheck when the app has an endpoint.
 - `docker-compose.yml` for local development when services are needed.
-- `docs/deploy.md` (or a section in the README): how to release, required secrets by name, how to roll back.
+- `docs/deploy.md` (or `docs/runbook.md` / a README section, when deploy automation is in scope): how to release, required secrets by name, how to roll back.
 
 ## Step 4 — Verify & hand over
 

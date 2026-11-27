@@ -18,7 +18,7 @@ Current dates: last verified 2026-11-23, next review **2027-05-23**.
 
 ## Framework review procedure
 
-For each stack section in `architecture-rules.md`:
+For each per-stack file `codebase-auditor/references/architecture-<stack>.md` (the verification status and dates stay in `architecture-rules.md`):
 1. Check the installed major version is still the one the section describes (Next.js, Spring Boot, ASP.NET Core / EF Core, NestJS, FastAPI + Pydantic, Flutter, Supabase, Firebase).
 2. Read the official docs and release notes for the sections the rules cite. Primary sources to start from: nextjs.org/docs, spring.io and docs.spring.io, learn.microsoft.com (ASP.NET Core, EF Core), docs.nestjs.com, fastapi.tiangolo.com, dart.dev and docs.flutter.dev, supabase.com/docs, firebase.google.com/docs.
 3. Change a rule only with evidence from a primary source; keep a rule you cannot verify but mark it as weakly verified (as the file already does for the Firebase test-mode expiry).

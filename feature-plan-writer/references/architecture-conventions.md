@@ -51,6 +51,33 @@ tests/test_core.py (unittest) or tests/core.test.js (node:test)
 ### Flutter
 `lib/features/<feature>/{data, domain, presentation}`; `lib/core/` (theme, routing, network); `lib/shared/widgets/`.
 
+### Go (service / CLI)
+```
+cmd/<app>/main.go                      # wiring only: config, dependencies, start
+internal/<feature>/{handler.go, service.go, store.go, model.go, *_test.go}
+internal/platform/{config, db, httpserver}/
+db/migrations/                         # golang-migrate or goose files if used
+go.mod  go.sum
+```
+Tests sit next to the code (`*_test.go`, table-driven). Public packages go under `pkg/` only if other modules import them.
+
+### Rust (service / CLI / library)
+```
+Cargo.toml (+ Cargo.lock for binaries)
+src/main.rs                            # thin: parse args/config, call lib
+src/lib.rs                             # re-exports the public API
+src/<feature>/{mod.rs or <feature>.rs, handlers.rs, service.rs, repo.rs, error.rs}
+tests/                                 # integration tests; unit tests in-module under #[cfg(test)]
+migrations/                            # sqlx or diesel files if used
+```
+Large projects: Cargo workspace with `crates/{domain, app, infra, api}`.
+
+### Android native (Kotlin, Jetpack Compose, Room)
+`app/src/main/java/<pkg>/feature/<feature>/{ui (screen, components), <Feature>ViewModel, domain (optional use cases), data (repository, local/Room dao + entity, remote)}`; `core/{database, network, designsystem}`; DI module files (Hilt/Koin) per layer. Tests: `src/test` (local JUnit), `src/androidTest` (Compose/Espresso). Room schema JSON under the module's schema directory when `exportSchema` is on.
+
+### iOS native (Swift, SwiftUI)
+`<App>/Features/<Feature>/{<Feature>View.swift, <Feature>ViewModel.swift, <Feature>Repository.swift, Models/}`; `Core/{Networking, Persistence, DesignSystem}`; `<App>App.swift` as entry point and composition root. Tests: `<App>Tests` (XCTest or Swift Testing), `<App>UITests`. Larger apps: split features into local Swift packages.
+
 ## What the plan must state per feature
 - Which layer/folder each new file belongs to (section 3, one row each).
 - Public surface other features may use; anything cross-feature is listed explicitly in section 2.

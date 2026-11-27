@@ -13,6 +13,18 @@
 | Add foreign key | Add as not validated if supported, clean orphans, then validate. |
 | Split / merge tables | Create new, dual write, backfill, switch reads, retire old. |
 
+## Migration tools by stack (check the project's version and existing files first)
+
+| Stack | Tool | Notes |
+|---|---|---|
+| Go | golang-migrate (`migrate create -ext sql -dir <dir> -seq <name>`, `migrate -path <dir> -database <url> up`) or goose (`goose create <name> sql`, `goose up`) | Paired up/down SQL files; keep numbering consistent with existing files |
+| Rust | sqlx-cli (`sqlx migrate add <name>`, `sqlx migrate run`) or diesel (`diesel migration generate <name>`, `diesel migration run`) | Do not edit an applied migration; sqlx checks applied migrations against their stored checksums |
+| Android (Room) | `@Database(version = N, exportSchema = true)` plus `AutoMigration(from, to)` for simple changes, or a manual `Migration(from, to)` with SQL | Commit the exported schema JSON; test with Room's `MigrationTestHelper`; avoid `fallbackToDestructiveMigration` unless data loss is accepted |
+| iOS (Core Data) | New model version; lightweight migration when the change allows it, otherwise a mapping model | Verify on a copy of a real store from the previous version |
+| iOS (SwiftData) | `VersionedSchema` + `SchemaMigrationPlan` with lightweight or custom stages | Check the minimum iOS version and the project's SwiftData usage |
+
+Language/toolchain upgrades: Go (`go` directive in `go.mod`, `go mod tidy`), Rust (edition and `rust-version`; `cargo fix --edition` exists for edition moves), Android (Gradle, Android Gradle Plugin and Kotlin versions must be compatible; check `targetSdk` behavior changes), iOS (Xcode and Swift language mode). Read the official upgrade notes for each.
+
 ## Backfills
 
 - Batch by primary key range; commit per batch; sleep or throttle if the DB is shared.

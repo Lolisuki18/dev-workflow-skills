@@ -38,8 +38,8 @@ Add services (database, cache) under `services:` only when tests need them, with
 ```dockerfile
 FROM <build image>:<tag> AS build
 WORKDIR /app
-COPY <lockfile and manifest> ./
-RUN <install with lockfile>
+COPY <lockfile and manifest> ./        # or manifest only if no lockfile
+RUN <install with lockfile>             # or <install> if no lockfile
 COPY . .
 RUN <build>
 

@@ -24,7 +24,7 @@ Begin EVERY response with a step label: `[CI 1/4: Detect]` · `[CI 2/4: Design]`
 ## Step 1 — Detect
 
 1. Read the stack: language and version, package manager and lockfile, build tool, test command, lint and type-check commands, ports, required services (DB, cache), env variables used in code.
-2. Find what exists already: `.github/workflows`, `Dockerfile`, `docker-compose*`, `Makefile`, deploy scripts. Extend, do not overwrite without asking. If existing CI (and container/deploy config if requested) already satisfies the requirements, say "existing CI is sufficient; nothing to do" and stop.
+2. Find what exists already: `.github/workflows`, `Dockerfile`, `docker-compose*`, `Makefile`, deploy scripts. Extend, do not overwrite without asking. In multi-app repos with an existing workflow, add a separate job or a module-named workflow (e.g. `.github/workflows/ci-<module>.yml`) instead of replacing another app's CI. If existing CI (and container/deploy config if requested) already satisfies the requirements, say "existing CI is sufficient; nothing to do" and stop.
 3. Ask only what the repo cannot tell: hosting target, branching model, environments, who may deploy. Offer defaults (GitHub Actions, build and test on every PR, deploy manually from `main`).
 
 ## Step 2 — Design

@@ -6,11 +6,11 @@ Stack-agnostic. Cite `file:line`. Calibrate severity to the project's scale (MVP
 - Hard-coded passwords, API keys, tokens, private keys, connection strings in code, tests, Dockerfiles, CI files, notebooks. Check git-tracked `.env*`, `*.pem`, `*.key`, `credentials*.json`.
 - `.gitignore` covers `.env`, build output, local DBs, IDE files; `.env.example` exists with placeholders only.
 - Different config per environment; debug flags (`DEBUG=True`, verbose errors, dev CORS `*`) off in production config.
-- If a live-looking secret is found: report it as Critical, name only the variable/type and `file:line` (never print any secret characters, per `CONVENTIONS.md`), and recommend rotation.
+- If a live-looking secret is found: report it as Critical, name only the variable/type and `file:line` (never print any secret characters in files or replies), and recommend rotation.
 
 ## Authentication & authorization
 - Passwords hashed with a modern algorithm (bcrypt/argon2/scrypt); never plain text or fast hashes (MD5/SHA1).
-- Session/JWT: strong secret from env, expiry set, signature algorithm pinned, refresh/revocation approach, secure/httpOnly/sameSite cookies.
+- Session/JWT/webhooks: strong secret from env, expiry set, signature algorithm pinned, constant-time signature checks (`timingSafeEqual`/`hmac.compare_digest`) + replay/timestamp checks on webhooks, secure/httpOnly/sameSite cookies.
 - Authorization enforced server-side on EVERY protected route/resource; check object-level access (user A cannot read user B's record by changing an id).
 - Rate limiting / lockout on login, signup, password reset, OTP.
 - Admin/internal endpoints not publicly reachable; default credentials removed.

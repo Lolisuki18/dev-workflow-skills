@@ -27,7 +27,8 @@ Check only what applies to the detected framework. Cite `file:line` for every hi
 ## Error handling & reliability
 - Central error handler; no empty `catch`/`except` that swallows errors; errors keep context.
 - Timeouts and retries on outbound HTTP/DB/queue calls; no blocking calls in async paths.
-- Race conditions on read-modify-write (counters, balances, stock); unique constraints backing "check then insert".
+- Race conditions on read-modify-write (counters, balances, stock, coupons); unique constraints backing "check then insert".
+- Money/currency calculations use integer minor units or decimal types (no binary float rounding drift); reject `NaN`/negative/oversized amounts.
 - Background jobs idempotent; graceful shutdown.
 
 ## Concurrency & performance

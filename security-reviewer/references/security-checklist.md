@@ -22,6 +22,7 @@ Use only the parts that match the stack. Each line is a question to answer from 
 - Files: upload type and size checks, random server-side names, storage outside the web root, path joins checked against `..`.
 - Deserialization and XML parsers: no untrusted native deserialization, external entities disabled.
 - Redirects: target validated against an allow-list.
+- Webhooks & request limits: verify signatures with constant-time comparison (`timingSafeEqual`/`hmac.compare_digest`), reject stale/replayed timestamps or nonces, and enforce request body size limits and timeouts on HTTP handlers (not just file uploads).
 
 ## Secrets and configuration
 - Search the repo and git history for keys, tokens, private keys and connection strings (`git log -p -S` on suspicious names). Report type and location only.
@@ -50,7 +51,7 @@ Use only the parts that match the stack. Each line is a question to answer from 
 - Integrity-only issues (a user damaging their own local file) are Low; raise severity only when another user or a privilege boundary is involved.
 
 ## Business logic
-- Price, quantity, discount and balance computed on the server; negative and huge values rejected.
+- Price, quantity, discount, tax and balance computed on the server using integer minor units or fixed-point decimal (never binary float rounding); negative, `NaN`, and huge values rejected.
 - Workflows cannot skip steps (pay before ship, verify before login).
 - Race conditions on balance, stock and coupon use have locking or unique constraints.
 
